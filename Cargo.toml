@@ -1,0 +1,13 @@
+[package]
+name = "tracer"
+version = "0.1.0"
+edition = "2021"
+keywords = ["graphics"]
+categories = ["graphics"]
+authors = ["LambdaXymox <lambda.xymox@gmail.com>"]
+description = "An offline path tracer."
+
+[dependencies]
+cglinalg = { git = "https://github.com/lambdaxymox/cglinalg" }
+rand = "0.8.5"
+
