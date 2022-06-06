@@ -51,8 +51,8 @@ fn camera(width: u32, height: u32) -> Camera {
 }
 
 fn generate_scene(rng: &mut ThreadRng) -> Scene {
-    let mut world = Scene::new();
-    world.push(Box::new(
+    let mut scene = Scene::new();
+    scene.push(Box::new(
         Sphere::new(
             Vector3::new(0_f32, -1000_f32, 0_f32), 
             1000_f32, 
@@ -76,7 +76,7 @@ fn generate_scene(rng: &mut ThreadRng) -> Scene {
                         rng.gen::<f32>() * rng.gen::<f32>(), 
                         rng.gen::<f32>() * rng.gen::<f32>()
                     );
-                    world.push(Box::new(
+                    scene.push(Box::new(
                         Sphere::new(center, 0.2, Material::lambertian(albedo))
                     ));
                 } else if choose_mat < 0.95 {
@@ -87,12 +87,12 @@ fn generate_scene(rng: &mut ThreadRng) -> Scene {
                         0.5 * (1_f32 + rng.gen::<f32>())
                     );
                     let fuzz = 0.5 * rng.gen::<f32>();
-                    world.push(Box::new(
+                    scene.push(Box::new(
                         Sphere::new(center, 0.2, Material::metal(albedo, fuzz))
                     ));
                 } else {
                     // Glass.
-                    world.push(Box::new(
+                    scene.push(Box::new(
                         Sphere::new(center, 0.2, Material::dielectric(1.5))
                     ));
                 }
@@ -100,21 +100,21 @@ fn generate_scene(rng: &mut ThreadRng) -> Scene {
         }
     }
 
-    world.push(Box::new(
+    scene.push(Box::new(
         Sphere::new(
             Vector3::new(0_f32, 1_f32, 0_f32), 
             1_f32, 
             Material::dielectric(1.5)
         )
     ));
-    world.push(Box::new(
+    scene.push(Box::new(
         Sphere::new(
             Vector3::new(-4_f32, 1_f32, 0_f32), 
             1_f32, 
             Material::lambertian(Vector3::new(0.4, 0.2, 0.1))
         )
     ));
-    world.push(Box::new(
+    scene.push(Box::new(
         Sphere::new(
             Vector3::new(4_f32, 1_f32, 0_f32), 
             1_f32, 
@@ -122,7 +122,7 @@ fn generate_scene(rng: &mut ThreadRng) -> Scene {
         )
     ));
 
-    world
+    scene
 }
 
 fn write_image_to_file(image: &Image, file: &mut File) -> io::Result<()> {

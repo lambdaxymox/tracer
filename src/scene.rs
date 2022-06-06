@@ -26,8 +26,8 @@ impl Hitable for Scene {
     fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord> {
         let mut closest_record = None;
         let mut closest_so_far = t_max;
-        for item in self.objects.iter() {
-            match item.intersect(ray, t_min, closest_so_far) {
+        for object in self.objects.iter() {
+            match object.intersect(ray, t_min, closest_so_far) {
                 Some(temp_record) => {
                     if temp_record.t < closest_so_far {
                         closest_so_far = temp_record.t;
