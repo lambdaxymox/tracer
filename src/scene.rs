@@ -1,33 +1,33 @@
 use crate::ray::Ray;
-use crate::material::{Hitable, HitRecord};
+use crate::material::{Hitable, IntersectionRecord};
 
 
-pub struct HitableList {
-    items: Vec<Box<dyn Hitable>>,
+pub struct Scene {
+    objects: Vec<Box<dyn Hitable>>,
 }
 
-impl HitableList {
-    pub fn new() -> HitableList {
-        HitableList {
-            items: Vec::new(),
+impl Scene {
+    pub fn new() -> Scene {
+        Scene {
+            objects: Vec::new(),
         }
     }
 
-    pub fn len(&self) -> usize {
-        self.items.len()
+    pub fn len_objects(&self) -> usize {
+        self.objects.len()
     }
 
     pub fn push(&mut self, item: Box<dyn Hitable>) {
-        self.items.push(item);
+        self.objects.push(item);
     }
 }
 
-impl Hitable for HitableList {
-    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
+impl Hitable for Scene {
+    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord> {
         let mut closest_record = None;
         let mut closest_so_far = t_max;
-        for item in self.items.iter() {
-            match item.hit(ray, t_min, closest_so_far) {
+        for item in self.objects.iter() {
+            match item.intersect(ray, t_min, closest_so_far) {
                 Some(temp_record) => {
                     if temp_record.t < closest_so_far {
                         closest_so_far = temp_record.t;

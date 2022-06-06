@@ -1,6 +1,6 @@
 use crate::camera::Camera;
 use crate::ray::Ray;
-use crate::hitable_list::HitableList;
+use crate::scene::Scene;
 use crate::material::*;
 use cglinalg::{ 
     Magnitude,
@@ -18,7 +18,7 @@ fn component_multiply(v1: Vector3<f32>, v2: Vector3<f32>) -> Vector3<f32> {
 }
 
 fn color<H: Hitable>(ray: Ray, world: &H, rng: &mut ThreadRng, depth: u32) -> Vector3<f32> {
-    match world.hit(&ray, 0.001, std::f32::MAX) {
+    match world.intersect(&ray, 0.001, std::f32::MAX) {
         Some(hit) => {    
             if depth < MAX_DEPTH {
                 let scatter = hit.material.scatter(ray, &hit, rng);
@@ -60,7 +60,7 @@ pub struct Image {
 }
 
 
-pub fn render(width: u32, height: u32, samples_per_pixel: u32, camera: Camera, world: HitableList) -> Image {
+pub fn render(width: u32, height: u32, samples_per_pixel: u32, camera: Camera, world: Scene) -> Image {
     let mut rng = rand::prelude::thread_rng();
     let mut data = vec![];
     for row in 0..height {

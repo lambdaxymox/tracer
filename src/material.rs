@@ -30,16 +30,16 @@ impl Scatter {
 }
 
 #[derive(Copy, Clone)]
-pub struct HitRecord<'a> {
+pub struct IntersectionRecord<'a> {
     pub t: f32,
     pub p: Vector3<f32>,
     pub normal: Vector3<f32>,
     pub material: &'a Material,
 }
 
-impl<'a> HitRecord<'a> {
-    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, material: &'a Material) -> HitRecord<'a> {
-        HitRecord {
+impl<'a> IntersectionRecord<'a> {
+    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, material: &'a Material) -> IntersectionRecord<'a> {
+        IntersectionRecord {
             t: t,
             p: p,
             normal: normal,
@@ -49,7 +49,7 @@ impl<'a> HitRecord<'a> {
 }
 
 pub trait Hitable {
-    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
+    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord>;
 }
 
 #[derive(Copy, Clone)]
@@ -64,7 +64,7 @@ impl Lambertian {
         }
     }
 
-    pub fn scatter(&self, _ray_in: Ray, hit: &HitRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn scatter(&self, _ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
         let target = hit.p + hit.normal + sample::random_in_unit_sphere(rng);
         let attenuation = self.albedo;
         let scattered = Ray::new(hit.p, target - hit.p);
@@ -87,7 +87,7 @@ impl Metal {
         }
     }
 
-    pub fn scatter(&self, ray_in: Ray, hit: &HitRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
         let reflected = reflect(ray_in.direction.normalize(), hit.normal);
         let attenuation = self.albedo;
         let scattered = Ray::new(hit.p, reflected + sample::random_in_unit_sphere(rng) * self.fuzz);
@@ -126,7 +126,7 @@ impl Dielectric {
         }
     }
 
-    pub fn scatter(&self, ray: Ray, hit: HitRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn scatter(&self, ray: Ray, hit: IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
         let (outward_normal, ni_over_nt, cosine) = if ray.direction.dot(&hit.normal) > 0_f32 {
             (
                 -hit.normal,
@@ -171,7 +171,7 @@ pub enum Material {
 }
 
 impl Material {
-    pub fn scatter(&self, ray_in: Ray, hit: &HitRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
         match *self {
             Material::Metal(metal) => metal.scatter(ray_in, hit, rng),
             Material::Lambertian(lambertian) => lambertian.scatter(ray_in, hit, rng),

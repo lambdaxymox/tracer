@@ -2,7 +2,7 @@ use crate::ray::Ray;
 use crate::material::{
     Material, 
     Hitable, 
-    HitRecord
+    IntersectionRecord
 };
 use cglinalg::{
     Vector3,
@@ -26,7 +26,7 @@ impl Sphere {
 }
 
 impl Hitable for Sphere {
-    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
+    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord> {
         let oc = ray.origin - self.center;
         let a = ray.direction.dot(&ray.direction);
         let b = oc.dot(&ray.direction);
@@ -37,7 +37,7 @@ impl Hitable for Sphere {
             let mut temp = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if temp < t_max && temp > t_min {
                 let hit_point = ray.point_at_parameter(temp);
-                return Some(HitRecord::new(
+                return Some(IntersectionRecord::new(
                     temp,
                     hit_point,
                     (hit_point - self.center) / self.radius,
@@ -47,7 +47,7 @@ impl Hitable for Sphere {
             temp = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if temp < t_max && temp > t_min {
                 let hit_point = ray.point_at_parameter(temp);
-                return Some(HitRecord::new(
+                return Some(IntersectionRecord::new(
                     temp,
                     hit_point,
                     (hit_point - self.center) / self.radius,

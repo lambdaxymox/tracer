@@ -3,7 +3,7 @@ extern crate rand;
 
 
 mod ray;
-mod hitable_list;
+mod scene;
 mod sphere;
 mod camera;
 mod material;
@@ -28,8 +28,8 @@ use camera::{
 use sphere::{
     Sphere
 };
-use hitable_list::{
-    HitableList
+use scene::{
+    Scene
 };
 use renderer::*;
 use material::*;
@@ -50,8 +50,8 @@ fn camera(width: u32, height: u32) -> Camera {
     Camera::new(look_from, look_at, v_up, v_fov, aspect_ratio, aperture, distance_to_focus)
 }
 
-fn generate_scene(rng: &mut ThreadRng) -> HitableList {
-    let mut world = HitableList::new();
+fn generate_scene(rng: &mut ThreadRng) -> Scene {
+    let mut world = Scene::new();
     world.push(Box::new(
         Sphere::new(
             Vector3::new(0_f32, -1000_f32, 0_f32), 
@@ -135,8 +135,8 @@ fn write_image_to_file(image: &Image, file: &mut File) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let width = 720;
-    let height = 480;
+    let width = 480;
+    let height = 270;
     let samples_per_pixel = SAMPLES_PER_PIXEL;
     let camera = camera(width, height);
     let mut rng = rand::prelude::thread_rng();
