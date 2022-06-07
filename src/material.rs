@@ -9,12 +9,13 @@ use cglinalg::{
 };
 use rand::prelude::*;
 
-
+/*
 // TODO: Move this to cglinalg crate.
 #[inline]
 fn reflect(v: Vector3<f32>, n: Vector3<f32>) -> Vector3<f32> {
     v - n * (2_f32 * v.dot(&n))
 }
+*/
 
 pub trait ObjectMaterial {
     fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay;
@@ -60,7 +61,7 @@ impl SimpleMetalMaterial {
 
 impl ObjectMaterial for SimpleMetalMaterial {
     fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
-        let reflected_direction = reflect(ray_in.direction.normalize(), hit.normal);
+        let reflected_direction = ray_in.direction.reflect(&hit.normal);
         let attenuation = self.albedo;
         let scattering_ray = Ray::new(
             hit.p, 
@@ -104,7 +105,7 @@ impl ObjectMaterial for SimpleDielectricMaterial {
             r0 + (1_f32 - r0) * (1_f32 - cosine).powf(5_f32)
         }
 
-        
+
         let (outward_normal, ni_over_nt, cosine) = if ray.direction.dot(&hit.normal) > 0_f32 {
             (
                 -hit.normal,
@@ -122,7 +123,7 @@ impl ObjectMaterial for SimpleDielectricMaterial {
         if let Some(refracted) = refract(ray.direction, outward_normal, ni_over_nt) {
             let reflection_prob = schlick(cosine, self.refraction_index);
             let out_dir = if rng.gen::<f32>() < reflection_prob {
-                reflect(ray.direction, hit.normal)
+                ray.direction.reflect(&hit.normal)
             } else {
                 refracted
             };
@@ -133,7 +134,7 @@ impl ObjectMaterial for SimpleDielectricMaterial {
         } else {
             ScatteredRay::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
-                Ray::new(hit.p, reflect(ray.direction, hit.normal))
+                Ray::new(hit.p, ray.direction.reflect(&hit.normal))
             )
         }
     }
