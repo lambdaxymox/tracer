@@ -7,22 +7,40 @@ use cglinalg::{
 };
 use rand::prelude::*;
 
-
+/*
 const MAX_DEPTH: u32 = 16;
+*/ 
 
+#[derive(Copy, Clone)]
+pub struct RendererSettings {
+    samples_per_pixel: usize,
+    max_path_depth: usize,
+}
+
+impl RendererSettings {
+    pub fn new(samples_per_pixel: usize, max_path_depth: usize) -> Self {
+        Self { 
+            samples_per_pixel, max_path_depth,
+        }
+    }
+}
 
 pub struct Renderer {
-    samples_per_pixel: u32,
+    samples_per_pixel: usize,
+    max_path_depth: usize,
 }
 
 impl Renderer {
-    pub fn new(samples_per_pixel: u32) -> Self {
-        Self { samples_per_pixel }
+    pub fn new(settings: RendererSettings) -> Self {
+        Self { 
+            samples_per_pixel: settings.samples_per_pixel, 
+            max_path_depth: settings.max_path_depth,
+        }
     }
 
-    fn path_trace(&self, ray: Ray, scene: &Scene, rng: &mut ThreadRng, depth: u32) -> Vector3<f32> {
+    fn path_trace(&self, ray: Ray, scene: &Scene, rng: &mut ThreadRng, depth: usize) -> Vector3<f32> {
         if let Some(hit) = scene.intersect(&ray, 0.001, std::f32::MAX) {
-            if depth < MAX_DEPTH {
+            if depth < self.max_path_depth {
                 let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
                 let color = self.path_trace(scattered_ray.ray, scene, rng, depth + 1);
     

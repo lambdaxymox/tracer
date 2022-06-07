@@ -33,7 +33,8 @@ use renderer::*;
 use material::*;
 
 
-const SAMPLES_PER_PIXEL: u32 = 32;
+const SAMPLES_PER_PIXEL: usize = 32;
+const MAX_DEPTH: usize = 16;
 
 
 fn camera(width: usize, height: usize) -> Camera {
@@ -142,7 +143,8 @@ fn main() -> io::Result<()> {
     let height = 270;
     let samples_per_pixel = SAMPLES_PER_PIXEL;
     let mut rng = rand::prelude::thread_rng();
-    let renderer = Renderer::new(samples_per_pixel);
+    let settings = RendererSettings::new(SAMPLES_PER_PIXEL, MAX_DEPTH);
+    let renderer = Renderer::new(settings);
 
     println!("Generating scene.");
     let mut scene = generate_scene(&mut rng, width, height);
