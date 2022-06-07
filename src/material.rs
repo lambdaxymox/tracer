@@ -2,7 +2,7 @@ use crate::ray::{
     Ray,
 };
 use crate::sample;
-use crate::sphere::*;
+use crate::scene_object::*;
 use cglinalg::{
     Magnitude, 
     Vector3,

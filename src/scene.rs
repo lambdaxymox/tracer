@@ -2,7 +2,7 @@ use crate::ray::Ray;
 use crate::material::*;
 use crate::camera::*;
 use crate::canvas::*;
-use crate::sphere::*;
+use crate::scene_object::*;
 
 
 pub struct Scene {

@@ -4,7 +4,7 @@ extern crate rand;
 
 mod ray;
 mod scene;
-mod sphere;
+mod scene_object;
 mod canvas;
 mod camera;
 mod material;
@@ -27,9 +27,7 @@ use camera::{
     Camera
 };
 use canvas::*;
-use sphere::{
-    Sphere, SceneObject
-};
+use scene_object::*;
 use scene::*;
 use renderer::*;
 use material::*;
