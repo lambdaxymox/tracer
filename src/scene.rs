@@ -19,6 +19,7 @@ impl Scene {
         }
     }
 
+    /// Returns the number of objects in a scene.
     pub fn len_objects(&self) -> usize {
         self.objects.len()
     }
@@ -26,9 +27,7 @@ impl Scene {
     pub fn push(&mut self, object: SceneObject) {
         self.objects.push(object);
     }
-}
 
-impl Scene {
     pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
         let mut closest_record = None;
         let mut closest_so_far = t_max;

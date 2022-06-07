@@ -141,7 +141,6 @@ fn write_image_to_file(canvas: &Canvas, file: &mut File) -> io::Result<()> {
 fn main() -> io::Result<()> {
     let width = 480;
     let height = 270;
-    let samples_per_pixel = SAMPLES_PER_PIXEL;
     let mut rng = rand::prelude::thread_rng();
     let settings = RendererSettings::new(SAMPLES_PER_PIXEL, MAX_DEPTH);
     let renderer = Renderer::new(settings);
