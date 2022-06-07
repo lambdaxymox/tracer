@@ -12,6 +12,7 @@ use rand::prelude::*;
 const MAX_DEPTH: u32 = 16;
 
 
+// TODO: Move to cglinalg crate.
 #[inline]
 fn component_multiply(v1: Vector3<f32>, v2: Vector3<f32>) -> Vector3<f32> {
     Vector3::new(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
@@ -20,10 +21,10 @@ fn component_multiply(v1: Vector3<f32>, v2: Vector3<f32>) -> Vector3<f32> {
 fn path_trace<H: Intersect>(ray: Ray, scene: &H, rng: &mut ThreadRng, depth: u32) -> Vector3<f32> {
     if let Some(hit) = scene.intersect(&ray, 0.001, std::f32::MAX) {
         if depth < MAX_DEPTH {
-            let scatter = hit.object.scatter(ray, &hit, rng);
-            let color = path_trace(scatter.ray, scene, rng, depth + 1);
+            let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
+            let color = path_trace(scattered_ray.ray, scene, rng, depth + 1);
 
-            return component_multiply(scatter.attenuation, color);
+            return component_multiply(scattered_ray.attenuation, color);
         } else {
             return Vector3::new(0_f32, 0_f32, 0_f32);
         }

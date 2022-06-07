@@ -3,7 +3,7 @@ use crate::material::{
     Material, 
     Intersect, 
     IntersectionRecord,
-    Scatter,
+    ScatteredRay,
 };
 use cglinalg::{
     Vector3,
@@ -21,7 +21,7 @@ impl SceneObject {
         Self { geometry, material }
     }
 
-    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         self.material.scatter(ray_in, hit, rng)
     }
 }

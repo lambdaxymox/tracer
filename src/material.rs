@@ -10,20 +10,21 @@ use cglinalg::{
 use rand::prelude::*;
 
 
+// TODO: Move this to cglinalg crate.
 #[inline]
 fn reflect(v: Vector3<f32>, n: Vector3<f32>) -> Vector3<f32> {
-    v - n * 2_f32 * v.dot(&n)
+    v - n * (2_f32 * v.dot(&n))
 }
 
 #[derive(Copy, Clone)]
-pub struct Scatter {
+pub struct ScatteredRay {
     pub attenuation: Vector3<f32>,
     pub ray: Ray,
 }
 
-impl Scatter {
-    pub fn new(attenuation: Vector3<f32>, ray: Ray) -> Scatter {
-        Scatter { 
+impl ScatteredRay {
+    pub fn new(attenuation: Vector3<f32>, ray: Ray) -> ScatteredRay {
+        ScatteredRay { 
             attenuation: attenuation, 
             ray: ray,
         }
@@ -66,12 +67,12 @@ impl Lambertian {
         }
     }
 
-    pub fn scatter(&self, _ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn scatter(&self, _ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         let target = hit.p + hit.normal + sample::random_in_unit_sphere(rng);
         let attenuation = self.albedo;
-        let scattered = Ray::new(hit.p, target - hit.p);
+        let scattering_ray = Ray::new(hit.p, target - hit.p);
 
-        Scatter::new(attenuation, scattered)
+        ScatteredRay::new(attenuation, scattering_ray)
     }
 }
 
@@ -89,12 +90,15 @@ impl Metal {
         }
     }
 
-    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
-        let reflected = reflect(ray_in.direction.normalize(), hit.normal);
+    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
+        let reflected_direction = reflect(ray_in.direction.normalize(), hit.normal);
         let attenuation = self.albedo;
-        let scattered = Ray::new(hit.p, reflected + sample::random_in_unit_sphere(rng) * self.fuzz);
+        let scattering_ray = Ray::new(
+            hit.p, 
+            reflected_direction + sample::random_in_unit_sphere(rng) * self.fuzz
+        );
         
-        Scatter::new(attenuation, scattered)
+        ScatteredRay::new(attenuation, scattering_ray)
     }
 }
 
@@ -108,8 +112,8 @@ fn refract(v: Vector3<f32>, n: Vector3<f32>, ni_over_nt: f32) -> Option<Vector3<
     let dt = uv.dot(&n);
     let discriminant = 1_f32 - ni_over_nt * ni_over_nt * (1_f32 - dt * dt);
     if discriminant > 0_f32 {
-        let refracted = (uv - n * dt) * ni_over_nt - n * discriminant.sqrt();
-        Some(refracted)
+        let refracted_direction = (uv - n * dt) * ni_over_nt - n * discriminant.sqrt();
+        Some(refracted_direction)
     } else {
         None
     }
@@ -128,7 +132,7 @@ impl Dielectric {
         }
     }
 
-    pub fn scatter(&self, ray: Ray, hit: IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn scatter(&self, ray: Ray, hit: IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         let (outward_normal, ni_over_nt, cosine) = if ray.direction.dot(&hit.normal) > 0_f32 {
             (
                 -hit.normal,
@@ -150,12 +154,12 @@ impl Dielectric {
             } else {
                 refracted
             };
-            Scatter::new(
+            ScatteredRay::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
                 Ray::new(hit.p, out_dir)
             )
         } else {
-            Scatter::new(
+            ScatteredRay::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
                 Ray::new(hit.p, reflect(ray.direction, hit.normal))
             )
@@ -173,7 +177,7 @@ pub enum Material {
 }
 
 impl Material {
-    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
+    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         match *self {
             Material::Metal(metal) => metal.scatter(ray_in, hit, rng),
             Material::Lambertian(lambertian) => lambertian.scatter(ray_in, hit, rng),
