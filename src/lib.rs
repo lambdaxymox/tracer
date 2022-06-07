@@ -1,3 +1,4 @@
+mod camera;
 mod scene;
 mod material;
 mod ray;

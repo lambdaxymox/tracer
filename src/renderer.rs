@@ -36,9 +36,10 @@ fn color<H: Intersect>(ray: Ray, world: &H, rng: &mut ThreadRng, depth: u32) -> 
     }
 }
 
-pub fn render(width: usize, height: usize, samples_per_pixel: u32, camera: Camera, scene: &mut Scene) {
+pub fn render(samples_per_pixel: u32, scene: &mut Scene) {
+    let height = scene.canvas.height;
+    let width = scene.canvas.width;
     let mut rng = rand::prelude::thread_rng();
-    // let mut data = vec![];
     for row in 0..height {
         println!("Rendering line {} of {}", row+1, height);
         for column in 0..width {
@@ -48,7 +49,7 @@ pub fn render(width: usize, height: usize, samples_per_pixel: u32, camera: Camer
                 let u = (column as f32 + du) / (width as f32);
                 let dv = rng.gen::<f32>();
                 let v = (((height - row) as f32) + dv) / (height as f32);
-                let ray = camera.get_ray(&mut rng, u, v);
+                let ray = scene.camera.get_ray(&mut rng, u, v);
                 col += color(ray, scene, &mut rng, 0);
             }
             col /= samples_per_pixel as f32;
@@ -57,11 +58,8 @@ pub fn render(width: usize, height: usize, samples_per_pixel: u32, camera: Camer
             let ig = (255.99 * col[1]) as u8;
             let ib = (255.99 * col[2]) as u8;
             
-            // data.push(Rgba::new(ir, ig, ib));
             scene.canvas[row][column] = Rgba::new(ir, ig, ib);
         }
     }
-
-    // scene.canvas.data = data
 }
 

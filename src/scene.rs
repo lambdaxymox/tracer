@@ -1,5 +1,6 @@
 use crate::ray::Ray;
 use crate::material::{Intersect, IntersectionRecord};
+use crate::camera::*;
 use std::ops;
 
 
@@ -70,13 +71,15 @@ impl ops::IndexMut<usize> for Canvas {
 pub struct Scene {
     pub objects: Vec<Box<dyn Intersect>>,
     pub canvas: Canvas,
+    pub camera: Camera,
 }
 
 impl Scene {
-    pub fn new(width: usize, height: usize) -> Scene {
+    pub fn new(width: usize, height: usize, camera: Camera) -> Scene {
         Scene {
             objects: Vec::new(),
             canvas: Canvas::new(width, height),
+            camera: camera,
         }
     }
 

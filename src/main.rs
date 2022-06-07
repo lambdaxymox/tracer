@@ -33,7 +33,7 @@ use renderer::*;
 use material::*;
 
 
-const SAMPLES_PER_PIXEL: u32 = 32;
+const SAMPLES_PER_PIXEL: u32 = 4;
 
 
 fn camera(width: usize, height: usize) -> Camera {
@@ -49,7 +49,8 @@ fn camera(width: usize, height: usize) -> Camera {
 }
 
 fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
-    let mut scene = Scene::new(width, height);
+    let camera = camera(width, height);
+    let mut scene = Scene::new(width, height, camera);
     scene.push(Box::new(
         Sphere::new(
             Vector3::new(0_f32, -1000_f32, 0_f32), 
@@ -134,17 +135,16 @@ fn write_image_to_file(canvas: &Canvas, file: &mut File) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let width = 240;
-    let height = 135;
+    let width = 480;
+    let height = 270;
     let samples_per_pixel = SAMPLES_PER_PIXEL;
-    let camera = camera(width, height);
     let mut rng = rand::prelude::thread_rng();
 
     println!("Generating scene.");
     let mut scene = generate_scene(&mut rng, width, height);
 
     println!("Generating image.");
-    render(width, height, samples_per_pixel, camera, &mut scene);
+    render(samples_per_pixel, &mut scene);
     
     println!("Writing image to file.");
     let mut file = File::create("output.ppm").unwrap();
