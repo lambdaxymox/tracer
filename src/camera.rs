@@ -26,8 +26,10 @@ impl Camera {
         look_at: Vector3<f32>,
         v_up: Vector3<f32>,
         v_fov: f32,
-        aspect: f32, aperture: f32, focus_dist: f32) -> Camera {
-
+        aspect: f32, 
+        aperture: f32, 
+        focus_dist: f32) -> Camera
+    {
         let lens_radius = 0.5 * aperture;
         let theta = v_fov * std::f32::consts::PI / 180.0;
         let half_height = (0.5 * theta).tan();
@@ -59,6 +61,7 @@ impl Camera {
         let rd = sample::random_in_unit_disk(rng) * self.lens_radius;
         let offset = self.u * rd.x + self.v * rd.y;
         let lens_position = self.eye + offset;
+        
         Ray::new(
             lens_position,
             self.lower_left_corner + self.horizontal * u + self.vertical * v - lens_position,

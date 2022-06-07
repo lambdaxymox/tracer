@@ -2,6 +2,7 @@ use crate::ray::{
     Ray,
 };
 use crate::sample;
+use crate::sphere::*;
 use cglinalg::{
     Magnitude, 
     Vector3,
@@ -34,9 +35,21 @@ pub struct IntersectionRecord<'a> {
     pub t: f32,
     pub p: Vector3<f32>,
     pub normal: Vector3<f32>,
-    pub material: &'a Material,
+    // pub material: &'a Material,
+    pub object: &'a SceneObject,
 }
 
+impl<'a> IntersectionRecord<'a> {
+    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, object: &'a SceneObject) -> IntersectionRecord<'a> {
+        IntersectionRecord {
+            t: t,
+            p: p,
+            normal: normal,
+            object: object,
+        }
+    }
+}
+/*
 impl<'a> IntersectionRecord<'a> {
     pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, material: &'a Material) -> IntersectionRecord<'a> {
         IntersectionRecord {
@@ -47,6 +60,8 @@ impl<'a> IntersectionRecord<'a> {
         }
     }
 }
+*/
+
 
 pub trait Intersect {
     fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord>;

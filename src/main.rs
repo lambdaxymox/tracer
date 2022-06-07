@@ -5,6 +5,7 @@ extern crate rand;
 mod ray;
 mod scene;
 mod sphere;
+mod canvas;
 mod camera;
 mod material;
 mod renderer;
@@ -25,15 +26,16 @@ use cglinalg::{
 use camera::{
     Camera
 };
+use canvas::*;
 use sphere::{
-    Sphere
+    Sphere, SceneObject
 };
 use scene::*;
 use renderer::*;
 use material::*;
 
 
-const SAMPLES_PER_PIXEL: u32 = 4;
+const SAMPLES_PER_PIXEL: u32 = 32;
 
 
 fn camera(width: usize, height: usize) -> Camera {
@@ -51,13 +53,13 @@ fn camera(width: usize, height: usize) -> Camera {
 fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
     let camera = camera(width, height);
     let mut scene = Scene::new(width, height, camera);
-    scene.push(Box::new(
+    scene.push(Box::new(SceneObject::new(
         Sphere::new(
             Vector3::new(0_f32, -1000_f32, 0_f32), 
-            1000_f32, 
-            Material::lambertian(Vector3::new(0.5, 0.5, 0.5))
-        )
-    ));
+            1000_f32
+        ), 
+        Material::lambertian(Vector3::new(0.5, 0.5, 0.5))
+    )));
     
     for a in -5..5 {
         for b in -5..5 {
@@ -75,8 +77,9 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                         rng.gen::<f32>() * rng.gen::<f32>(), 
                         rng.gen::<f32>() * rng.gen::<f32>()
                     );
-                    scene.push(Box::new(
-                        Sphere::new(center, 0.2, Material::lambertian(albedo))
+                    scene.push(Box::new(SceneObject::new(
+                        Sphere::new(center, 0.2), 
+                        Material::lambertian(albedo))
                     ));
                 } else if choose_mat < 0.95 {
                     // Metal.
@@ -86,40 +89,42 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                         0.5 * (1_f32 + rng.gen::<f32>())
                     );
                     let fuzz = 0.5 * rng.gen::<f32>();
-                    scene.push(Box::new(
-                        Sphere::new(center, 0.2, Material::metal(albedo, fuzz))
+                    scene.push(Box::new(SceneObject::new(
+                        Sphere::new(center, 0.2), 
+                        Material::metal(albedo, fuzz))
                     ));
                 } else {
                     // Glass.
-                    scene.push(Box::new(
-                        Sphere::new(center, 0.2, Material::dielectric(1.5))
+                    scene.push(Box::new(SceneObject::new(
+                        Sphere::new(center, 0.2), 
+                        Material::dielectric(1.5))
                     ));
                 }
             }
         }
     }
 
-    scene.push(Box::new(
+    scene.push(Box::new(SceneObject::new(
         Sphere::new(
             Vector3::new(0_f32, 1_f32, 0_f32), 
-            1_f32, 
-            Material::dielectric(1.5)
-        )
-    ));
-    scene.push(Box::new(
+            1_f32
+        ),
+        Material::dielectric(1.5)
+    )));
+    scene.push(Box::new(SceneObject::new(
         Sphere::new(
             Vector3::new(-4_f32, 1_f32, 0_f32), 
-            1_f32, 
-            Material::lambertian(Vector3::new(0.4, 0.2, 0.1))
-        )
-    ));
-    scene.push(Box::new(
+            1_f32
+        ), 
+        Material::lambertian(Vector3::new(0.4, 0.2, 0.1))
+    )));
+    scene.push(Box::new(SceneObject::new(
         Sphere::new(
             Vector3::new(4_f32, 1_f32, 0_f32), 
-            1_f32, 
-            Material::metal(Vector3::new(0.7, 0.6, 0.5), 0.1)
-        )
-    ));
+            1_f32
+        ), 
+        Material::metal(Vector3::new(0.7, 0.6, 0.5), 0.1)
+    )));
 
     scene
 }
@@ -139,12 +144,13 @@ fn main() -> io::Result<()> {
     let height = 270;
     let samples_per_pixel = SAMPLES_PER_PIXEL;
     let mut rng = rand::prelude::thread_rng();
+    let renderer = Renderer::new(samples_per_pixel);
 
     println!("Generating scene.");
     let mut scene = generate_scene(&mut rng, width, height);
 
     println!("Generating image.");
-    render(samples_per_pixel, &mut scene);
+    renderer.render(&mut scene);
     
     println!("Writing image to file.");
     let mut file = File::create("output.ppm").unwrap();

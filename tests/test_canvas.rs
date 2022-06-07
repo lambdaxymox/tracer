@@ -59,4 +59,13 @@ mod canvas_tests {
             }
         }
     }
+
+    #[test]
+    fn test_one_pixel_canvas() {
+        let mut result = Canvas::new(1, 1);
+        result.clear();
+
+        assert_eq!(result[0][0], Rgba::zero());
+    }
 }
+
