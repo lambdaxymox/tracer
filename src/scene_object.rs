@@ -23,10 +23,7 @@ pub struct IntersectionResult<'a> {
 impl<'a> IntersectionResult<'a> {
     pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, object: &'a SceneObject) -> IntersectionResult<'a> {
         IntersectionResult {
-            t: t,
-            p: p,
-            normal: normal,
-            object: object,
+            t, p, normal, object,
         }
     }
 }
@@ -40,8 +37,7 @@ pub struct ScatteredRay {
 impl ScatteredRay {
     pub fn new(attenuation: Vector3<f32>, ray: Ray) -> ScatteredRay {
         ScatteredRay { 
-            attenuation: attenuation, 
-            ray: ray,
+            attenuation, ray,
         }
     }
 }
@@ -61,7 +57,7 @@ impl SceneObject {
             res.t,
             res.p,
             res.normal,
-            &self
+            self
         ))
     }
 
@@ -80,9 +76,7 @@ pub struct GeometryIntersectionResult {
 impl<'a> GeometryIntersectionResult {
     pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>) -> GeometryIntersectionResult {
         GeometryIntersectionResult {
-            t: t,
-            p: p,
-            normal: normal,
+            t, p, normal,
         }
     }
 }
@@ -95,8 +89,7 @@ pub struct Sphere {
 impl Sphere {
     pub fn new(center: Vector3<f32>, radius: f32) -> Sphere {
         Sphere {
-            center: center,
-            radius: radius,
+            center, radius,
         }
     }
 }

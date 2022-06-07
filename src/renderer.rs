@@ -1,8 +1,6 @@
 use crate::ray::Ray;
 use crate::canvas::*;
 use crate::scene::*;
-use crate::scene_object::*;
-use crate::material::*;
 use cglinalg::{ 
     Magnitude,
     Vector3,
@@ -28,15 +26,15 @@ impl Renderer {
                 let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
                 let color = self.path_trace(scattered_ray.ray, scene, rng, depth + 1);
     
-                return scattered_ray.attenuation.component_mul(&color);
+                scattered_ray.attenuation.component_mul(&color)
             } else {
-                return Vector3::new(0_f32, 0_f32, 0_f32);
+                Vector3::new(0_f32, 0_f32, 0_f32)
             }
         } else {
             let unit_direction = ray.direction.normalize();
             let t = (unit_direction.y + 1_f32) * 0.5;
     
-            return Vector3::new(1_f32, 1_f32, 1_f32) * (1_f32 - t) + Vector3::new(0.5, 0.7, 1.0) * t
+            Vector3::new(1_f32, 1_f32, 1_f32) * (1_f32 - t) + Vector3::new(0.5, 0.7, 1.0) * t
         }
     }
 
@@ -54,9 +52,8 @@ impl Renderer {
 
             color += self.path_trace(ray, scene, rng, 0);
         }
-        let averaged_color = color / self.samples_per_pixel as f32;
-
-        averaged_color
+        
+        color / self.samples_per_pixel as f32
     }
 
     pub fn render(&self, scene: &mut Scene) {

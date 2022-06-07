@@ -1,12 +1,11 @@
 use crate::ray::Ray;
-use crate::material::*;
 use crate::camera::*;
 use crate::canvas::*;
 use crate::scene_object::*;
 
 
 pub struct Scene {
-    pub objects: Vec<Box<SceneObject>>,
+    pub objects: Vec<SceneObject>,
     pub canvas: Canvas,
     pub camera: Camera,
 }
@@ -16,7 +15,7 @@ impl Scene {
         Scene {
             objects: Vec::new(),
             canvas: Canvas::new(width, height),
-            camera: camera,
+            camera,
         }
     }
 
@@ -25,7 +24,7 @@ impl Scene {
     }
 
     pub fn push(&mut self, object: SceneObject) {
-        self.objects.push(Box::new(object));
+        self.objects.push(object);
     }
 }
 

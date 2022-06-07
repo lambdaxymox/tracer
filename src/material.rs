@@ -22,7 +22,7 @@ pub struct SimpleLambertianMaterial {
 impl SimpleLambertianMaterial {
     pub fn new(albedo: Vector3<f32>) -> SimpleLambertianMaterial {
         SimpleLambertianMaterial {
-            albedo: albedo,
+            albedo,
         }
     }
 }
@@ -46,8 +46,7 @@ pub struct SimpleMetalMaterial {
 impl SimpleMetalMaterial {
     pub fn new(albedo: Vector3<f32>, fuzz: f32) -> SimpleMetalMaterial {
         SimpleMetalMaterial {
-            albedo: albedo,
-            fuzz: fuzz,
+            albedo, fuzz,
         }
     }
 }
@@ -73,7 +72,7 @@ pub struct SimpleDielectricMaterial {
 impl SimpleDielectricMaterial {
     pub fn new(refraction_index: f32) -> SimpleDielectricMaterial {
         SimpleDielectricMaterial {
-            refraction_index: refraction_index,
+            refraction_index,
         }
     }
 }

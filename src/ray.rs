@@ -12,8 +12,7 @@ pub struct Ray {
 impl Ray {
     pub fn new(origin: Vector3<f32>, direction: Vector3<f32>) -> Ray {
         Ray {
-            origin: origin,
-            direction: direction,
+            origin, direction,
         }
     }
 
