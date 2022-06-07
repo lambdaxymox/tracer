@@ -7,9 +7,6 @@ use cglinalg::{
 };
 use rand::prelude::*;
 
-/*
-const MAX_DEPTH: u32 = 16;
-*/ 
 
 #[derive(Copy, Clone)]
 pub struct RendererSettings {
