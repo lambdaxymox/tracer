@@ -32,30 +32,6 @@ impl ScatteredRay {
 }
 
 #[derive(Copy, Clone)]
-pub struct IntersectionRecord<'a> {
-    pub t: f32,
-    pub p: Vector3<f32>,
-    pub normal: Vector3<f32>,
-    pub object: &'a SceneObject,
-}
-
-impl<'a> IntersectionRecord<'a> {
-    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, object: &'a SceneObject) -> IntersectionRecord<'a> {
-        IntersectionRecord {
-            t: t,
-            p: p,
-            normal: normal,
-            object: object,
-        }
-    }
-}
-
-
-pub trait Intersect {
-    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord>;
-}
-
-#[derive(Copy, Clone)]
 pub struct Lambertian {
     albedo: Vector3<f32>,
 }

@@ -1,6 +1,7 @@
 use crate::ray::Ray;
 use crate::canvas::*;
 use crate::scene::*;
+use crate::sphere::*;
 use crate::material::*;
 use cglinalg::{ 
     Magnitude,
