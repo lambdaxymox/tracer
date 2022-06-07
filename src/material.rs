@@ -138,36 +138,3 @@ impl ObjectMaterial for SimpleDielectricMaterial {
     }
 }
 
-
-/*
-#[derive(Copy, Clone)]
-pub enum Material {
-    Metal(SimpleMetalMaterial),
-    Lambertian(SimpleLambertianMaterial),
-    Dielectric(SimpleDielectricMaterial),
-}
-
-impl Material {
-    pub fn lambertian(albedo: Vector3<f32>) -> Material {
-        Material::Lambertian(SimpleLambertianMaterial::new(albedo))
-    }
-    
-    pub fn metal(albedo: Vector3<f32>, fuzz: f32) -> Material {
-        Material::Metal(SimpleMetalMaterial::new(albedo, fuzz))
-    }
-
-    pub fn dielectric(refraction_index: f32) -> Material {
-        Material::Dielectric(SimpleDielectricMaterial::new(refraction_index))
-    }
-}
-
-impl ObjectMaterial for Material {
-    fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
-        match *self {
-            Material::Metal(metal) => metal.sample_bsdf(ray_in, hit, rng),
-            Material::Lambertian(lambertian) => lambertian.sample_bsdf(ray_in, hit, rng),
-            Material::Dielectric(dielectric) => dielectric.sample_bsdf(ray_in, hit, rng),
-        }
-    }
-}
-*/
