@@ -28,17 +28,15 @@ use camera::{
 use sphere::{
     Sphere
 };
-use scene::{
-    Scene
-};
+use scene::*;
 use renderer::*;
 use material::*;
 
 
-const SAMPLES_PER_PIXEL: u32 = 128;
+const SAMPLES_PER_PIXEL: u32 = 32;
 
 
-fn camera(width: u32, height: u32) -> Camera {
+fn camera(width: usize, height: usize) -> Camera {
     let look_from = Vector3::new(12_f32, 2_f32, 4_f32);
     let look_at = Vector3::new(0_f32, 0_f32, 0_f32);
     let distance_to_focus = (look_from - look_at).magnitude();
@@ -50,8 +48,8 @@ fn camera(width: u32, height: u32) -> Camera {
     Camera::new(look_from, look_at, v_up, v_fov, aspect_ratio, aperture, distance_to_focus)
 }
 
-fn generate_scene(rng: &mut ThreadRng) -> Scene {
-    let mut scene = Scene::new();
+fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
+    let mut scene = Scene::new(width, height);
     scene.push(Box::new(
         Sphere::new(
             Vector3::new(0_f32, -1000_f32, 0_f32), 
@@ -125,9 +123,10 @@ fn generate_scene(rng: &mut ThreadRng) -> Scene {
     scene
 }
 
-fn write_image_to_file(image: &Image, file: &mut File) -> io::Result<()> {
-    write!(file, "P3\n{} {}\n255\n", image.width, image.height).unwrap();
-    for pixel in image.data.iter() {
+
+fn write_image_to_file(canvas: &Canvas, file: &mut File) -> io::Result<()> {
+    write!(file, "P3\n{} {}\n255\n", canvas.width, canvas.height).unwrap();
+    for pixel in canvas.data.iter() {
         writeln!(file, "{} {} {}", pixel.r, pixel.g, pixel.b).unwrap();
     }
 
@@ -135,20 +134,20 @@ fn write_image_to_file(image: &Image, file: &mut File) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let width = 480;
-    let height = 270;
+    let width = 240;
+    let height = 135;
     let samples_per_pixel = SAMPLES_PER_PIXEL;
     let camera = camera(width, height);
     let mut rng = rand::prelude::thread_rng();
 
     println!("Generating scene.");
-    let world = generate_scene(&mut rng);
+    let mut scene = generate_scene(&mut rng, width, height);
 
     println!("Generating image.");
-    let image = render(width, height, samples_per_pixel, camera, world);
+    render(width, height, samples_per_pixel, camera, &mut scene);
     
     println!("Writing image to file.");
     let mut file = File::create("output.ppm").unwrap();
-    write_image_to_file(&image, &mut file)
+    write_image_to_file(&scene.canvas, &mut file)
 }
 

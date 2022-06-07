@@ -1,7 +1,7 @@
 use crate::ray::Ray;
 use crate::material::{
     Material, 
-    Hitable, 
+    Intersect, 
     IntersectionRecord
 };
 use cglinalg::{
@@ -25,7 +25,7 @@ impl Sphere {
     }
 }
 
-impl Hitable for Sphere {
+impl Intersect for Sphere {
     fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord> {
         let oc = ray.origin - self.center;
         let a = ray.direction.dot(&ray.direction);

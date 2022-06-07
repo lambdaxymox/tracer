@@ -48,7 +48,7 @@ impl<'a> IntersectionRecord<'a> {
     }
 }
 
-pub trait Hitable {
+pub trait Intersect {
     fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord>;
 }
 

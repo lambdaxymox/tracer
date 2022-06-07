@@ -1,6 +1,6 @@
 use crate::camera::Camera;
 use crate::ray::Ray;
-use crate::scene::Scene;
+use crate::scene::*;
 use crate::material::*;
 use cglinalg::{ 
     Magnitude,
@@ -17,7 +17,7 @@ fn component_multiply(v1: Vector3<f32>, v2: Vector3<f32>) -> Vector3<f32> {
     Vector3::new(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
 }
 
-fn color<H: Hitable>(ray: Ray, world: &H, rng: &mut ThreadRng, depth: u32) -> Vector3<f32> {
+fn color<H: Intersect>(ray: Ray, world: &H, rng: &mut ThreadRng, depth: u32) -> Vector3<f32> {
     match world.intersect(&ray, 0.001, std::f32::MAX) {
         Some(hit) => {    
             if depth < MAX_DEPTH {
@@ -36,33 +36,9 @@ fn color<H: Hitable>(ray: Ray, world: &H, rng: &mut ThreadRng, depth: u32) -> Ve
     }
 }
 
-pub struct Rgba {
-    pub r: u8,
-    pub g: u8,
-    pub b: u8,
-}
-
-impl Rgba {
-    #[inline]
-    fn new(r: u8, g: u8, b: u8) -> Rgba {
-        Rgba { 
-            r: r,
-            b: b,
-            g: g,
-        }
-    }
-}
-
-pub struct Image {
-    pub width: u32,
-    pub height: u32,
-    pub data: Vec<Rgba>,
-}
-
-
-pub fn render(width: u32, height: u32, samples_per_pixel: u32, camera: Camera, world: Scene) -> Image {
+pub fn render(width: usize, height: usize, samples_per_pixel: u32, camera: Camera, scene: &mut Scene) {
     let mut rng = rand::prelude::thread_rng();
-    let mut data = vec![];
+    // let mut data = vec![];
     for row in 0..height {
         println!("Rendering line {} of {}", row+1, height);
         for column in 0..width {
@@ -73,21 +49,19 @@ pub fn render(width: u32, height: u32, samples_per_pixel: u32, camera: Camera, w
                 let dv = rng.gen::<f32>();
                 let v = (((height - row) as f32) + dv) / (height as f32);
                 let ray = camera.get_ray(&mut rng, u, v);
-                col += color(ray, &world, &mut rng, 0);
+                col += color(ray, scene, &mut rng, 0);
             }
             col /= samples_per_pixel as f32;
             col = Vector3::new(f32::sqrt(col[0]), f32::sqrt(col[1]), f32::sqrt(col[2]));
             let ir = (255.99 * col[0]) as u8;
             let ig = (255.99 * col[1]) as u8;
             let ib = (255.99 * col[2]) as u8;
-
-            data.push(Rgba::new(ir, ig, ib));
+            
+            // data.push(Rgba::new(ir, ig, ib));
+            scene.canvas[row][column] = Rgba::new(ir, ig, ib);
         }
     }
 
-    Image {
-        width: width,
-        height: height,
-        data: data,
-    }
+    // scene.canvas.data = data
 }
+
