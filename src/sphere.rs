@@ -12,13 +12,13 @@ use rand::prelude::*;
 
 
 pub struct SceneObject {
-    sphere: Sphere,
+    geometry: Sphere,
     material: Material,
 }
 
 impl SceneObject {
-    pub fn new(sphere: Sphere, material: Material) -> Self {
-        Self { sphere, material }
+    pub fn new(geometry: Sphere, material: Material) -> Self {
+        Self { geometry, material }
     }
 
     pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> Scatter {
@@ -28,10 +28,10 @@ impl SceneObject {
 
 impl Intersect for SceneObject {
     fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord> {
-        let oc = ray.origin - self.sphere.center;
+        let oc = ray.origin - self.geometry.center;
         let a = ray.direction.dot(&ray.direction);
         let b = oc.dot(&ray.direction);
-        let c = oc.dot(&oc) - self.sphere.radius * self.sphere.radius;
+        let c = oc.dot(&oc) - self.geometry.radius * self.geometry.radius;
         let discriminant = b * b - a * c; // 4 * a * c?
 
         if discriminant > 0_f32 {
@@ -41,7 +41,7 @@ impl Intersect for SceneObject {
                 return Some(IntersectionRecord::new(
                     temp,
                     hit_point,
-                    (hit_point - self.sphere.center) / self.sphere.radius,
+                    (hit_point - self.geometry.center) / self.geometry.radius,
                     &self
                 ));
             }
@@ -51,7 +51,7 @@ impl Intersect for SceneObject {
                 return Some(IntersectionRecord::new(
                     temp,
                     hit_point,
-                    (hit_point - self.sphere.center) / self.sphere.radius,
+                    (hit_point - self.geometry.center) / self.geometry.radius,
                     &self
                 ));
             }
