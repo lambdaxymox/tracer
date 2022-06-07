@@ -12,13 +12,6 @@ use rand::prelude::*;
 
 const MAX_DEPTH: u32 = 16;
 
-/*
-// TODO: Move to cglinalg crate.
-#[inline]
-fn component_multiply(v1: Vector3<f32>, v2: Vector3<f32>) -> Vector3<f32> {
-    Vector3::new(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
-}
-*/
 
 pub struct Renderer {
     samples_per_pixel: u32,
