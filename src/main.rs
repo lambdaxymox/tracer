@@ -51,13 +51,13 @@ fn camera(width: usize, height: usize) -> Camera {
 fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
     let camera = camera(width, height);
     let mut scene = Scene::new(width, height, camera);
-    scene.push(Box::new(SceneObject::new(
+    scene.push(SceneObject::new(
         Sphere::new(
             Vector3::new(0_f32, -1000_f32, 0_f32), 
             1000_f32
         ), 
         Material::lambertian(Vector3::new(0.5, 0.5, 0.5))
-    )));
+    ));
     
     for a in -5..5 {
         for b in -5..5 {
@@ -75,9 +75,9 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                         rng.gen::<f32>() * rng.gen::<f32>(), 
                         rng.gen::<f32>() * rng.gen::<f32>()
                     );
-                    scene.push(Box::new(SceneObject::new(
+                    scene.push(SceneObject::new(
                         Sphere::new(center, 0.2), 
-                        Material::lambertian(albedo))
+                        Material::lambertian(albedo)
                     ));
                 } else if choose_mat < 0.95 {
                     // Metal.
@@ -87,42 +87,42 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                         0.5 * (1_f32 + rng.gen::<f32>())
                     );
                     let fuzz = 0.5 * rng.gen::<f32>();
-                    scene.push(Box::new(SceneObject::new(
+                    scene.push(SceneObject::new(
                         Sphere::new(center, 0.2), 
-                        Material::metal(albedo, fuzz))
+                        Material::metal(albedo, fuzz)
                     ));
                 } else {
                     // Glass.
-                    scene.push(Box::new(SceneObject::new(
+                    scene.push(SceneObject::new(
                         Sphere::new(center, 0.2), 
-                        Material::dielectric(1.5))
+                        Material::dielectric(1.5)
                     ));
                 }
             }
         }
     }
 
-    scene.push(Box::new(SceneObject::new(
+    scene.push(SceneObject::new(
         Sphere::new(
             Vector3::new(0_f32, 1_f32, 0_f32), 
             1_f32
         ),
         Material::dielectric(1.5)
-    )));
-    scene.push(Box::new(SceneObject::new(
+    ));
+    scene.push(SceneObject::new(
         Sphere::new(
             Vector3::new(-4_f32, 1_f32, 0_f32), 
             1_f32
         ), 
         Material::lambertian(Vector3::new(0.4, 0.2, 0.1))
-    )));
-    scene.push(Box::new(SceneObject::new(
+    ));
+    scene.push(SceneObject::new(
         Sphere::new(
             Vector3::new(4_f32, 1_f32, 0_f32), 
             1_f32
         ), 
         Material::metal(Vector3::new(0.7, 0.6, 0.5), 0.1)
-    )));
+    ));
 
     scene
 }

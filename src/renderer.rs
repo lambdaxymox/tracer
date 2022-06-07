@@ -19,24 +19,6 @@ fn component_multiply(v1: Vector3<f32>, v2: Vector3<f32>) -> Vector3<f32> {
     Vector3::new(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
 }
 
-fn path_trace<H: Intersect>(ray: Ray, scene: &H, rng: &mut ThreadRng, depth: u32) -> Vector3<f32> {
-    if let Some(hit) = scene.intersect(&ray, 0.001, std::f32::MAX) {
-        if depth < MAX_DEPTH {
-            let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
-            let color = path_trace(scattered_ray.ray, scene, rng, depth + 1);
-
-            return component_multiply(scattered_ray.attenuation, color);
-        } else {
-            return Vector3::new(0_f32, 0_f32, 0_f32);
-        }
-    } else {
-        let unit_direction = ray.direction.normalize();
-        let t = (unit_direction.y + 1_f32) * 0.5;
-
-        return Vector3::new(1_f32, 1_f32, 1_f32) * (1_f32 - t) + Vector3::new(0.5, 0.7, 1.0) * t
-    }
-}
-
 pub struct Renderer {
     samples_per_pixel: u32,
 }
@@ -44,6 +26,24 @@ pub struct Renderer {
 impl Renderer {
     pub fn new(samples_per_pixel: u32) -> Self {
         Self { samples_per_pixel }
+    }
+
+    fn path_trace(&self, ray: Ray, scene: &Scene, rng: &mut ThreadRng, depth: u32) -> Vector3<f32> {
+        if let Some(hit) = scene.intersect(&ray, 0.001, std::f32::MAX) {
+            if depth < MAX_DEPTH {
+                let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
+                let color = self.path_trace(scattered_ray.ray, scene, rng, depth + 1);
+    
+                return component_multiply(scattered_ray.attenuation, color);
+            } else {
+                return Vector3::new(0_f32, 0_f32, 0_f32);
+            }
+        } else {
+            let unit_direction = ray.direction.normalize();
+            let t = (unit_direction.y + 1_f32) * 0.5;
+    
+            return Vector3::new(1_f32, 1_f32, 1_f32) * (1_f32 - t) + Vector3::new(0.5, 0.7, 1.0) * t
+        }
     }
 
     #[inline]
@@ -58,7 +58,7 @@ impl Renderer {
             let v = (((height - row) as f32) + dv) / (height as f32);
             let ray = scene.camera.get_ray(rng, u, v);
 
-            color += path_trace(ray, scene, rng, 0);
+            color += self.path_trace(ray, scene, rng, 0);
         }
         let averaged_color = color / self.samples_per_pixel as f32;
 

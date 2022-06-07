@@ -6,7 +6,7 @@ use crate::scene_object::*;
 
 
 pub struct Scene {
-    pub objects: Vec<Box<dyn Intersect>>,
+    pub objects: Vec<Box<SceneObject>>,
     pub canvas: Canvas,
     pub camera: Camera,
 }
@@ -24,13 +24,13 @@ impl Scene {
         self.objects.len()
     }
 
-    pub fn push(&mut self, item: Box<dyn Intersect>) {
-        self.objects.push(item);
+    pub fn push(&mut self, object: SceneObject) {
+        self.objects.push(Box::new(object));
     }
 }
 
-impl Intersect for Scene {
-    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionRecord> {
+impl Scene {
+    pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
         let mut closest_record = None;
         let mut closest_so_far = t_max;
         for object in self.objects.iter() {
