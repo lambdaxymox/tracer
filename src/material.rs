@@ -9,13 +9,6 @@ use cglinalg::{
 };
 use rand::prelude::*;
 
-/*
-// TODO: Move this to cglinalg crate.
-#[inline]
-fn reflect(v: Vector3<f32>, n: Vector3<f32>) -> Vector3<f32> {
-    v - n * (2_f32 * v.dot(&n))
-}
-*/
 
 pub trait ObjectMaterial {
     fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay;
