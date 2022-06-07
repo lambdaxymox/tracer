@@ -28,7 +28,7 @@ impl Scene {
         self.objects.push(object);
     }
 
-    pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
+    pub fn ray_cast(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
         let mut closest_record = None;
         let mut closest_so_far = t_max;
         for object in self.objects.iter() {
