@@ -1,6 +1,6 @@
 use crate::ray::Ray;
 use crate::material::{
-    Material, 
+    ObjectMaterial, 
 };
 use cglinalg::{
     Vector3,
@@ -47,12 +47,12 @@ impl ScatteredRay {
 }
 
 pub struct SceneObject {
-    geometry: Sphere,
-    material: Material,
+    geometry: Box<dyn Intersect>,
+    material: Box<dyn ObjectMaterial>,
 }
 
 impl SceneObject {
-    pub fn new(geometry: Sphere, material: Material) -> Self {
+    pub fn new(geometry: Box<dyn Intersect>, material: Box<dyn ObjectMaterial>) -> Self {
         Self { geometry, material }
     }
 

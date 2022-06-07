@@ -16,6 +16,10 @@ fn reflect(v: Vector3<f32>, n: Vector3<f32>) -> Vector3<f32> {
     v - n * (2_f32 * v.dot(&n))
 }
 
+pub trait ObjectMaterial {
+    fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay;
+}
+
 #[derive(Copy, Clone)]
 pub struct Lambertian {
     albedo: Vector3<f32>,
@@ -138,14 +142,6 @@ pub enum Material {
 }
 
 impl Material {
-    pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
-        match *self {
-            Material::Metal(metal) => metal.sample_bsdf(ray_in, hit, rng),
-            Material::Lambertian(lambertian) => lambertian.sample_bsdf(ray_in, hit, rng),
-            Material::Dielectric(dielectric) => dielectric.sample_bsdf(ray_in, *hit, rng),
-        }
-    }
-
     pub fn lambertian(albedo: Vector3<f32>) -> Material {
         Material::Lambertian(Lambertian::new(albedo))
     }
@@ -156,6 +152,16 @@ impl Material {
 
     pub fn dielectric(refraction_index: f32) -> Material {
         Material::Dielectric(Dielectric::new(refraction_index))
+    }
+}
+
+impl ObjectMaterial for Material {
+    fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+        match *self {
+            Material::Metal(metal) => metal.sample_bsdf(ray_in, hit, rng),
+            Material::Lambertian(lambertian) => lambertian.sample_bsdf(ray_in, hit, rng),
+            Material::Dielectric(dielectric) => dielectric.sample_bsdf(ray_in, *hit, rng),
+        }
     }
 }
 
