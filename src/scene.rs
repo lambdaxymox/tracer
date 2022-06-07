@@ -34,14 +34,11 @@ impl Intersect for Scene {
         let mut closest_record = None;
         let mut closest_so_far = t_max;
         for object in self.objects.iter() {
-            match object.intersect(ray, t_min, closest_so_far) {
-                Some(temp_record) => {
-                    if temp_record.t < closest_so_far {
-                        closest_so_far = temp_record.t;
-                        closest_record = Some(temp_record);
-                    }
+            if let Some(temp_record) = object.intersect(ray, t_min, closest_so_far) {
+                if temp_record.t < closest_so_far {
+                    closest_so_far = temp_record.t;
+                    closest_record = Some(temp_record);
                 }
-                None => {}
             }
         }
 
