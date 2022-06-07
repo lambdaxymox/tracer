@@ -1,7 +1,6 @@
 use crate::ray::Ray;
 use crate::material::{
     Material, 
-    ScatteredRay,
 };
 use cglinalg::{
     Vector3,
@@ -28,6 +27,21 @@ impl<'a> IntersectionRecord<'a> {
             p: p,
             normal: normal,
             object: object,
+        }
+    }
+}
+
+#[derive(Copy, Clone)]
+pub struct ScatteredRay {
+    pub attenuation: Vector3<f32>,
+    pub ray: Ray,
+}
+
+impl ScatteredRay {
+    pub fn new(attenuation: Vector3<f32>, ray: Ray) -> ScatteredRay {
+        ScatteredRay { 
+            attenuation: attenuation, 
+            ray: ray,
         }
     }
 }
