@@ -76,24 +76,6 @@ pub struct SimpleDielectricMaterial {
     pub refraction_index: f32,
 }
 
-fn refract(v: Vector3<f32>, n: Vector3<f32>, ni_over_nt: f32) -> Option<Vector3<f32>> {
-    let uv = v.normalize();
-    let dt = uv.dot(&n);
-    let discriminant = 1_f32 - ni_over_nt * ni_over_nt * (1_f32 - dt * dt);
-    if discriminant > 0_f32 {
-        let refracted_direction = (uv - n * dt) * ni_over_nt - n * discriminant.sqrt();
-        Some(refracted_direction)
-    } else {
-        None
-    }
-}
-
-fn schlick(cosine: f32, refraction_index: f32) -> f32 {
-    let mut r0 = (1_f32 - refraction_index) / (1_f32 + refraction_index);
-    r0 = r0 * r0;
-    r0 + (1_f32 - r0) * (1_f32 - cosine).powf(5_f32)
-}
-
 impl SimpleDielectricMaterial {
     pub fn new(refraction_index: f32) -> SimpleDielectricMaterial {
         SimpleDielectricMaterial {
@@ -104,6 +86,25 @@ impl SimpleDielectricMaterial {
 
 impl ObjectMaterial for SimpleDielectricMaterial {
     fn sample_bsdf(&self, ray: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+        fn refract(v: Vector3<f32>, n: Vector3<f32>, ni_over_nt: f32) -> Option<Vector3<f32>> {
+            let uv = v.normalize();
+            let dt = uv.dot(&n);
+            let discriminant = 1_f32 - ni_over_nt * ni_over_nt * (1_f32 - dt * dt);
+            if discriminant > 0_f32 {
+                let refracted_direction = (uv - n * dt) * ni_over_nt - n * discriminant.sqrt();
+                Some(refracted_direction)
+            } else {
+                None
+            }
+        }
+        
+        fn schlick(cosine: f32, refraction_index: f32) -> f32 {
+            let mut r0 = (1_f32 - refraction_index) / (1_f32 + refraction_index);
+            r0 = r0 * r0;
+            r0 + (1_f32 - r0) * (1_f32 - cosine).powf(5_f32)
+        }
+
+        
         let (outward_normal, ni_over_nt, cosine) = if ray.direction.dot(&hit.normal) > 0_f32 {
             (
                 -hit.normal,
