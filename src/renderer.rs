@@ -12,12 +12,13 @@ use rand::prelude::*;
 
 const MAX_DEPTH: u32 = 16;
 
-
+/*
 // TODO: Move to cglinalg crate.
 #[inline]
 fn component_multiply(v1: Vector3<f32>, v2: Vector3<f32>) -> Vector3<f32> {
     Vector3::new(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
 }
+*/
 
 pub struct Renderer {
     samples_per_pixel: u32,
@@ -34,7 +35,7 @@ impl Renderer {
                 let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
                 let color = self.path_trace(scattered_ray.ray, scene, rng, depth + 1);
     
-                return component_multiply(scattered_ray.attenuation, color);
+                return scattered_ray.attenuation.component_mul(&color);
             } else {
                 return Vector3::new(0_f32, 0_f32, 0_f32);
             }
