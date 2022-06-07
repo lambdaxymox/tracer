@@ -67,7 +67,7 @@ impl Lambertian {
         }
     }
 
-    pub fn scatter(&self, _ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
+    pub fn sample_bsdf(&self, _ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         let target = hit.p + hit.normal + sample::random_in_unit_sphere(rng);
         let attenuation = self.albedo;
         let scattering_ray = Ray::new(hit.p, target - hit.p);
@@ -90,7 +90,7 @@ impl Metal {
         }
     }
 
-    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
+    pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         let reflected_direction = reflect(ray_in.direction.normalize(), hit.normal);
         let attenuation = self.albedo;
         let scattering_ray = Ray::new(
@@ -132,7 +132,7 @@ impl Dielectric {
         }
     }
 
-    pub fn scatter(&self, ray: Ray, hit: IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
+    pub fn sample_bsdf(&self, ray: Ray, hit: IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         let (outward_normal, ni_over_nt, cosine) = if ray.direction.dot(&hit.normal) > 0_f32 {
             (
                 -hit.normal,
@@ -177,11 +177,11 @@ pub enum Material {
 }
 
 impl Material {
-    pub fn scatter(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
+    pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
         match *self {
-            Material::Metal(metal) => metal.scatter(ray_in, hit, rng),
-            Material::Lambertian(lambertian) => lambertian.scatter(ray_in, hit, rng),
-            Material::Dielectric(dielectric) => dielectric.scatter(ray_in, *hit, rng),
+            Material::Metal(metal) => metal.sample_bsdf(ray_in, hit, rng),
+            Material::Lambertian(lambertian) => lambertian.sample_bsdf(ray_in, hit, rng),
+            Material::Dielectric(dielectric) => dielectric.sample_bsdf(ray_in, *hit, rng),
         }
     }
 

@@ -22,7 +22,7 @@ impl SceneObject {
     }
 
     pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionRecord, rng: &mut ThreadRng) -> ScatteredRay {
-        self.material.scatter(ray_in, hit, rng)
+        self.material.sample_bsdf(ray_in, hit, rng)
     }
 }
 
