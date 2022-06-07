@@ -21,18 +21,20 @@ pub trait ObjectMaterial {
 }
 
 #[derive(Copy, Clone)]
-pub struct Lambertian {
+pub struct SimpleLambertianMaterial {
     albedo: Vector3<f32>,
 }
 
-impl Lambertian {
-    pub fn new(albedo: Vector3<f32>) -> Lambertian {
-        Lambertian {
+impl SimpleLambertianMaterial {
+    pub fn new(albedo: Vector3<f32>) -> SimpleLambertianMaterial {
+        SimpleLambertianMaterial {
             albedo: albedo,
         }
     }
+}
 
-    pub fn sample_bsdf(&self, _ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+impl ObjectMaterial for SimpleLambertianMaterial {
+    fn sample_bsdf(&self, _ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
         let target = hit.p + hit.normal + sample::random_in_unit_sphere(rng);
         let attenuation = self.albedo;
         let scattering_ray = Ray::new(hit.p, target - hit.p);
@@ -42,20 +44,22 @@ impl Lambertian {
 }
 
 #[derive(Copy, Clone)]
-pub struct Metal {
+pub struct SimpleMetalMaterial {
     albedo: Vector3<f32>,
     fuzz: f32,
 }
 
-impl Metal {
-    pub fn new(albedo: Vector3<f32>, fuzz: f32) -> Metal {
-        Metal {
+impl SimpleMetalMaterial {
+    pub fn new(albedo: Vector3<f32>, fuzz: f32) -> SimpleMetalMaterial {
+        SimpleMetalMaterial {
             albedo: albedo,
             fuzz: fuzz,
         }
     }
+}
 
-    pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+impl ObjectMaterial for SimpleMetalMaterial {
+    fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
         let reflected_direction = reflect(ray_in.direction.normalize(), hit.normal);
         let attenuation = self.albedo;
         let scattering_ray = Ray::new(
@@ -68,7 +72,7 @@ impl Metal {
 }
 
 #[derive(Copy, Clone)]
-pub struct Dielectric {
+pub struct SimpleDielectricMaterial {
     pub refraction_index: f32,
 }
 
@@ -90,14 +94,16 @@ fn schlick(cosine: f32, refraction_index: f32) -> f32 {
     r0 + (1_f32 - r0) * (1_f32 - cosine).powf(5_f32)
 }
 
-impl Dielectric {
-    fn new(refraction_index: f32) -> Dielectric {
-        Dielectric {
+impl SimpleDielectricMaterial {
+    pub fn new(refraction_index: f32) -> SimpleDielectricMaterial {
+        SimpleDielectricMaterial {
             refraction_index: refraction_index,
         }
     }
+}
 
-    pub fn sample_bsdf(&self, ray: Ray, hit: IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+impl ObjectMaterial for SimpleDielectricMaterial {
+    fn sample_bsdf(&self, ray: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
         let (outward_normal, ni_over_nt, cosine) = if ray.direction.dot(&hit.normal) > 0_f32 {
             (
                 -hit.normal,
@@ -133,25 +139,25 @@ impl Dielectric {
 }
 
 
-
+/*
 #[derive(Copy, Clone)]
 pub enum Material {
-    Metal(Metal),
-    Lambertian(Lambertian),
-    Dielectric(Dielectric),
+    Metal(SimpleMetalMaterial),
+    Lambertian(SimpleLambertianMaterial),
+    Dielectric(SimpleDielectricMaterial),
 }
 
 impl Material {
     pub fn lambertian(albedo: Vector3<f32>) -> Material {
-        Material::Lambertian(Lambertian::new(albedo))
+        Material::Lambertian(SimpleLambertianMaterial::new(albedo))
     }
     
     pub fn metal(albedo: Vector3<f32>, fuzz: f32) -> Material {
-        Material::Metal(Metal::new(albedo, fuzz))
+        Material::Metal(SimpleMetalMaterial::new(albedo, fuzz))
     }
 
     pub fn dielectric(refraction_index: f32) -> Material {
-        Material::Dielectric(Dielectric::new(refraction_index))
+        Material::Dielectric(SimpleDielectricMaterial::new(refraction_index))
     }
 }
 
@@ -160,8 +166,8 @@ impl ObjectMaterial for Material {
         match *self {
             Material::Metal(metal) => metal.sample_bsdf(ray_in, hit, rng),
             Material::Lambertian(lambertian) => lambertian.sample_bsdf(ray_in, hit, rng),
-            Material::Dielectric(dielectric) => dielectric.sample_bsdf(ray_in, *hit, rng),
+            Material::Dielectric(dielectric) => dielectric.sample_bsdf(ray_in, hit, rng),
         }
     }
 }
-
+*/

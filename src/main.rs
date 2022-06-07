@@ -56,7 +56,7 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
             Vector3::new(0_f32, -1000_f32, 0_f32), 
             1000_f32
         )), 
-        Box::new(Material::lambertian(Vector3::new(0.5, 0.5, 0.5)))
+        Box::new(SimpleLambertianMaterial::new(Vector3::new(0.5, 0.5, 0.5)))
     ));
     
     for a in -5..5 {
@@ -77,7 +77,7 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                     );
                     scene.push(SceneObject::new(
                         Box::new(Sphere::new(center, 0.2)),
-                        Box::new(Material::lambertian(albedo))
+                        Box::new(SimpleLambertianMaterial::new(albedo))
                     ));
                 } else if choose_mat < 0.95 {
                     // Metal.
@@ -89,13 +89,13 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                     let fuzz = 0.5 * rng.gen::<f32>();
                     scene.push(SceneObject::new(
                         Box::new(Sphere::new(center, 0.2)), 
-                        Box::new(Material::metal(albedo, fuzz))
+                        Box::new(SimpleMetalMaterial::new(albedo, fuzz))
                     ));
                 } else {
                     // Glass.
                     scene.push(SceneObject::new(
                         Box::new(Sphere::new(center, 0.2)),
-                        Box::new(Material::dielectric(1.5))
+                        Box::new(SimpleDielectricMaterial::new(1.5))
                     ));
                 }
             }
@@ -107,21 +107,21 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
             Vector3::new(0_f32, 1_f32, 0_f32), 
             1_f32
         )),
-        Box::new(Material::dielectric(1.5))
+        Box::new(SimpleDielectricMaterial::new(1.5))
     ));
     scene.push(SceneObject::new(
         Box::new(Sphere::new(
             Vector3::new(-4_f32, 1_f32, 0_f32), 
             1_f32
         )), 
-        Box::new(Material::lambertian(Vector3::new(0.4, 0.2, 0.1)))
+        Box::new(SimpleLambertianMaterial::new(Vector3::new(0.4, 0.2, 0.1)))
     ));
     scene.push(SceneObject::new(
         Box::new(Sphere::new(
             Vector3::new(4_f32, 1_f32, 0_f32), 
             1_f32
         )), 
-        Box::new(Material::metal(Vector3::new(0.7, 0.6, 0.5), 0.1))
+        Box::new(SimpleMetalMaterial::new(Vector3::new(0.7, 0.6, 0.5), 0.1))
     ));
 
     scene
