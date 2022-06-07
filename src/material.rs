@@ -49,18 +49,6 @@ impl<'a> IntersectionRecord<'a> {
         }
     }
 }
-/*
-impl<'a> IntersectionRecord<'a> {
-    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, material: &'a Material) -> IntersectionRecord<'a> {
-        IntersectionRecord {
-            t: t,
-            p: p,
-            normal: normal,
-            material: material,
-        }
-    }
-}
-*/
 
 
 pub trait Intersect {
