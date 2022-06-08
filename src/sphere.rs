@@ -44,7 +44,7 @@ impl Geometry for Sphere {
         if discriminant > 0_f32 {
             let mut temp = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if temp < t_max && temp > t_min {
-                let hit_point = ray.point_at_parameter(temp);
+                let hit_point = ray.interpolate(temp);
                 return Some(GeometryIntersectionResult::new(
                     temp,
                     hit_point,
@@ -53,7 +53,7 @@ impl Geometry for Sphere {
             }
             temp = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if temp < t_max && temp > t_min {
-                let hit_point = ray.point_at_parameter(temp);
+                let hit_point = ray.interpolate(temp);
                 return Some(GeometryIntersectionResult::new(
                     temp,
                     hit_point,

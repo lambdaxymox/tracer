@@ -16,7 +16,7 @@ impl Ray {
         }
     }
 
-    pub fn point_at_parameter(&self, t: f32) -> Vector3<f32> {
+    pub fn interpolate(&self, t: f32) -> Vector3<f32> {
         self.origin + self.direction * t
     }
 }
