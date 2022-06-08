@@ -7,9 +7,11 @@ mod scene;
 mod scene_object;
 mod canvas;
 mod camera;
+mod geometry;
 mod material;
 mod renderer;
 mod sample;
+mod sphere;
 
 use rand::prelude::*;
 
@@ -28,6 +30,7 @@ use camera::{
     Camera
 };
 use canvas::*;
+use sphere::*;
 use scene_object::*;
 use scene::*;
 use renderer::*;
