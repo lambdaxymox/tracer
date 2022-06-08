@@ -67,10 +67,16 @@ impl SceneObject {
         }
     }
 
-    pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
+    #[inline]
+    fn ray_to_model_space(&self, ray: &Ray) -> Ray {
         let ray_origin_model_space = (self.model_matrix_inv * ray.origin.extend(1_f32)).contract();
         let ray_direction_model_space = (self.model_matrix_inv * ray.direction.extend(0_f32)).contract();
-        let ray_model_space = Ray::new(ray_origin_model_space, ray_direction_model_space);
+        
+        Ray::new(ray_origin_model_space, ray_direction_model_space)
+    }
+
+    pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
+        let ray_model_space = self.ray_to_model_space(ray);
         self.geometry.intersect(&ray_model_space, t_min, t_max).map(|res_model_space| {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.p.extend(1_f32)).contract();
