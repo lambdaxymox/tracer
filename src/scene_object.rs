@@ -4,15 +4,18 @@ use crate::material::{
 };
 use cglinalg::{
     Vector3,
+    Matrix4x4,
 };
 use rand::prelude::*;
 
 
-pub trait Intersect {
+pub trait Geometry: std::fmt::Debug {
     fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<GeometryIntersectionResult>;
+
+    fn center(&self) -> Vector3<f32>;
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct IntersectionResult<'a> {
     pub t: f32,
     pub p: Vector3<f32>,
@@ -28,45 +31,69 @@ impl<'a> IntersectionResult<'a> {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct ScatteredRay {
     pub scattering_fraction: Vector3<f32>,
     pub ray: Ray,
 }
 
 impl ScatteredRay {
-    pub fn new(attenuation: Vector3<f32>, ray: Ray) -> ScatteredRay {
+    pub fn new(scattering_fraction: Vector3<f32>, ray: Ray) -> ScatteredRay {
         ScatteredRay { 
-            scattering_fraction: attenuation, ray,
+            scattering_fraction, ray,
         }
     }
 }
 
+#[derive(Debug)]
 pub struct SceneObject {
-    geometry: Box<dyn Intersect>,
+    geometry: Box<dyn Geometry>,
     material: Box<dyn ObjectMaterial>,
+    pub model_matrix: Matrix4x4<f32>,
 }
 
 impl SceneObject {
-    pub fn new(geometry: Box<dyn Intersect>, material: Box<dyn ObjectMaterial>) -> Self {
-        Self { geometry, material }
+    pub fn new(
+        geometry: Box<dyn Geometry>, 
+        material: Box<dyn ObjectMaterial>, 
+        model_matrix: Matrix4x4<f32>) -> Self 
+    {
+        Self { 
+            geometry, material, model_matrix 
+        }
     }
 
     pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
-        self.geometry.intersect(ray, t_min, t_max).map(|res| IntersectionResult::new(
-            res.t,
-            res.p,
-            res.normal,
-            self
-        ))
+        // TODO: Precompute inverse model matrix?
+        let matrix_world_space_to_model_space = self.model_matrix.inverse().unwrap();
+        let ray_origin_model_space = (matrix_world_space_to_model_space * ray.origin.extend(1_f32)).contract();
+        let ray_direction_model_space = (matrix_world_space_to_model_space * ray.direction.extend(0_f32)).contract();
+        let ray_model_space = Ray::new(ray_origin_model_space, ray_direction_model_space);
+        self.geometry.intersect(&ray_model_space, t_min, t_max).map(|res_model_space| {
+            let res_t_world_space = res_model_space.t;
+            let res_p_world_space = (self.model_matrix * res_model_space.p.extend(1_f32)).contract();
+            let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
+            let object = self;
+
+            IntersectionResult::new(
+                res_t_world_space,
+                res_p_world_space,
+                res_normal_world_space,
+                object
+            )
+        })
     }
 
     pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
         self.material.sample_bsdf(ray_in, hit, rng)
     }
+
+    pub fn center(&self) -> Vector3<f32> {
+        (self.model_matrix * self.geometry.center().extend(1_f32)).contract()
+    }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct GeometryIntersectionResult {
     pub t: f32,
     pub p: Vector3<f32>,
@@ -81,9 +108,10 @@ impl<'a> GeometryIntersectionResult {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Sphere {
-    pub center: Vector3<f32>,
-    pub radius: f32,
+    center: Vector3<f32>,
+    radius: f32,
 }
 
 impl Sphere {
@@ -94,7 +122,7 @@ impl Sphere {
     }
 }
 
-impl Intersect for Sphere {
+impl Geometry for Sphere {
     fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<GeometryIntersectionResult> {
         let oc = ray.origin - self.center;
         let a = ray.direction.dot(&ray.direction);
@@ -124,6 +152,11 @@ impl Intersect for Sphere {
         }
 
         None
+    }
+
+    #[inline]
+    fn center(&self) -> Vector3<f32> {
+        self.center
     }
 }
 

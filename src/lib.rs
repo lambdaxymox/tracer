@@ -7,7 +7,10 @@ mod sample;
 mod scene_object;
 
 
+pub use camera::*;
 pub use canvas::*;
 pub use scene::*;
 pub use scene_object::*;
+pub use ray::*;
+pub use material::*;
 

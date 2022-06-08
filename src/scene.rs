@@ -24,6 +24,10 @@ impl Scene {
         self.objects.len()
     }
 
+    pub fn is_empty_objects(&self) -> bool {
+        self.objects.is_empty()
+    }
+
     pub fn push(&mut self, object: SceneObject) {
         self.objects.push(object);
     }

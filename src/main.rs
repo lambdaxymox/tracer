@@ -21,6 +21,7 @@ use std::f32;
 
 use cglinalg::{
     Vector3,
+    Matrix4x4,
     Magnitude,
 };
 use camera::{
@@ -54,10 +55,11 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
     let mut scene = Scene::new(width, height, camera);
     scene.push(SceneObject::new(
         Box::new(Sphere::new(
-            Vector3::new(0_f32, -1000_f32, 0_f32), 
+            Vector3::zero(), 
             1000_f32
-        )), 
-        Box::new(SimpleLambertianMaterial::new(Vector3::new(0.5, 0.5, 0.5)))
+        )),
+        Box::new(SimpleLambertianMaterial::new(Vector3::new(0.5, 0.5, 0.5))),
+        Matrix4x4::from_affine_translation(&Vector3::new(0_f32, -1000_f32, 0_f32))
     ));
     
     for a in -5..5 {
@@ -77,8 +79,9 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                         rng.gen::<f32>() * rng.gen::<f32>()
                     );
                     scene.push(SceneObject::new(
-                        Box::new(Sphere::new(center, 0.2)),
-                        Box::new(SimpleLambertianMaterial::new(albedo))
+                        Box::new(Sphere::new(Vector3::zero(), 0.2)),
+                        Box::new(SimpleLambertianMaterial::new(albedo)),
+                        Matrix4x4::from_affine_translation(&center)
                     ));
                 } else if choose_mat < 0.95 {
                     // Metal.
@@ -89,14 +92,16 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                     );
                     let fuzz = 0.5 * rng.gen::<f32>();
                     scene.push(SceneObject::new(
-                        Box::new(Sphere::new(center, 0.2)), 
-                        Box::new(SimpleMetalMaterial::new(albedo, fuzz))
+                        Box::new(Sphere::new(Vector3::zero(), 0.2)), 
+                        Box::new(SimpleMetalMaterial::new(albedo, fuzz)),
+                        Matrix4x4::from_affine_translation(&center)
                     ));
                 } else {
                     // Glass.
                     scene.push(SceneObject::new(
-                        Box::new(Sphere::new(center, 0.2)),
-                        Box::new(SimpleDielectricMaterial::new(1.5))
+                        Box::new(Sphere::new(Vector3::zero(), 0.2)),
+                        Box::new(SimpleDielectricMaterial::new(1.5)),
+                        Matrix4x4::from_affine_translation(&center)
                     ));
                 }
             }
@@ -105,24 +110,27 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
 
     scene.push(SceneObject::new(
         Box::new(Sphere::new(
-            Vector3::new(0_f32, 1_f32, 0_f32), 
+            Vector3::zero(), 
             1_f32
         )),
-        Box::new(SimpleDielectricMaterial::new(1.5))
+        Box::new(SimpleDielectricMaterial::new(1.5)),
+        Matrix4x4::from_affine_translation(&Vector3::new(0_f32, 1_f32, 0_f32))
     ));
     scene.push(SceneObject::new(
         Box::new(Sphere::new(
-            Vector3::new(-4_f32, 1_f32, 0_f32), 
+            Vector3::zero(), 
             1_f32
         )), 
-        Box::new(SimpleLambertianMaterial::new(Vector3::new(0.4, 0.2, 0.1)))
+        Box::new(SimpleLambertianMaterial::new(Vector3::new(0.4, 0.2, 0.1))),
+        Matrix4x4::from_affine_translation(&Vector3::new(-4_f32, 1_f32, 0_f32))
     ));
     scene.push(SceneObject::new(
         Box::new(Sphere::new(
-            Vector3::new(4_f32, 1_f32, 0_f32), 
+            Vector3::zero(), 
             1_f32
         )), 
-        Box::new(SimpleMetalMaterial::new(Vector3::new(0.7, 0.6, 0.5), 0.1))
+        Box::new(SimpleMetalMaterial::new(Vector3::new(0.7, 0.6, 0.5), 0.1)),
+        Matrix4x4::from_affine_translation(&Vector3::new(4_f32, 1_f32, 0_f32))
     ));
 
     scene
@@ -143,7 +151,7 @@ fn main() -> io::Result<()> {
     let height = 270;
     let mut rng = rand::prelude::thread_rng();
     let settings = RendererSettings::new(SAMPLES_PER_PIXEL, MAX_DEPTH);
-    let renderer = Renderer::new(settings);
+    let mut renderer = Renderer::new(settings);
 
     println!("Generating scene.");
     let mut scene = generate_scene(&mut rng, width, height);

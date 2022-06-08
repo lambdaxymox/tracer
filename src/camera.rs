@@ -18,6 +18,7 @@ pub struct Camera {
     u: Vector3<f32>,
     v: Vector3<f32>,
     lens_radius: f32,
+    forward: Vector3<f32>,
 }
 
 impl Camera {
@@ -37,12 +38,14 @@ impl Camera {
 
         let eye = look_from;
 
-        let w = (look_from - look_at).normalize();
-        let u = v_up.cross(&w).normalize();
-        let v = w.cross(&u);
+        let forward = (look_from - look_at).normalize();
+        let u = v_up.cross(&forward).normalize();
+        let v = forward.cross(&u);
 
-        let lower_left_corner =
-            eye - u * (half_width * focus_dist) - v * (half_height * focus_dist) - w * focus_dist;
+        let lower_left_corner = eye - 
+            u * (half_width * focus_dist) - 
+            v * (half_height * focus_dist) - 
+            forward * focus_dist;
         let horizontal = u * (2.0 * half_width * focus_dist);
         let vertical = v * (2.0 * half_height * focus_dist);
 
@@ -54,10 +57,21 @@ impl Camera {
             u,
             v,
             lens_radius,
+            forward,
         }
     }
 
-    pub fn get_ray(&self, rng: &mut ThreadRng, u: f32, v: f32) -> Ray {
+    pub fn cast_ray(&self, rng: &mut ThreadRng, u: f32, v: f32) -> Ray {
+        // TODO: Cast a ray in eye space, and convert is back to world space?
+        // That is, all the aspects of the camera construction, namely, lens position, lower left corner, horizontal, vertical,
+        // forward axis, vertical axis, horizontal axis, Take place in eye space. When we cast a ray through the camera through its viewport
+        // we are getting a eye space ray that must be converted back to world space via its viewing matrix. This way,
+        // the camera parameters are decoupled from the specifics of the scene and we have a more consistent way of querying
+        // through the eyes of the camera.
+        // TODO: Make Rays have a coordinate space. A ray in eye space, a ray in model space, and a ray in world space are different things.
+        // How do we convert between them?
+        //
+        // Ray<EyeSpace> -> Ray<WorldSpace>
         let rd = sample::random_in_unit_disk(rng) * self.lens_radius;
         let offset = self.u * rd.x + self.v * rd.y;
         let lens_position = self.eye + offset;
@@ -66,6 +80,16 @@ impl Camera {
             lens_position,
             self.lower_left_corner + self.horizontal * u + self.vertical * v - lens_position,
         )
+    }
+
+    #[inline]
+    pub fn position(&self) -> Vector3<f32> {
+        self.eye
+    }
+
+    #[inline]
+    pub fn forward(&self) -> Vector3<f32> {
+        self.forward
     }
 }
 

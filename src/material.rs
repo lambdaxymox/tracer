@@ -10,11 +10,11 @@ use cglinalg::{
 use rand::prelude::*;
 
 
-pub trait ObjectMaterial {
+pub trait ObjectMaterial: std::fmt::Debug {
     fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay;
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct SimpleLambertianMaterial {
     albedo: Vector3<f32>,
 }
@@ -37,7 +37,7 @@ impl ObjectMaterial for SimpleLambertianMaterial {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct SimpleMetalMaterial {
     albedo: Vector3<f32>,
     fuzz: f32,
@@ -54,17 +54,17 @@ impl SimpleMetalMaterial {
 impl ObjectMaterial for SimpleMetalMaterial {
     fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
         let reflected_direction = ray_in.direction.reflect(&hit.normal);
-        let attenuation = self.albedo;
+        let scattering_fraction = self.albedo;
         let scattering_ray = Ray::new(
             hit.p, 
             reflected_direction + sample::random_in_unit_sphere(rng) * self.fuzz
         );
         
-        ScatteredRay::new(attenuation, scattering_ray)
+        ScatteredRay::new(scattering_fraction, scattering_ray)
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct SimpleDielectricMaterial {
     pub refraction_index: f32,
 }
