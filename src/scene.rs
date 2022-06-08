@@ -24,14 +24,18 @@ impl Scene {
         self.objects.len()
     }
 
+    /// Determine whether a scene contains any objects.
     pub fn is_empty_objects(&self) -> bool {
         self.objects.is_empty()
     }
 
+    /// Insert an object into a scene.
     pub fn push(&mut self, object: SceneObject) {
         self.objects.push(object);
     }
 
+    /// Cast a ray into a scene and determine whether the ray intersects and 
+    /// object inside the scene.
     pub fn ray_cast(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
         let mut closest_record = None;
         let mut closest_so_far = t_max;
