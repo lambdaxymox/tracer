@@ -42,22 +42,23 @@ impl Geometry for Sphere {
         let c = oc.dot(&oc) - self.radius * self.radius;
         let discriminant = b * b - a * c; // 4 * a * c?
         if discriminant > 0_f32 {
-            let mut temp = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
-            if temp < t_max && temp > t_min {
-                let hit_point = ray.interpolate(temp);
+            let t_intersect1 = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
+            if t_intersect1 > t_min && t_intersect1 < t_max {
+                let point_of_intersection = ray.interpolate(t_intersect1);
                 return Some(GeometryIntersectionResult::new(
-                    temp,
-                    hit_point,
-                    (hit_point - self.center) / self.radius,
+                    t_intersect1,
+                    point_of_intersection,
+                    (point_of_intersection - self.center) / self.radius,
                 ));
             }
-            temp = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
-            if temp < t_max && temp > t_min {
-                let hit_point = ray.interpolate(temp);
+
+            let t_intersect2 = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
+            if t_intersect2 > t_min && t_intersect2 < t_max {
+                let point_of_intersection = ray.interpolate(t_intersect2);
                 return Some(GeometryIntersectionResult::new(
-                    temp,
-                    hit_point,
-                    (hit_point - self.center) / self.radius,
+                    t_intersect2,
+                    point_of_intersection,
+                    (point_of_intersection - self.center) / self.radius,
                 ));
             }
         }
