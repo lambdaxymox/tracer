@@ -41,7 +41,6 @@ impl Geometry for Sphere {
         let b = oc.dot(&ray.direction);
         let c = oc.dot(&oc) - self.radius * self.radius;
         let discriminant = b * b - a * c; // 4 * a * c?
-        eprintln!("ray = {:?}; discriminant = {}", ray, discriminant);
         if discriminant > 0_f32 {
             let mut temp = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if temp < t_max && temp > t_min {
