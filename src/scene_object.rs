@@ -50,6 +50,7 @@ pub struct SceneObject {
     geometry: Box<dyn Geometry>,
     material: Box<dyn ObjectMaterial>,
     pub model_matrix: Matrix4x4<f32>,
+    model_matrix_inv: Matrix4x4<f32>,
 }
 
 impl SceneObject {
@@ -59,15 +60,16 @@ impl SceneObject {
         model_matrix: Matrix4x4<f32>) -> Self 
     {
         Self { 
-            geometry, material, model_matrix 
+            geometry, 
+            material, 
+            model_matrix,
+            model_matrix_inv: model_matrix.inverse().unwrap()
         }
     }
 
     pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
-        // TODO: Precompute inverse model matrix?
-        let matrix_world_space_to_model_space = self.model_matrix.inverse().unwrap();
-        let ray_origin_model_space = (matrix_world_space_to_model_space * ray.origin.extend(1_f32)).contract();
-        let ray_direction_model_space = (matrix_world_space_to_model_space * ray.direction.extend(0_f32)).contract();
+        let ray_origin_model_space = (self.model_matrix_inv * ray.origin.extend(1_f32)).contract();
+        let ray_direction_model_space = (self.model_matrix_inv * ray.direction.extend(0_f32)).contract();
         let ray_model_space = Ray::new(ray_origin_model_space, ray_direction_model_space);
         self.geometry.intersect(&ray_model_space, t_min, t_max).map(|res_model_space| {
             let res_t_world_space = res_model_space.t;
