@@ -7,6 +7,7 @@ mod sphere_tests {
         Ray,
         Sphere,
         Geometry,
+        Intersection,
     };
     use cglinalg::{
         Vector3,

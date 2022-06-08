@@ -34,8 +34,8 @@ impl Sphere {
     }
 }
 
-impl Geometry for Sphere {
-    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<GeometryIntersectionResult> {
+impl Intersection for Sphere {
+    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
         let oc = ray.origin - self.center;
         let a = ray.direction.dot(&ray.direction);
         let b = oc.dot(&ray.direction);
@@ -45,7 +45,7 @@ impl Geometry for Sphere {
             let t_intersect1 = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if t_intersect1 > t_min && t_intersect1 < t_max {
                 let point_of_intersection = ray.interpolate(t_intersect1);
-                return Some(GeometryIntersectionResult::new(
+                return Some(IntersectionResult::new(
                     t_intersect1,
                     point_of_intersection,
                     (point_of_intersection - self.center) / self.radius,
@@ -55,7 +55,7 @@ impl Geometry for Sphere {
             let t_intersect2 = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if t_intersect2 > t_min && t_intersect2 < t_max {
                 let point_of_intersection = ray.interpolate(t_intersect2);
-                return Some(GeometryIntersectionResult::new(
+                return Some(IntersectionResult::new(
                     t_intersect2,
                     point_of_intersection,
                     (point_of_intersection - self.center) / self.radius,
@@ -65,7 +65,9 @@ impl Geometry for Sphere {
 
         None
     }
+}
 
+impl Geometry for Sphere {
     #[inline]
     fn center(&self) -> Vector3<f32> {
         self.center

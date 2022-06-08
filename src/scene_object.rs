@@ -13,16 +13,16 @@ use rand::prelude::*;
 
 
 #[derive(Copy, Clone, Debug)]
-pub struct IntersectionResult<'a> {
+pub struct ObjectIntersectionResult<'a> {
     pub t: f32,
     pub p: Vector3<f32>,
     pub normal: Vector3<f32>,
     pub object: &'a SceneObject,
 }
 
-impl<'a> IntersectionResult<'a> {
-    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, object: &'a SceneObject) -> IntersectionResult<'a> {
-        IntersectionResult {
+impl<'a> ObjectIntersectionResult<'a> {
+    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, object: &'a SceneObject) -> ObjectIntersectionResult<'a> {
+        ObjectIntersectionResult {
             t, p, normal, object,
         }
     }
@@ -72,7 +72,7 @@ impl SceneObject {
         Ray::new(ray_origin_model_space, ray_direction_model_space)
     }
 
-    pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
+    pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<ObjectIntersectionResult> {
         let ray_model_space = self.ray_to_model_space(ray);
         self.geometry.intersect(&ray_model_space, t_min, t_max).map(|res_model_space| {
             let res_t_world_space = res_model_space.t;
@@ -80,7 +80,7 @@ impl SceneObject {
             let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
             let object = self;
 
-            IntersectionResult::new(
+            ObjectIntersectionResult::new(
                 res_t_world_space,
                 res_p_world_space,
                 res_normal_world_space,
@@ -89,7 +89,7 @@ impl SceneObject {
         })
     }
 
-    pub fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+    pub fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
         self.material.sample_bsdf(ray_in, hit, rng)
     }
 
