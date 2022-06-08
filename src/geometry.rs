@@ -15,14 +15,14 @@ pub trait Geometry: std::fmt::Debug + Intersection {
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct IntersectionResult {
     pub t: f32,
-    pub p: Vector3<f32>,
+    pub point: Vector3<f32>,
     pub normal: Vector3<f32>,
 }
 
 impl<'a> IntersectionResult {
-    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>) -> IntersectionResult {
+    pub fn new(t: f32, point: Vector3<f32>, normal: Vector3<f32>) -> IntersectionResult {
         IntersectionResult {
-            t, p, normal,
+            t, point, normal,
         }
     }
 }

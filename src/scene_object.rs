@@ -76,7 +76,7 @@ impl SceneObject {
         let ray_model_space = self.ray_to_model_space(ray);
         self.geometry.intersect(&ray_model_space, t_min, t_max).map(|res_model_space| {
             let res_t_world_space = res_model_space.t;
-            let res_p_world_space = (self.model_matrix * res_model_space.p.extend(1_f32)).contract();
+            let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
             let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
             let object = self;
 
