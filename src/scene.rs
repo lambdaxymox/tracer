@@ -67,6 +67,13 @@ impl Scene {
                     closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, &object));
                 }
             }
+            if let IntersectionResult::Tangent(new_intersection_desc) = new_intersection_result {
+                if new_intersection_desc.t < t_closest_so_far {
+                    closest_ray = new_query;
+                    t_closest_so_far = new_intersection_desc.t;
+                    closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, &object));
+                }
+            }
         }
 
         closest_result

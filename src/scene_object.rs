@@ -54,7 +54,6 @@ impl SceneObject {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
             let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
-            let object = self;
 
             IntersectionResult::new_hit(
                 res_t_world_space,
@@ -65,7 +64,6 @@ impl SceneObject {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
             let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
-            let object = self;
 
             IntersectionResult::new_tangent(
                 res_t_world_space,
@@ -82,13 +80,12 @@ impl SceneObject {
         let result = self.intersect(query);
         if let IntersectionResult::Hit(_) = result {
             Some(self.material.sample_bsdf(query.ray, &result, rng))
-        } else if let IntersectionResult::Tangent(graze) = result {
+        } else if let IntersectionResult::Tangent(_) = result {
             Some(self.material.sample_bsdf(query.ray, &result, rng))
         } else {
             // We missed the object.
             None
         }
-
     } 
 
     #[inline]

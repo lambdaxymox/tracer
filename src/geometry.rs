@@ -62,7 +62,13 @@ impl IntersectionResult {
         }
     }
 
-    
+    #[inline]
+    pub fn is_hit_or_tangent(&self) -> bool {
+        match self {
+            Self::Hit(_) | Self::Tangent(_) => true,
+            _ => false,
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -74,8 +80,7 @@ pub struct IntersectionDesc {
 
 impl<'a> IntersectionDesc {
     pub fn new(t: f32, point: Vector3<f32>, normal: Vector3<f32>) -> Self {
-        IntersectionDesc {
-            t, point, normal,
-        }
+        IntersectionDesc { t, point, normal, }
     }
 }
+
