@@ -12,12 +12,17 @@ use rand::prelude::*;
 pub struct RendererSettings {
     samples_per_pixel: usize,
     max_path_depth: usize,
+    t_min: f32,
+    t_max: f32,
 }
 
 impl RendererSettings {
     pub fn new(samples_per_pixel: usize, max_path_depth: usize) -> Self {
         Self { 
-            samples_per_pixel, max_path_depth,
+            samples_per_pixel, 
+            max_path_depth,
+            t_min: 0.0001,
+            t_max: f32::MAX
         }
     }
 }
@@ -25,6 +30,8 @@ impl RendererSettings {
 pub struct Renderer {
     samples_per_pixel: usize,
     max_path_depth: usize,
+    t_min: f32,
+    t_max: f32,
 }
 
 impl Renderer {
@@ -32,6 +39,8 @@ impl Renderer {
         Self { 
             samples_per_pixel: settings.samples_per_pixel, 
             max_path_depth: settings.max_path_depth,
+            t_min: settings.t_min,
+            t_max: settings.t_max,
         }
     }
 
@@ -67,7 +76,7 @@ impl Renderer {
             let dv = rng.gen::<f32>();
             let v = (((height - row) as f32) + dv) / (height as f32);
             let ray = scene.camera.cast_ray(rng, u, v);
-            let query = IntersectionQuery::new(ray, 0.0001, f32::MAX);
+            let query = IntersectionQuery::new(ray, self.t_min, self.t_max);
 
             color += self.estimate(scene, &query, rng, 0);
         }
