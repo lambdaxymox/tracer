@@ -10,22 +10,6 @@ use cglinalg::{
 use rand::prelude::*;
 
 
-#[derive(Copy, Clone, Debug)]
-pub struct ObjectIntersectionResult<'a> {
-    pub t: f32,
-    pub p: Vector3<f32>,
-    pub normal: Vector3<f32>,
-    pub object: &'a SceneObject,
-}
-
-impl<'a> ObjectIntersectionResult<'a> {
-    pub fn new(t: f32, p: Vector3<f32>, normal: Vector3<f32>, object: &'a SceneObject) -> ObjectIntersectionResult<'a> {
-        ObjectIntersectionResult {
-            t, p, normal, object,
-        }
-    }
-}
-
 #[derive(Debug)]
 pub struct SceneObject {
     geometry: Box<dyn Geometry>,
@@ -63,7 +47,7 @@ impl SceneObject {
         IntersectionQuery::new(ray_model_space, query.t_min, query.t_max)
     }
 
-    pub fn intersect(&self, query: &IntersectionQuery) -> Option<ObjectIntersectionResult> {
+    pub fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult {
         let query_model_space = self.query_to_model_space(query);
         let result = self.geometry.intersect(&query_model_space);
         if let IntersectionResult::Hit(res_model_space) = result {
@@ -72,31 +56,39 @@ impl SceneObject {
             let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
             let object = self;
 
-            Some(ObjectIntersectionResult::new(
+            IntersectionResult::new_hit(
                 res_t_world_space,
                 res_p_world_space,
                 res_normal_world_space,
-                object
-            ))
+            )
         } else if let IntersectionResult::Tangent(res_model_space) = result {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
             let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
             let object = self;
 
-            Some(ObjectIntersectionResult::new(
+            IntersectionResult::new_tangent(
                 res_t_world_space,
                 res_p_world_space,
                 res_normal_world_space,
-                object
-            ))
+            )
         } else {
-            None
+            // The ray missed the object.
+            result
         }
     }
 
     pub fn scatter(&self, query: &IntersectionQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
-        self.intersect(query).map(|hit| self.material.sample_bsdf(query.ray, &hit, rng))
+        let result = self.intersect(query);
+        if let IntersectionResult::Hit(_) = result {
+            Some(self.material.sample_bsdf(query.ray, &result, rng))
+        } else if let IntersectionResult::Tangent(graze) = result {
+            Some(self.material.sample_bsdf(query.ray, &result, rng))
+        } else {
+            // We missed the object.
+            None
+        }
+
     } 
 
     #[inline]

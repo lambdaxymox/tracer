@@ -1,8 +1,24 @@
 use crate::query::*;
+use crate::geometry::*;
 use crate::camera::*;
 use crate::canvas::*;
 use crate::scene_object::*;
+use cglinalg::{
+    Vector3,
+};
 
+
+#[derive(Copy, Clone, Debug)]
+pub struct ObjectIntersectionResult<'a> {
+    pub intersection_result: IntersectionResult,
+    pub object: &'a SceneObject,
+}
+
+impl<'a> ObjectIntersectionResult<'a> {
+    pub fn new(intersection_result: IntersectionResult, object: &'a SceneObject) -> Self {
+        Self { intersection_result, object, }
+    }
+}
 
 pub struct Scene {
     pub objects: Vec<SceneObject>,
@@ -38,16 +54,17 @@ impl Scene {
     /// object inside the scene.
     pub fn ray_cast(&self, query: &IntersectionQuery) -> Option<ObjectIntersectionResult> {
         let mut closest_result = None;
-        let mut closest_so_far = query.t_max;
+        let mut t_closest_so_far = query.t_max;
         let mut closest_ray = *query;
         for object in self.objects.iter() {
             let new_ray = Ray::new(closest_ray.ray.origin, closest_ray.ray.direction);
-            let new_query = IntersectionQuery::new(new_ray, closest_ray.t_min, closest_so_far);
-            if let Some(new_result) = object.intersect(&new_query) {
-                if new_result.t < closest_so_far {
+            let new_query = IntersectionQuery::new(new_ray, closest_ray.t_min, t_closest_so_far);
+            let new_intersection_result = object.intersect(&new_query);
+            if let IntersectionResult::Hit(new_intersection_desc) = new_intersection_result {
+                if new_intersection_desc.t < t_closest_so_far {
                     closest_ray = new_query;
-                    closest_so_far = new_result.t;
-                    closest_result = Some(new_result);
+                    t_closest_so_far = new_intersection_desc.t;
+                    closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, &object));
                 }
             }
         }
