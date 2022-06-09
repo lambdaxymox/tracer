@@ -1,8 +1,6 @@
 use crate::geometry::*;
-use crate::ray::{
-    Ray,
-    IntersectionQuery,
-};
+use crate::ray::*;
+use crate::query::*;
 use cglinalg::{
     Vector3,
 };

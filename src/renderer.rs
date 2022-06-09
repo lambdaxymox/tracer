@@ -1,9 +1,9 @@
-use crate::ray::*;
+use crate::query::*;
 use crate::canvas::*;
 use crate::scene::*;
 use cglinalg::{ 
-    Magnitude,
     Vector3,
+    Magnitude,
 };
 use rand::prelude::*;
 

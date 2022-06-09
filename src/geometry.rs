@@ -1,4 +1,4 @@
-use crate::ray::*;
+use crate::query::*;
 use cglinalg::{
     Vector3,
 };

@@ -1,5 +1,6 @@
 use crate::geometry::*;
 use crate::ray::*;
+use crate::query::*;
 use crate::material::{
     ObjectMaterial, 
 };

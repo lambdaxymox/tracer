@@ -1,4 +1,5 @@
 use crate::ray::*;
+use crate::query::*;
 use crate::camera::*;
 use crate::canvas::*;
 use crate::scene_object::*;

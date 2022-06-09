@@ -3,6 +3,7 @@ extern crate rand;
 
 
 mod ray;
+mod query;
 mod scene;
 mod scene_object;
 mod canvas;
