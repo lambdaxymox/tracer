@@ -78,9 +78,7 @@ impl SceneObject {
 
     pub fn scatter(&self, query: &IntersectionQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
         let result = self.intersect(query);
-        if let IntersectionResult::Hit(_) = result {
-            Some(self.material.sample_bsdf(query.ray, &result, rng))
-        } else if let IntersectionResult::Tangent(_) = result {
+        if let IntersectionResult::Hit(_) | IntersectionResult::Tangent(_) = result {
             Some(self.material.sample_bsdf(query.ray, &result, rng))
         } else {
             // We missed the object.

@@ -148,14 +148,14 @@ impl ObjectMaterial for SimpleDielectricMaterial {
 
         if let Some(refracted) = refract(ray_in.direction, outward_normal, ni_over_nt) {
             let reflection_prob = schlick(cosine, self.refraction_index);
-            let out_dir = if rng.gen::<f32>() < reflection_prob {
+            let out_direction = if rng.gen::<f32>() < reflection_prob {
                 ray_in.direction.reflect(&result.normal)
             } else {
                 refracted
             };
             ScatteringResult::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
-                Ray::new(result.point, out_dir)
+                Ray::new(result.point, out_direction)
             )
         } else {
             ScatteringResult::new(
