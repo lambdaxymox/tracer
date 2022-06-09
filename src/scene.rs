@@ -3,9 +3,6 @@ use crate::geometry::*;
 use crate::camera::*;
 use crate::canvas::*;
 use crate::scene_object::*;
-use cglinalg::{
-    Vector3,
-};
 
 
 #[derive(Copy, Clone, Debug)]
@@ -64,14 +61,14 @@ impl Scene {
                 if new_intersection_desc.t < t_closest_so_far {
                     closest_ray = new_query;
                     t_closest_so_far = new_intersection_desc.t;
-                    closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, &object));
+                    closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, object));
                 }
             }
             if let IntersectionResult::Tangent(new_intersection_desc) = new_intersection_result {
                 if new_intersection_desc.t < t_closest_so_far {
                     closest_ray = new_query;
                     t_closest_so_far = new_intersection_desc.t;
-                    closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, &object));
+                    closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, object));
                 }
             }
         }
