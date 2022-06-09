@@ -57,14 +57,10 @@ impl Scene {
             let new_ray = Ray::new(closest_ray.ray.origin, closest_ray.ray.direction);
             let new_query = IntersectionQuery::new(new_ray, closest_ray.t_min, t_closest_so_far);
             let new_intersection_result = object.intersect(&new_query);
-            if let IntersectionResult::Hit(new_intersection_desc) = new_intersection_result {
-                if new_intersection_desc.t < t_closest_so_far {
-                    closest_ray = new_query;
-                    t_closest_so_far = new_intersection_desc.t;
-                    closest_result = Some(ObjectIntersectionResult::new(new_intersection_result, object));
-                }
-            }
-            if let IntersectionResult::Tangent(new_intersection_desc) = new_intersection_result {
+            if let 
+                IntersectionResult::Hit(new_intersection_desc) | 
+                IntersectionResult::Tangent(new_intersection_desc) = new_intersection_result 
+            {
                 if new_intersection_desc.t < t_closest_so_far {
                     closest_ray = new_query;
                     t_closest_so_far = new_intersection_desc.t;
