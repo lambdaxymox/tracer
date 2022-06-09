@@ -1,5 +1,5 @@
 use crate::geometry::*;
-use crate::ray::Ray;
+use crate::ray::*;
 use crate::material::{
     ObjectMaterial, 
 };
@@ -8,8 +8,6 @@ use cglinalg::{
     Matrix4x4,
 };
 use rand::prelude::*;
-
-
 
 
 #[derive(Copy, Clone, Debug)]
@@ -69,12 +67,19 @@ impl SceneObject {
         let ray_origin_model_space = (self.model_matrix_inv * ray.origin.extend(1_f32)).contract();
         let ray_direction_model_space = (self.model_matrix_inv * ray.direction.extend(0_f32)).contract();
         
-        Ray::new(ray_origin_model_space, ray_direction_model_space, ray.t_min, ray.t_max)
+        Ray::new(ray_origin_model_space, ray_direction_model_space)
     }
 
-    pub fn intersect(&self, ray: &Ray) -> Option<ObjectIntersectionResult> {
-        let ray_model_space = self.ray_to_model_space(ray);
-        let result = self.geometry.intersect(&ray_model_space);
+    #[inline]
+    fn query_to_model_space(&self, query: &IntersectionQuery) -> IntersectionQuery {
+        let ray_model_space = self.ray_to_model_space(&query.ray);
+
+        IntersectionQuery::new(ray_model_space, query.t_min, query.t_max)
+    }
+
+    pub fn intersect(&self, query: &IntersectionQuery) -> Option<ObjectIntersectionResult> {
+        let query_model_space = self.query_to_model_space(query);
+        let result = self.geometry.intersect(&query_model_space);
         if let IntersectionResult::Hit(res_model_space) = result {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
@@ -108,6 +113,7 @@ impl SceneObject {
         self.material.sample_bsdf(ray_in, hit, rng)
     }
 
+    #[inline]
     pub fn center(&self) -> Vector3<f32> {
         (self.model_matrix * self.geometry.center().extend(1_f32)).contract()
     }

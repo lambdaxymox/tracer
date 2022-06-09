@@ -1,4 +1,4 @@
-use crate::ray::Ray;
+use crate::ray::*;
 use crate::camera::*;
 use crate::canvas::*;
 use crate::scene_object::*;
@@ -36,15 +36,16 @@ impl Scene {
 
     /// Cast a ray into a scene and determine whether the ray intersects and 
     /// object inside the scene.
-    pub fn ray_cast(&self, ray: &Ray) -> Option<ObjectIntersectionResult> {
+    pub fn ray_cast(&self, query: &IntersectionQuery) -> Option<ObjectIntersectionResult> {
         let mut closest_result = None;
-        let mut closest_so_far = ray.t_max;
-        let mut closest_ray = *ray;
+        let mut closest_so_far = query.t_max;
+        let mut closest_ray = *query;
         for object in self.objects.iter() {
-            let new_ray = Ray::new(closest_ray.origin, closest_ray.direction, ray.t_min, closest_so_far);
-            if let Some(new_result) = object.intersect(&new_ray) {
+            let new_ray = Ray::new(closest_ray.ray.origin, closest_ray.ray.direction);
+            let new_query = IntersectionQuery::new(new_ray, closest_ray.t_min, closest_so_far);
+            if let Some(new_result) = object.intersect(&new_query) {
                 if new_result.t < closest_so_far {
-                    closest_ray = new_ray;
+                    closest_ray = new_query;
                     closest_so_far = new_result.t;
                     closest_result = Some(new_result);
                 }

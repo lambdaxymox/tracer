@@ -80,8 +80,6 @@ impl Camera {
         Ray::new(
             lens_position,
             self.lower_left_corner + self.horizontal * u + self.vertical * v - lens_position,
-            0.0001,
-            f32::MAX
         )
     }
 

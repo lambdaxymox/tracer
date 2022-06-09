@@ -1,12 +1,10 @@
-use crate::ray::{
-    Ray,
-};
+use crate::ray::*;
 use cglinalg::{
     Vector3,
 };
 
 pub trait Intersection {
-    fn intersect(&self, ray: &Ray) -> IntersectionResult;
+    fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
 }
 pub trait Geometry: std::fmt::Debug + Intersection {
     fn center(&self) -> Vector3<f32>;

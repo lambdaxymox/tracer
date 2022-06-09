@@ -1,4 +1,4 @@
-use crate::ray::Ray;
+use crate::ray::*;
 use crate::canvas::*;
 use crate::scene::*;
 use cglinalg::{ 
@@ -35,19 +35,20 @@ impl Renderer {
         }
     }
 
-    fn estimate(&self, scene: &Scene, ray: Ray, rng: &mut ThreadRng, depth: usize) -> Vector3<f32> {
+    fn estimate(&self, scene: &Scene, query: &IntersectionQuery, rng: &mut ThreadRng, depth: usize) -> Vector3<f32> {
         // TODO: Include ability to sample emissions for scene objects that are lights.
-        if let Some(hit) = scene.ray_cast(&ray) {
+        if let Some(hit) = scene.ray_cast(&query) {
             if depth < self.max_path_depth {
-                let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
-                let color = self.estimate(scene, scattered_ray.ray, rng, depth + 1);
+                let scattered_ray = hit.object.sample_bsdf(query.ray, &hit, rng);
+                let scattered_query = IntersectionQuery::new(scattered_ray.ray, query.t_min, query.t_max);
+                let color = self.estimate(scene, &scattered_query, rng, depth + 1);
     
                 scattered_ray.scattering_fraction.component_mul(&color)
             } else {
                 Vector3::new(0_f32, 0_f32, 0_f32)
             }
         } else {
-            let unit_direction = ray.direction.normalize();
+            let unit_direction = query.ray.direction.normalize();
             let t = (unit_direction.y + 1_f32) * 0.5;
     
             // TODO: Convert default value to some kind of ambient light instead of baking into path tracer.
@@ -66,8 +67,9 @@ impl Renderer {
             let dv = rng.gen::<f32>();
             let v = (((height - row) as f32) + dv) / (height as f32);
             let ray = scene.camera.cast_ray(rng, u, v);
+            let query = IntersectionQuery::new(ray, 0.0001, f32::MAX);
 
-            color += self.estimate(scene, ray, rng, 0);
+            color += self.estimate(scene, &query, rng, 0);
         }
         
         color / self.samples_per_pixel as f32

@@ -8,6 +8,7 @@ mod sphere_tests {
         Sphere,
         Geometry,
         Intersection,
+        IntersectionQuery,
     };
     use cglinalg::{
         Vector3,
@@ -35,9 +36,10 @@ mod sphere_tests {
                 0_f32
             );
             let ray_direction = (sphere.center() - ray_origin).normalize();
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
 
         for j in 0..65 {
@@ -47,9 +49,10 @@ mod sphere_tests {
                 path_radius * f32::sin((j as f32) * f32::consts::PI / 64_f32),
             );
             let ray_direction = (sphere.center() - ray_origin).normalize();
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
 
         for k in 0..65 {
@@ -60,9 +63,10 @@ mod sphere_tests {
                 path_radius * f32::cos((k as f32) * f32::consts::PI / 64_f32),                
             );
             let ray_direction = (sphere.center() - ray_origin).normalize();
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -78,9 +82,10 @@ mod sphere_tests {
                 0_f32
             );
             let ray_direction = (ray_origin - sphere.center()).normalize();
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_miss());
+            assert!(sphere.intersect(&query).is_miss());
         }
 
         for j in 0..65 {
@@ -90,9 +95,10 @@ mod sphere_tests {
                 path_radius * f32::sin((j as f32) * f32::consts::PI / 64_f32),
             );
             let ray_direction = (ray_origin - sphere.center()).normalize();
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_miss());
+            assert!(sphere.intersect(&query).is_miss());
         }
 
         for k in 0..65 {
@@ -103,9 +109,10 @@ mod sphere_tests {
                 path_radius * f32::cos((k as f32) * f32::consts::PI / 64_f32),                
             );
             let ray_direction = (ray_origin - sphere.center()).normalize();
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_miss());
+            assert!(sphere.intersect(&query).is_miss());
         }
     }
 
@@ -122,9 +129,10 @@ mod sphere_tests {
             let origin_z = 0_f32;
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -141,9 +149,10 @@ mod sphere_tests {
             let origin_z = 0_f32;
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -160,9 +169,10 @@ mod sphere_tests {
             let origin_z = sphere_radius - (i as f32) * sphere_diameter / (total_rays_cast as f32);
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -179,9 +189,10 @@ mod sphere_tests {
             let origin_z = sphere_radius - (i as f32) * sphere_diameter / (total_rays_cast as f32);
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -198,9 +209,10 @@ mod sphere_tests {
             let origin_z = 0_f32;
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -217,9 +229,10 @@ mod sphere_tests {
             let origin_z = 0_f32;
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -236,9 +249,10 @@ mod sphere_tests {
             let origin_z = sphere_radius - (i as f32) * sphere_diameter / (total_rays_cast as f32);
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0f32, -1_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -255,9 +269,10 @@ mod sphere_tests {
             let origin_z = sphere_radius - (i as f32) * sphere_diameter / (total_rays_cast as f32);
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -274,9 +289,10 @@ mod sphere_tests {
             let origin_y = 0_f32;
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -293,9 +309,10 @@ mod sphere_tests {
             let origin_y = 0_f32;
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -312,9 +329,10 @@ mod sphere_tests {
             let origin_y = sphere_radius - (i as f32) * sphere_diameter / (total_rays_cast as f32);
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0f32, 0_f32, -1_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -331,9 +349,10 @@ mod sphere_tests {
             let origin_y = sphere_radius - (i as f32) * sphere_diameter / (total_rays_cast as f32);
             let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
             let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-            let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+            let ray = Ray::new(ray_origin, ray_direction);
+            let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-            assert!(sphere.intersect(&ray).is_hit());
+            assert!(sphere.intersect(&query).is_hit());
         }
     }
 
@@ -346,9 +365,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -360,9 +380,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
 
@@ -375,9 +396,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -389,9 +411,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -403,9 +426,10 @@ mod sphere_tests {
         let origin_z = sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -417,9 +441,10 @@ mod sphere_tests {
         let origin_z = -sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -431,9 +456,10 @@ mod sphere_tests {
         let origin_z = sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -445,9 +471,10 @@ mod sphere_tests {
         let origin_z = -sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -459,9 +486,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -473,9 +501,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -487,9 +516,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -501,9 +531,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -515,9 +546,10 @@ mod sphere_tests {
         let origin_z = sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -529,9 +561,10 @@ mod sphere_tests {
         let origin_z = -sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -543,9 +576,10 @@ mod sphere_tests {
         let origin_z = sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -557,9 +591,10 @@ mod sphere_tests {
         let origin_z = -sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -571,9 +606,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -585,9 +621,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -599,9 +636,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -613,9 +651,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -627,9 +666,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -641,9 +681,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -655,9 +696,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -669,9 +711,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_tangent());
+        assert!(sphere.intersect(&query).is_tangent());
     }
 
     #[test]
@@ -683,9 +726,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -697,9 +741,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
 
@@ -712,9 +757,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -726,9 +772,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -740,9 +787,10 @@ mod sphere_tests {
         let origin_z = sphere_radius - 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -754,9 +802,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius - 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -768,9 +817,10 @@ mod sphere_tests {
         let origin_z = sphere_radius - 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -782,9 +832,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius - 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -796,9 +847,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -810,9 +862,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -824,9 +877,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -838,9 +892,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -852,9 +907,10 @@ mod sphere_tests {
         let origin_z = sphere_radius - 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -866,9 +922,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius - 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -880,9 +937,10 @@ mod sphere_tests {
         let origin_z = sphere_radius - 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -894,9 +952,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius - 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -908,9 +967,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -922,9 +982,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -936,9 +997,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -950,9 +1012,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -964,9 +1027,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -978,9 +1042,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -992,9 +1057,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -1006,9 +1072,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
 
-        assert!(sphere.intersect(&ray).is_hit());
+        assert!(sphere.intersect(&query).is_hit());
     }
 
     #[test]
@@ -1020,9 +1087,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1034,9 +1102,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     
@@ -1049,9 +1118,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1063,9 +1133,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1077,9 +1148,10 @@ mod sphere_tests {
         let origin_z = sphere_radius + 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1091,9 +1163,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius + 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1105,9 +1178,10 @@ mod sphere_tests {
         let origin_z = sphere_radius + 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1119,9 +1193,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius + 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1133,9 +1208,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1147,9 +1223,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1161,9 +1238,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1175,9 +1253,10 @@ mod sphere_tests {
         let origin_z = 0_f32;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1189,9 +1268,10 @@ mod sphere_tests {
         let origin_z = sphere_radius + 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1203,9 +1283,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius + 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1217,9 +1298,10 @@ mod sphere_tests {
         let origin_z = sphere_radius + 1e-6;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1231,9 +1313,10 @@ mod sphere_tests {
         let origin_z = -(sphere_radius + 1e-6);
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1245,9 +1328,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1259,9 +1343,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1273,9 +1358,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1287,9 +1373,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1301,9 +1388,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1315,9 +1403,10 @@ mod sphere_tests {
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1329,9 +1418,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
     
     #[test]
@@ -1343,9 +1433,10 @@ mod sphere_tests {
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
-        let ray = Ray::new(ray_origin, ray_direction, 0.01_f32, f32::MAX);
+        let ray = Ray::new(ray_origin, ray_direction);
+        let query = IntersectionQuery::new(ray, 0.01_f32, f32::MAX);
     
-        assert!(sphere.intersect(&ray).is_miss());
+        assert!(sphere.intersect(&query).is_miss());
     }
 }
 

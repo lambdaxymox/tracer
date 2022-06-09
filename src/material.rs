@@ -31,7 +31,7 @@ impl ObjectMaterial for SimpleLambertianMaterial {
     fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
         let target = hit.p + hit.normal + sample::random_in_unit_sphere(rng);
         let attenuation = self.albedo;
-        let scattering_ray = Ray::new(hit.p, target - hit.p, ray_in.t_min, ray_in.t_max);
+        let scattering_ray = Ray::new(hit.p, target - hit.p);
 
         ScatteredRay::new(attenuation, scattering_ray)
     }
@@ -58,8 +58,6 @@ impl ObjectMaterial for SimpleMetalMaterial {
         let scattering_ray = Ray::new(
             hit.p, 
             reflected_direction + sample::random_in_unit_sphere(rng) * self.fuzz,
-            ray_in.t_min,
-            ray_in.t_max
         );
         
         ScatteredRay::new(scattering_fraction, scattering_ray)
@@ -123,12 +121,12 @@ impl ObjectMaterial for SimpleDielectricMaterial {
             };
             ScatteredRay::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
-                Ray::new(hit.p, out_dir, ray.t_min, ray.t_max)
+                Ray::new(hit.p, out_dir)
             )
         } else {
             ScatteredRay::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
-                Ray::new(hit.p, ray.direction.reflect(&hit.normal), ray.t_min, ray.t_max)
+                Ray::new(hit.p, ray.direction.reflect(&hit.normal))
             )
         }
     }

@@ -1,6 +1,7 @@
 use crate::geometry::*;
 use crate::ray::{
     Ray,
+    IntersectionQuery,
 };
 use cglinalg::{
     Vector3,
@@ -35,16 +36,16 @@ impl Sphere {
 }
 
 impl Intersection for Sphere {
-    fn intersect(&self, ray: &Ray) -> IntersectionResult {
-        let oc = ray.origin - self.center;
-        let a = ray.direction.dot(&ray.direction);
-        let b = oc.dot(&ray.direction);
+    fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult {
+        let oc = query.ray.origin - self.center;
+        let a = query.ray.direction.dot(&query.ray.direction);
+        let b = oc.dot(&query.ray.direction);
         let c = oc.dot(&oc) - self.radius * self.radius;
         let discriminant = b * b - a * c; // 4 * a * c?
         if discriminant > 0_f32 {
             let t_intersect1 = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
-            if t_intersect1 > ray.t_min && t_intersect1 < ray.t_max {
-                let point_of_intersection = ray.interpolate(t_intersect1);
+            if t_intersect1 > query.t_min && t_intersect1 < query.t_max {
+                let point_of_intersection = query.ray.interpolate(t_intersect1);
                 return IntersectionResult::new_hit(
                     t_intersect1,
                     point_of_intersection,
@@ -53,8 +54,8 @@ impl Intersection for Sphere {
             }
 
             let t_intersect2 = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
-            if t_intersect2 > ray.t_min && t_intersect2 < ray.t_max {
-                let point_of_intersection = ray.interpolate(t_intersect2);
+            if t_intersect2 > query.t_min && t_intersect2 < query.t_max {
+                let point_of_intersection = query.ray.interpolate(t_intersect2);
                 return IntersectionResult::new_hit(
                     t_intersect2,
                     point_of_intersection,
@@ -65,8 +66,8 @@ impl Intersection for Sphere {
         
         if discriminant == 0_f32 {
             let t_intersect1 = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
-            if t_intersect1 > ray.t_min && t_intersect1 < ray.t_max {
-                let point_of_intersection = ray.interpolate(t_intersect1);
+            if t_intersect1 > query.t_min && t_intersect1 < query.t_max {
+                let point_of_intersection = query.ray.interpolate(t_intersect1);
                 return IntersectionResult::new_tangent(
                     t_intersect1,
                     point_of_intersection,
@@ -75,8 +76,8 @@ impl Intersection for Sphere {
             }
 
             let t_intersect2 = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
-            if t_intersect2 > ray.t_min && t_intersect2 < ray.t_max {
-                let point_of_intersection = ray.interpolate(t_intersect2);
+            if t_intersect2 > query.t_min && t_intersect2 < query.t_max {
+                let point_of_intersection = query.ray.interpolate(t_intersect2);
                 return IntersectionResult::new_tangent(
                     t_intersect2,
                     point_of_intersection,

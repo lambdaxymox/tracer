@@ -10,6 +10,7 @@ mod scene_tests {
         Sphere,
         SceneObject,
         SimpleLambertianMaterial,
+        IntersectionQuery,
     };
     use cglinalg::{
         Vector3,
@@ -52,21 +53,23 @@ mod scene_tests {
     #[test]
     fn test_scene_sphere_sample_ray_intersects_from_camera() {
         let scene = scene();
-        let ray = Ray::new(scene.camera.position(), scene.camera.forward(), 0.1, f32::MAX);
+        let ray = Ray::new(scene.camera.position(), scene.camera.forward());
+        let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
 
         eprintln!("{:?}", ray);
         eprintln!("{:?}", scene.objects[0].center());
         eprintln!("{:?}", (scene.objects[0].center() - ray.origin).normalize());
         eprintln!("{:?}", scene.camera.forward());
         
-        assert!(scene.ray_cast(&ray).is_some());
+        assert!(scene.ray_cast(&query).is_some());
     }
 
     #[test]
     fn test_scene_sphere_sample_ray() {
         let scene = scene();
-        let ray = Ray::new(scene.camera.position(), scene.camera.forward(), 0.1, f32::MAX);
-        let sphere = scene.ray_cast(&ray).unwrap();
+        let ray = Ray::new(scene.camera.position(), scene.camera.forward());
+        let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
+        let sphere = scene.ray_cast(&query).unwrap();
         
         /*
         let expected = ;
@@ -92,8 +95,9 @@ mod scene_tests {
     #[test]
     fn test_scene_sphere_sample_normal() {
         let scene = scene();
-        let ray = Ray::new(scene.camera.position(), scene.camera.forward(), 0.1, f32::MAX);
-        let sphere = scene.ray_cast(&ray).unwrap();
+        let ray = Ray::new(scene.camera.position(), scene.camera.forward());
+        let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
+        let sphere = scene.ray_cast(&query).unwrap();
         
         /*
         let expected = ;
@@ -108,8 +112,9 @@ mod scene_tests {
     #[test]
     fn test_scene_sphere_sample_bsdf() {
         let scene = scene();
-        let ray = Ray::new(scene.camera.position(), scene.camera.forward(), 0.1, f32::MAX);
-        let sphere = scene.ray_cast(&ray).unwrap();
+        let ray = Ray::new(scene.camera.position(), scene.camera.forward());
+        let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
+        let sphere = scene.ray_cast(&query).unwrap();
         
         /*
         let expected = ;
