@@ -33,3 +33,17 @@ impl IntersectionQuery {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ScatteringResult {
+    pub scattering_fraction: Vector3<f32>,
+    pub ray: Ray,
+}
+
+impl ScatteringResult {
+    pub fn new(scattering_fraction: Vector3<f32>, ray: Ray) -> ScatteringResult {
+        ScatteringResult { 
+            scattering_fraction, ray,
+        }
+    }
+}
+
