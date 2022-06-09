@@ -35,7 +35,7 @@ impl Sphere {
 }
 
 impl Intersection for Sphere {
-    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<IntersectionResult> {
+    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> IntersectionResult {
         let oc = ray.origin - self.center;
         let a = ray.direction.dot(&ray.direction);
         let b = oc.dot(&ray.direction);
@@ -45,25 +45,47 @@ impl Intersection for Sphere {
             let t_intersect1 = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if t_intersect1 > t_min && t_intersect1 < t_max {
                 let point_of_intersection = ray.interpolate(t_intersect1);
-                return Some(IntersectionResult::new(
+                return IntersectionResult::new_hit(
                     t_intersect1,
                     point_of_intersection,
                     (point_of_intersection - self.center) / self.radius,
-                ));
+                );
             }
 
             let t_intersect2 = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
             if t_intersect2 > t_min && t_intersect2 < t_max {
                 let point_of_intersection = ray.interpolate(t_intersect2);
-                return Some(IntersectionResult::new(
+                return IntersectionResult::new_hit(
                     t_intersect2,
                     point_of_intersection,
                     (point_of_intersection - self.center) / self.radius,
-                ));
+                );
+            }
+        } 
+        
+        if discriminant == 0_f32 {
+            let t_intersect1 = (-b - f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
+            if t_intersect1 > t_min && t_intersect1 < t_max {
+                let point_of_intersection = ray.interpolate(t_intersect1);
+                return IntersectionResult::new_tangent(
+                    t_intersect1,
+                    point_of_intersection,
+                    (point_of_intersection - self.center) / self.radius,
+                );
+            }
+
+            let t_intersect2 = (-b + f32::sqrt(b * b - a * c)) / a; // 4 * a * c?
+            if t_intersect2 > t_min && t_intersect2 < t_max {
+                let point_of_intersection = ray.interpolate(t_intersect2);
+                return IntersectionResult::new_tangent(
+                    t_intersect2,
+                    point_of_intersection,
+                    (point_of_intersection - self.center) / self.radius,
+                );
             }
         }
-
-        None
+            
+        IntersectionResult::new_miss()
     }
 }
 

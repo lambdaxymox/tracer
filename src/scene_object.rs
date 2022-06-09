@@ -74,19 +74,34 @@ impl SceneObject {
 
     pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<ObjectIntersectionResult> {
         let ray_model_space = self.ray_to_model_space(ray);
-        self.geometry.intersect(&ray_model_space, t_min, t_max).map(|res_model_space| {
+        let result = self.geometry.intersect(&ray_model_space, t_min, t_max);
+        if let IntersectionResult::Hit(res_model_space) = result {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
             let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
             let object = self;
 
-            ObjectIntersectionResult::new(
+            Some(ObjectIntersectionResult::new(
                 res_t_world_space,
                 res_p_world_space,
                 res_normal_world_space,
                 object
-            )
-        })
+            ))
+        } else if let IntersectionResult::Tangent(res_model_space) = result {
+            let res_t_world_space = res_model_space.t;
+            let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
+            let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
+            let object = self;
+
+            Some(ObjectIntersectionResult::new(
+                res_t_world_space,
+                res_p_world_space,
+                res_normal_world_space,
+                object
+            ))
+        } else {
+            None
+        }
     }
 
     pub fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {

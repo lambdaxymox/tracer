@@ -37,7 +37,7 @@ mod sphere_tests {
             let ray_direction = (sphere.center() - ray_origin).normalize();
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
 
         for j in 0..65 {
@@ -49,7 +49,7 @@ mod sphere_tests {
             let ray_direction = (sphere.center() - ray_origin).normalize();
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
 
         for k in 0..65 {
@@ -62,7 +62,7 @@ mod sphere_tests {
             let ray_direction = (sphere.center() - ray_origin).normalize();
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -80,7 +80,7 @@ mod sphere_tests {
             let ray_direction = (ray_origin - sphere.center()).normalize();
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
         }
 
         for j in 0..65 {
@@ -92,7 +92,7 @@ mod sphere_tests {
             let ray_direction = (ray_origin - sphere.center()).normalize();
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
         }
 
         for k in 0..65 {
@@ -105,7 +105,7 @@ mod sphere_tests {
             let ray_direction = (ray_origin - sphere.center()).normalize();
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
         }
     }
 
@@ -124,7 +124,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -143,7 +143,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -162,7 +162,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -181,7 +181,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -200,7 +200,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -219,12 +219,12 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
     #[test]
-    fn test_rays_cast_towards_sphere_along_y_axis_sweeping_in_z_axis_1() {
+    fn test_rays_cast_towards_sphere_along_y_axis_sweeping_in_z_axis1() {
         let sphere = sphere();
         let sphere_radius = sphere.radius();
         let sphere_diameter = sphere.diameter();
@@ -238,7 +238,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0f32, -1_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -257,7 +257,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -276,7 +276,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -295,7 +295,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -314,7 +314,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0f32, 0_f32, -1_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -333,7 +333,7 @@ mod sphere_tests {
             let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
             let ray = Ray::new(ray_origin, ray_direction);
 
-            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_some());
+            assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
         }
     }
 
@@ -348,7 +348,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -362,7 +362,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
 
@@ -377,7 +377,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -391,7 +391,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -405,7 +405,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -419,7 +419,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -433,7 +433,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -447,7 +447,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -461,7 +461,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -475,7 +475,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -489,7 +489,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -503,7 +503,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -517,7 +517,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -531,7 +531,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -545,7 +545,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -559,7 +559,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -573,7 +573,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -587,7 +587,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -601,7 +601,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -615,7 +615,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -629,7 +629,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -643,7 +643,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -657,7 +657,7 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 
     #[test]
@@ -671,6 +671,6 @@ mod sphere_tests {
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
-        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_none());
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
     }
 }
