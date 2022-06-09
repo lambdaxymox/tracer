@@ -13,10 +13,17 @@ pub trait Geometry: std::fmt::Debug + Intersection {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
+pub enum Reason {
+    HitBeforeMin { t_got: f32 },
+    HitBeforeMax { t_got: f32 },
+    NoIntersection,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum IntersectionResult {
     Hit(IntersectionDesc),
     Tangent(IntersectionDesc),
-    Miss
+    Miss(Reason),
 }
 
 impl IntersectionResult {
@@ -29,8 +36,8 @@ impl IntersectionResult {
     }
 
     #[inline]
-    pub const fn new_miss() -> Self {
-        Self::Miss
+    pub const fn new_miss(reason: Reason) -> Self {
+        Self::Miss(reason)
     }
 
     #[inline]
@@ -52,7 +59,7 @@ impl IntersectionResult {
     #[inline]
     pub fn is_miss(&self) -> bool {
         match *self {
-            Self::Miss => true,
+            Self::Miss(_) => true,
             _ => false
         }
     }

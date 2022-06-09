@@ -84,8 +84,8 @@ impl Intersection for Sphere {
                 );
             }
         }
-            
-        IntersectionResult::new_miss()
+        
+        IntersectionResult::new_miss(Reason::NoIntersection)
     }
 }
 

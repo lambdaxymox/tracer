@@ -108,6 +108,7 @@ impl SceneObject {
         self.material.sample_bsdf(ray_in, hit, rng)
     }
 
+    #[inline]
     pub fn center(&self) -> Vector3<f32> {
         (self.model_matrix * self.geometry.center().extend(1_f32)).contract()
     }
