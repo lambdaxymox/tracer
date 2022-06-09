@@ -637,7 +637,7 @@ mod sphere_tests {
         let sphere = sphere();
         let sphere_radius = sphere.radius();
         let origin_x = 0_f32;
-        let origin_y = sphere_radius;
+        let origin_y = -sphere_radius;
         let origin_z = 3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
@@ -665,12 +665,686 @@ mod sphere_tests {
         let sphere = sphere();
         let sphere_radius = sphere.radius();
         let origin_x = 0_f32;
-        let origin_y = sphere_radius;
+        let origin_y = -sphere_radius;
         let origin_z = -3_f32 * sphere_radius;
         let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
         let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
         let ray = Ray::new(ray_origin, ray_direction);
 
         assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_tangent());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = sphere_radius - 1e-6;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = -(sphere_radius - 1e-6);
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = sphere_radius - 1e-6;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = -(sphere_radius - 1e-6);
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = sphere_radius - 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = -(sphere_radius - 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = sphere_radius - 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = -(sphere_radius - 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius - 1e-6;
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius - 1e-6);
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius - 1e-6;
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius - 1e-6);
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = sphere_radius - 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = -(sphere_radius - 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = sphere_radius - 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = -(sphere_radius - 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius - 1e-6;
+        let origin_y = 0_f32; 
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius - 1e-6);
+        let origin_y = 0_f32; 
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius - 1e-6;
+        let origin_y = 0_f32; 
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius - 1e-6);
+        let origin_y = 0_f32; 
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = sphere_radius - 1e-6;
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -(sphere_radius - 1e-6);
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = sphere_radius - 1e-6;
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_hit_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -(sphere_radius - 1e-6);
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_hit());
+    }
+
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = sphere_radius + 1e-6;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = -(sphere_radius + 1e-6);
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = sphere_radius + 1e-6;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_y_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = -(sphere_radius + 1e-6);
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = sphere_radius + 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = -(sphere_radius + 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(-1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = sphere_radius + 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_x_axis_sweeping_in_z_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -3_f32 * sphere_radius;
+        let origin_y = 0_f32;
+        let origin_z = -(sphere_radius + 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(1_f32, 0_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius + 1e-6;
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius + 1e-6);
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius + 1e-6;
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_x_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius + 1e-6);
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = 0_f32;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = sphere_radius + 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = 3_f32 * sphere_radius;
+        let origin_z = -(sphere_radius + 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, -1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = sphere_radius + 1e-6;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_y_axis_sweeping_in_z_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -3_f32 * sphere_radius;
+        let origin_z = -(sphere_radius + 1e-6);
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 1_f32, 0_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius + 1e-6;
+        let origin_y = 0_f32; 
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius + 1e-6);
+        let origin_y = 0_f32; 
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = sphere_radius + 1e-6;
+        let origin_y = 0_f32; 
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_x_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = -(sphere_radius + 1e-6);
+        let origin_y = 0_f32; 
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis1() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = sphere_radius + 1e-6;
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis2() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -(sphere_radius + 1e-6);
+        let origin_z = 3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, -1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis3() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = sphere_radius + 1e-6;
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
+    }
+    
+    #[test]
+    fn test_rays_cast_miss_almost_tangent_to_sphere_along_z_axis_sweeping_in_y_axis4() {
+        let sphere = sphere();
+        let sphere_radius = sphere.radius();
+        let origin_x = 0_f32;
+        let origin_y = -(sphere_radius + 1e-6);
+        let origin_z = -3_f32 * sphere_radius;
+        let ray_origin = Vector3::new(origin_x, origin_y, origin_z);
+        let ray_direction = Vector3::new(0_f32, 0_f32, 1_f32);
+        let ray = Ray::new(ray_origin, ray_direction);
+    
+        assert!(sphere.intersect(&ray, 0.01_f32, f32::MAX).is_miss());
     }
 }
