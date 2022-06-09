@@ -17,16 +17,15 @@ pub trait ObjectMaterial: std::fmt::Debug {
     fn sample_bsdf(&self, ray_in: Ray, hit: &IntersectionResult, rng: &mut ThreadRng) -> ScatteringResult;
 }
 
+
 #[derive(Copy, Clone, Debug)]
 pub struct SimpleLambertianMaterial {
     albedo: Vector3<f32>,
 }
 
 impl SimpleLambertianMaterial {
-    pub fn new(albedo: Vector3<f32>) -> SimpleLambertianMaterial {
-        SimpleLambertianMaterial {
-            albedo,
-        }
+    pub fn new(albedo: Vector3<f32>) -> Self {
+        Self { albedo, }
     }
 }
 
@@ -57,10 +56,8 @@ pub struct SimpleMetalMaterial {
 }
 
 impl SimpleMetalMaterial {
-    pub fn new(albedo: Vector3<f32>, fuzz: f32) -> SimpleMetalMaterial {
-        SimpleMetalMaterial {
-            albedo, fuzz,
-        }
+    pub fn new(albedo: Vector3<f32>, fuzz: f32) -> Self {
+        Self { albedo, fuzz, }
     }
 }
 
@@ -96,10 +93,8 @@ pub struct SimpleDielectricMaterial {
 }
 
 impl SimpleDielectricMaterial {
-    pub fn new(refraction_index: f32) -> SimpleDielectricMaterial {
-        SimpleDielectricMaterial {
-            refraction_index,
-        }
+    pub fn new(refraction_index: f32) -> Self {
+        Self { refraction_index, }
     }
 }
 
@@ -124,9 +119,7 @@ impl ObjectMaterial for SimpleDielectricMaterial {
         }
 
 
-        let result = if let IntersectionResult::Hit(value) = hit {
-            value
-        } else if let IntersectionResult::Tangent(value) = hit {
+        let result = if let IntersectionResult::Hit(value) | IntersectionResult::Tangent(value) = hit {
             value
         } else {
             panic!("Unwrapped a miss")

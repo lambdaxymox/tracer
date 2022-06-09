@@ -84,7 +84,7 @@ impl SceneObject {
             // We missed the object.
             None
         }
-    } 
+    }
 
     #[inline]
     pub fn center(&self) -> Vector3<f32> {
