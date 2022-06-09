@@ -1,5 +1,4 @@
 use crate::query::*;
-use crate::ray::*;
 use crate::canvas::*;
 use crate::scene::*;
 use cglinalg::{ 

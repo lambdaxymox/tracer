@@ -2,7 +2,6 @@ extern crate cglinalg;
 extern crate rand;
 
 
-mod ray;
 mod query;
 mod scene;
 mod scene_object;

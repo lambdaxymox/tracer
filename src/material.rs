@@ -1,6 +1,4 @@
-use crate::ray::{
-    Ray,
-};
+use crate::query::*;
 use crate::sample;
 use crate::scene_object::*;
 use cglinalg::{
