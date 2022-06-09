@@ -1,4 +1,5 @@
 use crate::query::*;
+use crate::ray::*;
 use crate::canvas::*;
 use crate::scene::*;
 use cglinalg::{ 
@@ -48,11 +49,14 @@ impl Renderer {
         // TODO: Include ability to sample emissions for scene objects that are lights.
         if let Some(hit) = scene.ray_cast(&query) {
             if depth < self.max_path_depth {
-                let scattered_ray = hit.object.sample_bsdf(query.ray, &hit, rng);
-                let scattered_query = IntersectionQuery::new(scattered_ray.ray, query.t_min, query.t_max);
-                let color = self.estimate(scene, &scattered_query, rng, depth + 1);
+                if let Some(scattered_ray) = hit.object.scatter(query, rng) {
+                    let scattered_query = IntersectionQuery::new(scattered_ray.ray, query.t_min, query.t_max);
+                    let color = self.estimate(scene, &scattered_query, rng, depth + 1);
     
-                scattered_ray.scattering_fraction.component_mul(&color)
+                    scattered_ray.scattering_fraction.component_mul(&color)
+                } else {
+                    Vector3::new(0_f32, 0_f32, 0_f32)
+                }
             } else {
                 Vector3::new(0_f32, 0_f32, 0_f32)
             }
@@ -61,6 +65,7 @@ impl Renderer {
             let t = (unit_direction.y + 1_f32) * 0.5;
     
             // TODO: Convert default value to some kind of ambient light instead of baking into path tracer.
+            // When we reach the end of a ray, there is always the ambient lighting to return.
             Vector3::new(1_f32, 1_f32, 1_f32) * (1_f32 - t) + Vector3::new(0.5, 0.7, 1.0) * t
         }
     }

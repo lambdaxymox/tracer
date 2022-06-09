@@ -28,14 +28,14 @@ impl<'a> ObjectIntersectionResult<'a> {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct ScatteredRay {
+pub struct ScatteringResult {
     pub scattering_fraction: Vector3<f32>,
     pub ray: Ray,
 }
 
-impl ScatteredRay {
-    pub fn new(scattering_fraction: Vector3<f32>, ray: Ray) -> ScatteredRay {
-        ScatteredRay { 
+impl ScatteringResult {
+    pub fn new(scattering_fraction: Vector3<f32>, ray: Ray) -> ScatteringResult {
+        ScatteringResult { 
             scattering_fraction, ray,
         }
     }
@@ -110,9 +110,9 @@ impl SceneObject {
         }
     }
 
-    pub fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
-        self.material.sample_bsdf(ray_in, hit, rng)
-    }
+    pub fn scatter(&self, query: &IntersectionQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
+        self.intersect(query).map(|hit| self.material.sample_bsdf(query.ray, &hit, rng))
+    } 
 
     #[inline]
     pub fn center(&self) -> Vector3<f32> {

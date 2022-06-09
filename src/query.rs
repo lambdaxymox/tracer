@@ -13,3 +13,4 @@ impl IntersectionQuery {
         Self { ray, t_min, t_max }
     }
 }
+

@@ -11,7 +11,7 @@ use rand::prelude::*;
 
 
 pub trait ObjectMaterial: std::fmt::Debug {
-    fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay;
+    fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteringResult;
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -28,12 +28,12 @@ impl SimpleLambertianMaterial {
 }
 
 impl ObjectMaterial for SimpleLambertianMaterial {
-    fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+    fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteringResult {
         let target = hit.p + hit.normal + sample::random_in_unit_sphere(rng);
         let attenuation = self.albedo;
         let scattering_ray = Ray::new(hit.p, target - hit.p);
 
-        ScatteredRay::new(attenuation, scattering_ray)
+        ScatteringResult::new(attenuation, scattering_ray)
     }
 }
 
@@ -52,7 +52,7 @@ impl SimpleMetalMaterial {
 }
 
 impl ObjectMaterial for SimpleMetalMaterial {
-    fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+    fn sample_bsdf(&self, ray_in: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteringResult {
         let reflected_direction = ray_in.direction.reflect(&hit.normal);
         let scattering_fraction = self.albedo;
         let scattering_ray = Ray::new(
@@ -60,7 +60,7 @@ impl ObjectMaterial for SimpleMetalMaterial {
             reflected_direction + sample::random_in_unit_sphere(rng) * self.fuzz,
         );
         
-        ScatteredRay::new(scattering_fraction, scattering_ray)
+        ScatteringResult::new(scattering_fraction, scattering_ray)
     }
 }
 
@@ -78,7 +78,7 @@ impl SimpleDielectricMaterial {
 }
 
 impl ObjectMaterial for SimpleDielectricMaterial {
-    fn sample_bsdf(&self, ray: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteredRay {
+    fn sample_bsdf(&self, ray: Ray, hit: &ObjectIntersectionResult, rng: &mut ThreadRng) -> ScatteringResult {
         fn refract(v: Vector3<f32>, n: Vector3<f32>, ni_over_nt: f32) -> Option<Vector3<f32>> {
             let uv = v.normalize();
             let dt = uv.dot(&n);
@@ -119,12 +119,12 @@ impl ObjectMaterial for SimpleDielectricMaterial {
             } else {
                 refracted
             };
-            ScatteredRay::new(
+            ScatteringResult::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
                 Ray::new(hit.p, out_dir)
             )
         } else {
-            ScatteredRay::new(
+            ScatteringResult::new(
                 Vector3::new(1_f32, 1_f32, 1_f32), 
                 Ray::new(hit.p, ray.direction.reflect(&hit.normal))
             )
