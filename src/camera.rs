@@ -76,9 +76,12 @@ impl Camera {
         let offset = self.u * rd.x + self.v * rd.y;
         let lens_position = self.eye + offset;
         
+        // TODO: Camera ray range?
         Ray::new(
             lens_position,
             self.lower_left_corner + self.horizontal * u + self.vertical * v - lens_position,
+            0.0001,
+            f32::MAX
         )
     }
 

@@ -6,7 +6,7 @@ use cglinalg::{
 };
 
 pub trait Intersection {
-    fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> IntersectionResult;
+    fn intersect(&self, ray: &Ray) -> IntersectionResult;
 }
 pub trait Geometry: std::fmt::Debug + Intersection {
     fn center(&self) -> Vector3<f32>;

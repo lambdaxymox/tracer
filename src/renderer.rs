@@ -37,7 +37,7 @@ impl Renderer {
 
     fn estimate(&self, scene: &Scene, ray: Ray, rng: &mut ThreadRng, depth: usize) -> Vector3<f32> {
         // TODO: Include ability to sample emissions for scene objects that are lights.
-        if let Some(hit) = scene.ray_cast(&ray, 0.001, std::f32::MAX) {
+        if let Some(hit) = scene.ray_cast(&ray) {
             if depth < self.max_path_depth {
                 let scattered_ray = hit.object.sample_bsdf(ray, &hit, rng);
                 let color = self.estimate(scene, scattered_ray.ray, rng, depth + 1);

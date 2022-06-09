@@ -36,18 +36,22 @@ impl Scene {
 
     /// Cast a ray into a scene and determine whether the ray intersects and 
     /// object inside the scene.
-    pub fn ray_cast(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<ObjectIntersectionResult> {
-        let mut closest_record = None;
-        let mut closest_so_far = t_max;
+    pub fn ray_cast(&self, ray: &Ray) -> Option<ObjectIntersectionResult> {
+        let mut closest_result = None;
+        let mut closest_so_far = ray.t_max;
+        let mut closest_ray = *ray;
         for object in self.objects.iter() {
-            if let Some(temp_record) = object.intersect(ray, t_min, closest_so_far) {
-                if temp_record.t < closest_so_far {
-                    closest_so_far = temp_record.t;
-                    closest_record = Some(temp_record);
+            let new_ray = Ray::new(closest_ray.origin, closest_ray.direction, ray.t_min, closest_so_far);
+            if let Some(new_result) = object.intersect(&new_ray) {
+                if new_result.t < closest_so_far {
+                    closest_ray = new_ray;
+                    closest_so_far = new_result.t;
+                    closest_result = Some(new_result);
                 }
             }
         }
 
-        closest_record
+        closest_result
     }
 }
+

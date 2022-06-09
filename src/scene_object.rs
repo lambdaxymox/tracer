@@ -69,12 +69,12 @@ impl SceneObject {
         let ray_origin_model_space = (self.model_matrix_inv * ray.origin.extend(1_f32)).contract();
         let ray_direction_model_space = (self.model_matrix_inv * ray.direction.extend(0_f32)).contract();
         
-        Ray::new(ray_origin_model_space, ray_direction_model_space)
+        Ray::new(ray_origin_model_space, ray_direction_model_space, ray.t_min, ray.t_max)
     }
 
-    pub fn intersect(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<ObjectIntersectionResult> {
+    pub fn intersect(&self, ray: &Ray) -> Option<ObjectIntersectionResult> {
         let ray_model_space = self.ray_to_model_space(ray);
-        let result = self.geometry.intersect(&ray_model_space, t_min, t_max);
+        let result = self.geometry.intersect(&ray_model_space);
         if let IntersectionResult::Hit(res_model_space) = result {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
@@ -108,7 +108,6 @@ impl SceneObject {
         self.material.sample_bsdf(ray_in, hit, rng)
     }
 
-    #[inline]
     pub fn center(&self) -> Vector3<f32> {
         (self.model_matrix * self.geometry.center().extend(1_f32)).contract()
     }
