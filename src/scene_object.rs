@@ -1,6 +1,7 @@
 use crate::geometry::*;
 use crate::sphere::*;
 use crate::query::*;
+use crate::model_object::*;
 use crate::bsdf::*;
 use cglinalg::{
     Vector3,
@@ -8,85 +9,6 @@ use cglinalg::{
     Magnitude,
 };
 use rand::prelude::*;
-
-
-pub trait ModelObject: std::fmt::Debug {
-    fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
-
-    fn scatter(&mut self, query: &ScatteringQuery) -> Option<ScatteringResult>;
-
-    fn center(&self) -> Vector3<f32>;
-
-    fn contains(&self, point: &Vector3<f32>) -> bool;
-
-    fn normal(&self, point: &Vector3<f32>) -> Option<Vector3<f32>>;
-}
-
-#[derive(Debug)]
-pub struct SphereModelObject<Bsdf> 
-where 
-    Bsdf: BsdfMapping 
-{
-    geometry: Sphere,
-    bsdf: Box<Bsdf>,
-    sampler: Box<dyn BsdfQuerySampler<Bsdf = Bsdf>>,
-}
-
-impl<Bsdf> SphereModelObject<Bsdf> 
-where 
-    Bsdf: BsdfMapping 
-{
-    pub fn new(geometry: Sphere, bsdf: Box<Bsdf>, sampler: Box<dyn BsdfQuerySampler<Bsdf = Bsdf>>) -> Self {
-        Self { geometry, bsdf, sampler, }
-    }
-}
-
-impl<Bsdf> ModelObject for SphereModelObject<Bsdf>
-where 
-    Bsdf: BsdfMapping
-{
-    fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult {
-        self.geometry.intersect(query)
-    }
-
-    fn scatter(&mut self, query: &ScatteringQuery) -> Option<ScatteringResult> {
-        // if let Some(normal) = self.normal(&query.point) {
-            let normal = (query.point - self.geometry.center()).normalize();
-            let ray_incoming = query.ray_incoming;
-            let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point);
-            let bsdf_result = self.bsdf.sample(&bsdf_query);
-             
-            Some(ScatteringResult::new(
-                bsdf_result.ray_incoming,
-                bsdf_result.ray_outgoing,
-                bsdf_result.point,
-                bsdf_result.normal,
-                bsdf_result.scattering_fraction,
-            ))
-        // } else {
-        //     None
-        // }
-    }
-
-    fn center(&self) -> Vector3<f32> {
-        self.geometry.center()
-    }
-
-    fn contains(&self, point: &Vector3<f32>) -> bool {
-        let diff = point - self.geometry.center;
-        
-        diff.dot(&diff) <= self.geometry.radius * self.geometry.radius
-    }
-
-    fn normal(&self, point: &Vector3<f32>) -> Option<Vector3<f32>> {
-        if self.contains(point) {
-            Some((point - self.geometry.center()).normalize())
-        } else {
-            None
-        }
-    }
-}
-
 
 
 #[derive(Debug)]
@@ -107,7 +29,7 @@ impl SceneObject {
     }
 
     #[inline]
-    fn ray_to_model_space(&self, ray: &Ray) -> Ray {
+    fn ray_world_space_to_model_space(&self, ray: &Ray) -> Ray {
         let ray_origin_model_space = (self.model_matrix_inv * ray.origin.extend(1_f32)).contract();
         let ray_direction_model_space = (self.model_matrix_inv * ray.direction.extend(0_f32)).contract();
         
@@ -116,7 +38,7 @@ impl SceneObject {
 
     #[inline]
     fn intersection_query_world_space_to_model_space(&self, query: &IntersectionQuery) -> IntersectionQuery {
-        let ray_model_space = self.ray_to_model_space(&query.ray);
+        let ray_model_space = self.ray_world_space_to_model_space(&query.ray);
 
         IntersectionQuery::new(ray_model_space, query.t_min, query.t_max)
     }

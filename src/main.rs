@@ -4,6 +4,7 @@ extern crate rand;
 
 mod query;
 mod scene;
+mod model_object;
 mod scene_object;
 mod canvas;
 mod camera;
@@ -31,6 +32,7 @@ use camera::{
 };
 use canvas::*;
 use sphere::*;
+use model_object::*;
 use scene_object::*;
 use scene::*;
 use renderer::*;
