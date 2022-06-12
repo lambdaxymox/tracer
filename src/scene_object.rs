@@ -165,21 +165,6 @@ impl SceneObject {
             None
         };
 
-        // TODO: scatter should choose the next ray tracing direction, not sampling the BSDF.
-        /*
-        let intersection_result = self.intersect(query);
-        if let IntersectionResult::Hit(result) | IntersectionResult::Tangent(result) = intersection_result {
-            // The ray hit or grazed the object.
-            let 
-
-            Some(self.material.sample_bsdf(query.ray, &result, rng))
-        } else {
-            // The ray missed the object.
-            None
-        }
-        */
-        //None
-
         result_world_space
     }
 
