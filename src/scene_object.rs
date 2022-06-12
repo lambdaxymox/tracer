@@ -1,35 +1,87 @@
 use crate::geometry::*;
+use crate::sphere::*;
 use crate::query::*;
-use crate::material::{
-    ObjectMaterial, 
-};
+use crate::bsdf::*;
 use cglinalg::{
     Vector3,
     Matrix4x4,
+    Magnitude,
 };
 use rand::prelude::*;
 
 
+pub trait ModelObject: std::fmt::Debug {
+    fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
+
+    fn scatter(&mut self, query: &ScatteringQuery) -> ScatteringResult;
+
+    fn center(&self) -> Vector3<f32>;
+}
+
+#[derive(Debug)]
+pub struct SphereModelObject<Bsdf> 
+where 
+    Bsdf: BsdfMapping 
+{
+    geometry: Sphere,
+    bsdf: Box<Bsdf>,
+    sampler: Box<dyn BsdfQuerySampler<Bsdf = Bsdf>>,
+}
+
+impl<Bsdf> SphereModelObject<Bsdf> 
+where 
+    Bsdf: BsdfMapping 
+{
+    pub fn new(geometry: Sphere, bsdf: Box<Bsdf>, sampler: Box<dyn BsdfQuerySampler<Bsdf = Bsdf>>) -> Self {
+        Self { geometry, bsdf, sampler, }
+    }
+}
+
+impl<Bsdf> ModelObject for SphereModelObject<Bsdf>
+where 
+    Bsdf: BsdfMapping
+{
+    fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult {
+        self.geometry.intersect(query)
+    }
+
+    fn scatter(&mut self, query: &ScatteringQuery) -> ScatteringResult {
+        let normal = (query.point - self.geometry.center()).normalize();
+        let ray_incoming = query.ray_incoming;
+        let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point);
+        let bsdf_result = self.bsdf.sample(&bsdf_query);
+         
+        ScatteringResult::new(
+            bsdf_result.ray_incoming,
+            bsdf_result.ray_outgoing,
+            bsdf_result.point,
+            bsdf_result.normal,
+            bsdf_result.scatterance,
+        )
+    }
+
+    fn center(&self) -> Vector3<f32> {
+        self.geometry.center()
+    }
+}
+
+
+
 #[derive(Debug)]
 pub struct SceneObject {
-    geometry: Box<dyn Geometry>,
-    material: Box<dyn ObjectMaterial>,
+    object: Box<dyn ModelObject>,
     pub model_matrix: Matrix4x4<f32>,
     model_matrix_inv: Matrix4x4<f32>,
 }
 
 impl SceneObject {
     pub fn new(
-        geometry: Box<dyn Geometry>, 
-        material: Box<dyn ObjectMaterial>, 
+        object: Box<dyn ModelObject>, 
         model_matrix: Matrix4x4<f32>) -> Self 
     {
-        Self { 
-            geometry, 
-            material, 
-            model_matrix,
-            model_matrix_inv: model_matrix.inverse().unwrap()
-        }
+        let model_matrix_inv = model_matrix.inverse().unwrap();
+        
+        Self { object, model_matrix, model_matrix_inv, }
     }
 
     #[inline]
@@ -49,7 +101,7 @@ impl SceneObject {
 
     pub fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult {
         let query_model_space = self.query_to_model_space(query);
-        let result = self.geometry.intersect(&query_model_space);
+        let result = self.object.intersect(&query_model_space);
         if let IntersectionResult::Hit(res_model_space) = result {
             let res_t_world_space = res_model_space.t;
             let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
@@ -76,19 +128,31 @@ impl SceneObject {
         }
     }
 
-    pub fn scatter(&self, query: &IntersectionQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
-        let result = self.intersect(query);
-        if let IntersectionResult::Hit(_) | IntersectionResult::Tangent(_) = result {
+    pub fn scatter(&self, query: &ScatteringQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
+        // let query_model_space = 
+        // Convert world space scattering query to model space scattering query
+        // Run the model space scattering query.
+        // Convert the model space scattering result to a world space scattering result.
+        // return.
+        // TODO: scatter should choose the next ray tracing direction, not sampling the BSDF.
+        /*
+        let intersection_result = self.intersect(query);
+        if let IntersectionResult::Hit(result) | IntersectionResult::Tangent(result) = intersection_result {
+            // The ray hit or grazed the object.
+            let 
+
             Some(self.material.sample_bsdf(query.ray, &result, rng))
         } else {
-            // We missed the object.
+            // The ray missed the object.
             None
         }
+        */
+        None
     }
 
     #[inline]
     pub fn center(&self) -> Vector3<f32> {
-        (self.model_matrix * self.geometry.center().extend(1_f32)).contract()
+        (self.model_matrix * self.object.center().extend(1_f32)).contract()
     }
 }
 

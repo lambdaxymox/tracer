@@ -48,11 +48,19 @@ impl Renderer {
         // TODO: Include ability to sample emissions for scene objects that are lights.
         if let Some(hit) = scene.ray_cast(query) {
             if depth < self.max_path_depth {
-                if let Some(scattered_ray) = hit.object.scatter(query, rng) {
-                    let scattered_query = IntersectionQuery::new(scattered_ray.ray, query.t_min, query.t_max);
-                    let color = self.estimate(scene, &scattered_query, rng, depth + 1);
+                let scattering_query = ScatteringQuery::new(
+                    query.ray.direction,
+                    Vector3::zero(),
+                    hit.intersection_result.unwrap_hit_or_tangent().point
+                );
+                if let Some(scattering_result) = hit.object.scatter(&scattering_query, rng) {
+                    let next_origin = scattering_result.point;
+                    let next_direction = scattering_result.ray_outgoing;
+                    let next_incoming_ray = Ray::new(next_origin, next_direction);
+                    let next_intersection_query = IntersectionQuery::new(next_incoming_ray, query.t_min, query.t_max);
+                    let color = self.estimate(scene, &next_intersection_query, rng, depth + 1);
     
-                    scattered_ray.scattering_fraction.component_mul(&color)
+                    scattering_result.scattering_fraction.component_mul(&color)
                 } else {
                     Vector3::new(0_f32, 0_f32, 0_f32)
                 }

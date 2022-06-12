@@ -1,7 +1,7 @@
 mod camera;
 mod canvas;
 mod geometry;
-mod material;
+mod bsdf;
 mod query;
 mod sample;
 mod scene;
@@ -12,7 +12,7 @@ mod sphere;
 pub use camera::*;
 pub use canvas::*;
 pub use geometry::*;
-pub use material::*;
+pub use bsdf::*;
 pub use query::*;
 pub use scene::*;
 pub use scene_object::*;

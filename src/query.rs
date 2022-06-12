@@ -1,6 +1,9 @@
 use cglinalg::{
     Vector3,
 };
+use crate::geometry::{
+    IntersectionResult,
+};
 
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -34,16 +37,83 @@ impl IntersectionQuery {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ScatteringQuery {
+    pub ray_incoming: Vector3<f32>,
+    pub ray_outgoing: Vector3<f32>,
+    pub point: Vector3<f32>,
+}
+
+impl ScatteringQuery {
+    pub fn new(ray_incoming: Vector3<f32>, ray_outgoing: Vector3<f32>, point: Vector3<f32>) -> Self {
+        Self { ray_incoming, ray_outgoing, point, }
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct ScatteringResult {
+    pub ray_incoming: Vector3<f32>,
+    pub ray_outgoing: Vector3<f32>,
+    pub point: Vector3<f32>,
+    pub normal: Vector3<f32>,
     pub scattering_fraction: Vector3<f32>,
-    pub ray: Ray,
 }
 
 impl ScatteringResult {
-    pub fn new(scattering_fraction: Vector3<f32>, ray: Ray) -> ScatteringResult {
-        ScatteringResult { 
-            scattering_fraction, ray,
+    pub fn new(
+        ray_incoming: Vector3<f32>,
+        ray_outgoing: Vector3<f32>,
+        point: Vector3<f32>,
+        normal: Vector3<f32>,
+        scatterance: Vector3<f32>) -> Self 
+    {
+        Self {
+            ray_incoming, ray_outgoing, point, normal, scattering_fraction: scatterance,
         }
+    }
+}
+
+pub trait BsdfMapping: std::fmt::Debug {
+    fn sample(&self, query: &BsdfQuery) -> BsdfResult;
+}
+
+pub trait BsdfQuerySampler: std::fmt::Debug {
+    type Bsdf: BsdfMapping;
+
+    fn sample(&mut self, bsdf: &Self::Bsdf, ray_incoming: &Vector3<f32>, normal: &Vector3<f32>, point: &Vector3<f32>) -> BsdfQuery;
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct BsdfQuery {
+    pub ray_incoming: Vector3<f32>,
+    pub ray_outgoing: Vector3<f32>,
+    pub point: Vector3<f32>,
+    pub normal: Vector3<f32>,
+}
+
+impl BsdfQuery {
+    pub fn new(ray_incoming: Vector3<f32>, ray_outgoing: Vector3<f32>, point: Vector3<f32>, normal: Vector3<f32>) -> Self {
+        Self { ray_incoming, ray_outgoing, point, normal, }
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct BsdfResult {
+    pub ray_incoming: Vector3<f32>,
+    pub ray_outgoing: Vector3<f32>,
+    pub point: Vector3<f32>,
+    pub normal: Vector3<f32>,
+    pub scatterance: Vector3<f32>,
+}
+
+impl BsdfResult {
+    pub fn new(
+        ray_incoming: Vector3<f32>,
+        ray_outgoing: Vector3<f32>,
+        point: Vector3<f32>,
+        normal: Vector3<f32>,
+        scatterance: Vector3<f32>) -> Self 
+    {
+        Self { ray_incoming, ray_outgoing, point, normal, scatterance, }
     }
 }
 

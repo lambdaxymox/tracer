@@ -9,8 +9,9 @@ mod scene_tests {
         Ray,
         Sphere,
         SceneObject,
-        SimpleLambertianMaterial,
-        IntersectionQuery,
+        SimpleLambertianBsdf,
+        IntersectionQuery, SimpleLambertianBsdfQuerySampler,
+        SphereModelObject,
     };
     use cglinalg::{
         Vector3,
@@ -23,9 +24,12 @@ mod scene_tests {
         let sphere_radius = 1_f32;
         let sphere_center_world_space = Vector3::new(4_f32, 5_f32, 6_f32);
         let model_matrix = Matrix4x4::from_affine_translation(&sphere_center_world_space);
-        let sphere = Box::new(Sphere::new(sphere_center_model_space, sphere_radius));
-        let material = Box::new(SimpleLambertianMaterial::new(Vector3::new(0.5, 0.5, 0.5)));
-        let scene_object = SceneObject::new(sphere, material, model_matrix);
+        let sphere = Sphere::new(sphere_center_model_space, sphere_radius);
+        let bsdf = Box::new(SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5)));
+        let rng = rand::prelude::thread_rng();
+        let bsdf_sampler = Box::new(SimpleLambertianBsdfQuerySampler::new(rng));
+        let object = Box::new(SphereModelObject::new(sphere, bsdf, bsdf_sampler));
+        let scene_object = SceneObject::new(object, model_matrix);
         let camera = (|width: usize, height: usize| {
             let look_from = Vector3::new(-4_f32, -5_f32, 0_f32);
             let look_at = sphere_center_world_space;
