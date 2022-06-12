@@ -55,7 +55,7 @@ impl BsdfMapping for SimpleLambertianBsdf {
             ray_outgoing: query.ray_outgoing,
             point: query.point,
             normal: query.normal,
-            scatterance: self.scattering_fraction,
+            scattering_fraction: self.scattering_fraction,
         }
     }
 }

@@ -102,7 +102,7 @@ pub struct BsdfResult {
     pub ray_outgoing: Vector3<f32>,
     pub point: Vector3<f32>,
     pub normal: Vector3<f32>,
-    pub scatterance: Vector3<f32>,
+    pub scattering_fraction: Vector3<f32>,
 }
 
 impl BsdfResult {
@@ -111,9 +111,9 @@ impl BsdfResult {
         ray_outgoing: Vector3<f32>,
         point: Vector3<f32>,
         normal: Vector3<f32>,
-        scatterance: Vector3<f32>) -> Self 
+        scattering_fraction: Vector3<f32>) -> Self 
     {
-        Self { ray_incoming, ray_outgoing, point, normal, scatterance, }
+        Self { ray_incoming, ray_outgoing, point, normal, scattering_fraction, }
     }
 }
 

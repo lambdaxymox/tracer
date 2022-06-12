@@ -56,7 +56,7 @@ where
             bsdf_result.ray_outgoing,
             bsdf_result.point,
             bsdf_result.normal,
-            bsdf_result.scatterance,
+            bsdf_result.scattering_fraction,
         )
     }
 
