@@ -104,15 +104,14 @@ impl BsdfQuerySampler for SimpleMetalBsdfQuerySampler {
 
 impl BsdfMapping for SimpleMetalBsdf {
     fn sample(&self, query: &BsdfQuery) -> BsdfResult {
-        let reflectance = self.reflectance;
-        let transmittance = Vector3::zero();
+        let scattering_fraction = self.reflectance;
 
         BsdfResult::new(
             query.ray_incoming,
             query.ray_outgoing,
             query.point,
-            reflectance,
-            transmittance,
+            query.normal,
+            scattering_fraction,
         )
     }
 }

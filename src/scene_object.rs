@@ -129,9 +129,8 @@ impl SceneObject {
     }
 
     pub fn scatter(&self, query: &ScatteringQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
-        // let query_model_space = 
-        // Convert world space scattering query to model space scattering query
-        // Run the model space scattering query.
+        // let scattering_query_model_space = Convert world space scattering query to model space scattering query.
+        // let scattering_result_model_space = Run the model space scattering query.
         // Convert the model space scattering result to a world space scattering result.
         // return.
         // TODO: scatter should choose the next ray tracing direction, not sampling the BSDF.
