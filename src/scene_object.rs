@@ -13,9 +13,13 @@ use rand::prelude::*;
 pub trait ModelObject: std::fmt::Debug {
     fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
 
-    fn scatter(&mut self, query: &ScatteringQuery) -> ScatteringResult;
+    fn scatter(&mut self, query: &ScatteringQuery) -> Option<ScatteringResult>;
 
     fn center(&self) -> Vector3<f32>;
+
+    fn contains(&self, point: &Vector3<f32>) -> bool;
+
+    fn normal(&self, point: &Vector3<f32>) -> Option<Vector3<f32>>;
 }
 
 #[derive(Debug)]
@@ -45,23 +49,40 @@ where
         self.geometry.intersect(query)
     }
 
-    fn scatter(&mut self, query: &ScatteringQuery) -> ScatteringResult {
-        let normal = (query.point - self.geometry.center()).normalize();
-        let ray_incoming = query.ray_incoming;
-        let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point);
-        let bsdf_result = self.bsdf.sample(&bsdf_query);
-         
-        ScatteringResult::new(
-            bsdf_result.ray_incoming,
-            bsdf_result.ray_outgoing,
-            bsdf_result.point,
-            bsdf_result.normal,
-            bsdf_result.scattering_fraction,
-        )
+    fn scatter(&mut self, query: &ScatteringQuery) -> Option<ScatteringResult> {
+        if let Some(normal) = self.normal(&query.point) {
+            let ray_incoming = query.ray_incoming;
+            let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point);
+            let bsdf_result = self.bsdf.sample(&bsdf_query);
+             
+            Some(ScatteringResult::new(
+                bsdf_result.ray_incoming,
+                bsdf_result.ray_outgoing,
+                bsdf_result.point,
+                bsdf_result.normal,
+                bsdf_result.scattering_fraction,
+            ))
+        } else {
+            None
+        }
     }
 
     fn center(&self) -> Vector3<f32> {
         self.geometry.center()
+    }
+
+    fn contains(&self, point: &Vector3<f32>) -> bool {
+        let diff = point - self.geometry.center;
+        
+        diff.dot(&diff) <= self.geometry.radius * self.geometry.radius
+    }
+
+    fn normal(&self, point: &Vector3<f32>) -> Option<Vector3<f32>> {
+        if self.contains(point) {
+            Some((point - self.geometry.center()).normalize())
+        } else {
+            None
+        }
     }
 }
 
@@ -93,14 +114,14 @@ impl SceneObject {
     }
 
     #[inline]
-    fn query_to_model_space(&self, query: &IntersectionQuery) -> IntersectionQuery {
+    fn intersection_query_to_model_space(&self, query: &IntersectionQuery) -> IntersectionQuery {
         let ray_model_space = self.ray_to_model_space(&query.ray);
 
         IntersectionQuery::new(ray_model_space, query.t_min, query.t_max)
     }
 
     pub fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult {
-        let query_model_space = self.query_to_model_space(query);
+        let query_model_space = self.intersection_query_to_model_space(query);
         let result = self.object.intersect(&query_model_space);
         if let IntersectionResult::Hit(res_model_space) = result {
             let res_t_world_space = res_model_space.t;
@@ -128,11 +149,22 @@ impl SceneObject {
         }
     }
 
-    pub fn scatter(&self, query: &ScatteringQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
-        // let scattering_query_model_space = Convert world space scattering query to model space scattering query.
-        // let scattering_result_model_space = Run the model space scattering query.
-        // Convert the model space scattering result to a world space scattering result.
-        // return.
+    fn scattering_query_world_space_to_model_space(&self, query: &ScatteringQuery) -> ScatteringQuery {
+        unimplemented!()
+    }
+
+    fn scattering_result_model_space_to_world_space(&self, result: &ScatteringResult) -> ScatteringResult {
+        unimplemented!()
+    }
+
+    pub fn scatter(&mut self, query: &ScatteringQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
+        let query_model_space = self.scattering_query_world_space_to_model_space(query);
+        let result_world_space = if let Some(result_model_space) = self.object.scatter(&query_model_space) {
+            Some(self.scattering_result_model_space_to_world_space(&result_model_space))
+        } else {
+            None
+        };
+
         // TODO: scatter should choose the next ray tracing direction, not sampling the BSDF.
         /*
         let intersection_result = self.intersect(query);
@@ -146,7 +178,9 @@ impl SceneObject {
             None
         }
         */
-        None
+        //None
+
+        result_world_space
     }
 
     #[inline]

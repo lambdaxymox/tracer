@@ -1,6 +1,7 @@
 use crate::query::*;
 use crate::canvas::*;
 use crate::scene::*;
+use crate::scene_object::*;
 use cglinalg::{ 
     Vector3,
     Magnitude,
@@ -44,7 +45,7 @@ impl Renderer {
         }
     }
 
-    fn estimate(&self, scene: &Scene, query: &IntersectionQuery, rng: &mut ThreadRng, depth: usize) -> Vector3<f32> {
+    fn estimate(&self, scene: &mut Scene, query: &IntersectionQuery, rng: &mut ThreadRng, depth: usize) -> Vector3<f32> {
         // TODO: Include ability to sample emissions for scene objects that are lights.
         if let Some(hit) = scene.ray_cast(query) {
             if depth < self.max_path_depth {
@@ -53,7 +54,13 @@ impl Renderer {
                     Vector3::zero(),
                     hit.intersection_result.unwrap_hit_or_tangent().point
                 );
-                if let Some(scattering_result) = hit.object.scatter(&scattering_query, rng) {
+                // WARNING: This is really really unsafe. Do this more safely. This is a temporary hack to get 
+                // the algorithm and abstractions straightened out first. cf. UnsafeCell or Cell or RefCell.
+                #[allow(mutable_transmutes)]
+                let unsafe_hit_object = unsafe {
+                    std::mem::transmute::<&SceneObject, &mut SceneObject>(hit.object)
+                };
+                if let Some(scattering_result) = unsafe_hit_object.scatter(&scattering_query, rng) {
                     let next_origin = scattering_result.point;
                     let next_direction = scattering_result.ray_outgoing;
                     let next_incoming_ray = Ray::new(next_origin, next_direction);

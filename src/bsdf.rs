@@ -1,4 +1,3 @@
-use crate::geometry::*;
 use crate::query::*;
 use crate::sample;
 use cglinalg::{
@@ -36,7 +35,7 @@ impl BsdfQuerySampler for SimpleLambertianBsdfQuerySampler {
     #[inline]
     fn sample(
         &mut self, 
-        bsdf: &Self::Bsdf, 
+        _bsdf: &Self::Bsdf, 
         ray_incoming: &Vector3<f32>, 
         normal: &Vector3<f32>, 
         point: &Vector3<f32>) -> BsdfQuery

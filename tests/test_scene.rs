@@ -56,7 +56,7 @@ mod scene_tests {
 
     #[test]
     fn test_scene_sphere_sample_ray_intersects_from_camera() {
-        let scene = scene();
+        let mut scene = scene();
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
 
@@ -70,7 +70,7 @@ mod scene_tests {
 
     #[test]
     fn test_scene_sphere_sample_ray() {
-        let scene = scene();
+        let mut scene = scene();
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
         let sphere = scene.ray_cast(&query).unwrap();
@@ -98,7 +98,7 @@ mod scene_tests {
 
     #[test]
     fn test_scene_sphere_sample_normal() {
-        let scene = scene();
+        let mut scene = scene();
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
         let sphere = scene.ray_cast(&query).unwrap();
@@ -115,7 +115,7 @@ mod scene_tests {
 
     #[test]
     fn test_scene_sphere_sample_bsdf() {
-        let scene = scene();
+        let mut scene = scene();
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
         let sphere = scene.ray_cast(&query).unwrap();

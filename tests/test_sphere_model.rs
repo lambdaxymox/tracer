@@ -73,7 +73,7 @@ mod sphere_lambertian_model_tests {
             intersection_result.normal,
             Vector3::new(0.5, 0.5, 0.5)
         );
-        let result = sphere.scatter(&scattering_query);
+        let result = sphere.scatter(&scattering_query).unwrap();
 
         assert_eq!(result.ray_incoming, expected.ray_incoming);
         assert_eq!(result.point, expected.point);
@@ -154,7 +154,7 @@ mod sphere_metal_model_tests {
             intersection_result.normal,
             Vector3::new(0.5, 0.5, 0.5)
         );
-        let result = sphere.scatter(&scattering_query);
+        let result = sphere.scatter(&scattering_query).unwrap();
 
         assert_eq!(result.ray_incoming, expected.ray_incoming);
         assert_eq!(result.point, expected.point);

@@ -7,8 +7,8 @@ use cglinalg::{
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Sphere {
-    center: Vector3<f32>,
-    radius: f32,
+    pub center: Vector3<f32>,
+    pub radius: f32,
 }
 
 impl Sphere {
