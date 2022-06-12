@@ -50,7 +50,8 @@ where
     }
 
     fn scatter(&mut self, query: &ScatteringQuery) -> Option<ScatteringResult> {
-        if let Some(normal) = self.normal(&query.point) {
+        // if let Some(normal) = self.normal(&query.point) {
+            let normal = (query.point - self.geometry.center()).normalize();
             let ray_incoming = query.ray_incoming;
             let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point);
             let bsdf_result = self.bsdf.sample(&bsdf_query);
@@ -62,9 +63,9 @@ where
                 bsdf_result.normal,
                 bsdf_result.scattering_fraction,
             ))
-        } else {
-            None
-        }
+        // } else {
+        //     None
+        // }
     }
 
     fn center(&self) -> Vector3<f32> {

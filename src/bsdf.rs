@@ -166,26 +166,21 @@ impl BsdfQuerySampler for SimpleDielectricBsdfQuerySampler {
             r0 + (1_f32 - r0) * (1_f32 - cosine).powf(5_f32)
         }
 
-
-        let normal_outward = if ray_incoming.dot(normal) > 0_f32 {
-            -normal
-        } else {
-            *normal
-        };
-
-        let (ni_over_nt, cosine) = if ray_incoming.dot(normal) > 0_f32 {
+        let (normal_outward, ni_over_nt, cosine) = if ray_incoming.dot(normal) > 0_f32 {
             (
+                -normal,
                 bsdf.refraction_index, 
                 bsdf.refraction_index * ray_incoming.dot(normal) / ray_incoming.magnitude()
             )
         } else {
             (
+                *normal,
                 1_f32 / bsdf.refraction_index,
                 -ray_incoming.dot(normal) / ray_incoming.magnitude(),
             )
         };
 
-        let ray_outgoing = if let Some(refracted_direction) = refract(*ray_incoming, *normal, ni_over_nt) {
+        let ray_outgoing = if let Some(refracted_direction) = refract(*ray_incoming, normal_outward, ni_over_nt) {
             let reflection_prob = schlick(cosine, bsdf.refraction_index);
             if self.rng.gen::<f32>() < reflection_prob {
                 ray_incoming.reflect(normal)
