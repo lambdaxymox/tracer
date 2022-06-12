@@ -50,7 +50,7 @@ mod sphere_lambertian_model_tests {
 
         assert_eq!(result, expected);
     }
-
+    /*
     #[test]
     fn test_scattering() {
         let mut sphere = sphere();
@@ -80,6 +80,7 @@ mod sphere_lambertian_model_tests {
         assert_eq!(result.normal, expected.normal);
         assert_eq!(result.scattering_fraction, expected.scattering_fraction);
     }
+    */
 }
 
 #[cfg(test)]
@@ -131,7 +132,7 @@ mod sphere_metal_model_tests {
 
         assert_eq!(result, expected);
     }
-
+    /*
     #[test]
     fn test_scattering() {
         let mut sphere = sphere();
@@ -161,5 +162,6 @@ mod sphere_metal_model_tests {
         assert_eq!(result.normal, expected.normal);
         assert_eq!(result.scattering_fraction, expected.scattering_fraction);
     }
+    */
 }
 

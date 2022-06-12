@@ -39,13 +39,12 @@ impl IntersectionQuery {
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct ScatteringQuery {
     pub ray_incoming: Vector3<f32>,
-    pub ray_outgoing: Vector3<f32>,
     pub point: Vector3<f32>,
 }
 
 impl ScatteringQuery {
-    pub fn new(ray_incoming: Vector3<f32>, ray_outgoing: Vector3<f32>, point: Vector3<f32>) -> Self {
-        Self { ray_incoming, ray_outgoing, point, }
+    pub fn new(ray_incoming: Vector3<f32>, point: Vector3<f32>) -> Self {
+        Self { ray_incoming, point, }
     }
 }
 

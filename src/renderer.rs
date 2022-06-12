@@ -51,10 +51,9 @@ impl Renderer {
             if depth < self.max_path_depth {
                 let scattering_query = ScatteringQuery::new(
                     query.ray.direction,
-                    Vector3::zero(),
                     hit.intersection_result.unwrap_hit_or_tangent().point
                 );
-                // WARNING: This is really really unsafe. Do this more safely. This is a temporary hack to get 
+                // FIXME: This is really really unsafe. Do this more safely. This is a temporary hack to get 
                 // the algorithm and abstractions straightened out first. cf. UnsafeCell or Cell or RefCell.
                 #[allow(mutable_transmutes)]
                 let unsafe_hit_object = unsafe {

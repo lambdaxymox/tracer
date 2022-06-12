@@ -153,32 +153,6 @@ impl SceneObject {
         let result_model_space = self.object.intersect(&query_model_space);
 
         self.intersection_result_model_space_to_world_space(&result_model_space)
-        /*
-        if let IntersectionResult::Hit(res_model_space) = result {
-            let res_t_world_space = res_model_space.t;
-            let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
-            let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
-
-            IntersectionResult::new_hit(
-                res_t_world_space,
-                res_p_world_space,
-                res_normal_world_space,
-            )
-        } else if let IntersectionResult::Tangent(res_model_space) = result {
-            let res_t_world_space = res_model_space.t;
-            let res_p_world_space = (self.model_matrix * res_model_space.point.extend(1_f32)).contract();
-            let res_normal_world_space = (self.model_matrix * res_model_space.normal.extend(0_f32)).contract();
-
-            IntersectionResult::new_tangent(
-                res_t_world_space,
-                res_p_world_space,
-                res_normal_world_space,
-            )
-        } else {
-            // The ray missed the object.
-            result
-        }
-        */
     }
 
     fn scattering_query_world_space_to_model_space(&self, query: &ScatteringQuery) -> ScatteringQuery {
