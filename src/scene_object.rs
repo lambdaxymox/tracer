@@ -157,7 +157,7 @@ impl SceneObject {
 
     fn scattering_query_world_space_to_model_space(&self, query: &ScatteringQuery) -> ScatteringQuery {
         let ray_incoming_model_space = (self.model_matrix_inv * query.ray_incoming.extend(0_f32)).contract();
-        let point_model_space = (self.model_matrix_inv * query.ray_incoming.extend(1_f32)).contract();
+        let point_model_space = (self.model_matrix_inv * query.point.extend(1_f32)).contract();
 
         ScatteringQuery::new(ray_incoming_model_space, point_model_space)
     }

@@ -1,10 +1,6 @@
 use cglinalg::{
     Vector3,
 };
-use crate::geometry::{
-    IntersectionResult,
-};
-
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Ray {

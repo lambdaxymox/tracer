@@ -59,6 +59,7 @@ impl Renderer {
                 let unsafe_hit_object = unsafe {
                     std::mem::transmute::<&SceneObject, &mut SceneObject>(hit.object)
                 };
+                println!("DEPTH: {}", depth);
                 if let Some(scattering_result) = unsafe_hit_object.scatter(&scattering_query, rng) {
                     let next_origin = scattering_result.point;
                     let next_direction = scattering_result.ray_outgoing;
@@ -68,6 +69,8 @@ impl Renderer {
     
                     scattering_result.scattering_fraction.component_mul(&color)
                 } else {
+                    println!("Hit AND NOT Scatter.");
+                    // If we hit this should not happen.
                     Vector3::new(0_f32, 0_f32, 0_f32)
                 }
             } else {
