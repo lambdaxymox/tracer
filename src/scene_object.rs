@@ -156,11 +156,25 @@ impl SceneObject {
     }
 
     fn scattering_query_world_space_to_model_space(&self, query: &ScatteringQuery) -> ScatteringQuery {
-        unimplemented!()
+        let ray_incoming_model_space = (self.model_matrix_inv * query.ray_incoming.extend(0_f32)).contract();
+        let point_model_space = (self.model_matrix_inv * query.ray_incoming.extend(1_f32)).contract();
+
+        ScatteringQuery::new(ray_incoming_model_space, point_model_space)
     }
 
     fn scattering_result_model_space_to_world_space(&self, result: &ScatteringResult) -> ScatteringResult {
-        unimplemented!()
+        let ray_incoming_model_space = (self.model_matrix * result.ray_incoming.extend(0_f32)).contract();
+        let ray_outgoing_model_space = (self.model_matrix * result.ray_outgoing.extend(0_f32)).contract();
+        let point_model_space = (self.model_matrix * result.point.extend(1_f32)).contract();
+        let normal_model_space = (self.model_matrix * result.normal.extend(0_f32)).contract();
+
+        ScatteringResult::new(
+            ray_incoming_model_space,
+            ray_outgoing_model_space,
+            point_model_space,
+            normal_model_space,
+            result.scattering_fraction
+        )
     }
 
     pub fn scatter(&mut self, query: &ScatteringQuery, rng: &mut ThreadRng) -> Option<ScatteringResult> {
