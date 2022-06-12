@@ -64,10 +64,10 @@ impl ScatteringResult {
         ray_outgoing: Vector3<f32>,
         point: Vector3<f32>,
         normal: Vector3<f32>,
-        scatterance: Vector3<f32>) -> Self 
+        scattering_fraction: Vector3<f32>) -> Self 
     {
         Self {
-            ray_incoming, ray_outgoing, point, normal, scattering_fraction: scatterance,
+            ray_incoming, ray_outgoing, point, normal, scattering_fraction,
         }
     }
 }
