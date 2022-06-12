@@ -148,8 +148,9 @@ impl BsdfQuerySampler for SimpleDielectricBsdfQuerySampler {
         normal: &Vector3<f32>, 
         point: &Vector3<f32>) -> BsdfQuery
     {
-        fn refract(v: Vector3<f32>, normal: Vector3<f32>, ni_over_nt: f32) -> Option<Vector3<f32>> {
-            let uv = v.normalize();
+        #[inline]
+        fn refract(ray_incoming: Vector3<f32>, normal: Vector3<f32>, ni_over_nt: f32) -> Option<Vector3<f32>> {
+            let uv = ray_incoming.normalize();
             let dt = uv.dot(&normal);
             let discriminant = 1_f32 - ni_over_nt * ni_over_nt * (1_f32 - dt * dt);
             if discriminant > 0_f32 {
@@ -160,6 +161,7 @@ impl BsdfQuerySampler for SimpleDielectricBsdfQuerySampler {
             }
         }
         
+        #[inline]
         fn schlick(cosine: f32, refraction_index: f32) -> f32 {
             let mut r0 = (1_f32 - refraction_index) / (1_f32 + refraction_index);
             r0 = r0 * r0;
