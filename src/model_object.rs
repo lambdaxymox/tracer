@@ -2,13 +2,10 @@ use crate::geometry::*;
 use crate::sphere::*;
 use crate::query::*;
 use crate::sampler::*;
-use crate::bsdf::*;
 use cglinalg::{
     Vector3,
-    Matrix4x4,
     Magnitude,
 };
-use rand::prelude::*;
 
 
 pub trait ModelObject: std::fmt::Debug {

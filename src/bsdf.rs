@@ -18,7 +18,7 @@ impl SimpleLambertianBsdf {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct SimpleLambertianBsdfQuerySampler {}
 
 impl SimpleLambertianBsdfQuerySampler {
@@ -70,7 +70,7 @@ impl SimpleMetalBsdf {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct SimpleMetalBsdfQuerySampler {}
 
 impl SimpleMetalBsdfQuerySampler {
@@ -124,7 +124,7 @@ impl SimpleDielectricBsdf {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct SimpleDielectricBsdfQuerySampler {}
 
 impl SimpleDielectricBsdfQuerySampler {

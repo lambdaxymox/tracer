@@ -1,15 +1,11 @@
 use crate::geometry::*;
-use crate::sphere::*;
 use crate::sampler::*;
 use crate::query::*;
 use crate::model_object::*;
-use crate::bsdf::*;
 use cglinalg::{
     Vector3,
     Matrix4x4,
-    Magnitude,
 };
-use rand::prelude::*;
 
 
 #[derive(Debug)]
@@ -103,13 +99,11 @@ impl SceneObject {
 
     pub fn scatter(&mut self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult> {
         let query_model_space = self.scattering_query_world_space_to_model_space(query);
-        let result_world_space = if let Some(result_model_space) = self.object.scatter(&query_model_space, sampler) {
+        if let Some(result_model_space) = self.object.scatter(&query_model_space, sampler) {
             Some(self.scattering_result_model_space_to_world_space(&result_model_space))
         } else {
             None
-        };
-
-        result_world_space
+        }
     }
 
     #[inline]

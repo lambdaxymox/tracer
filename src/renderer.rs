@@ -107,7 +107,6 @@ impl Renderer {
     pub fn render(&self, scene: &mut Scene, sampler: &mut SphereSampler) {
         let height = scene.canvas.height;
         let width = scene.canvas.width;
-        let mut rng = rand::prelude::thread_rng();
         for row in 0..height {
             println!("Rendering line {} of {}", row+1, height);
             for column in 0..width {
