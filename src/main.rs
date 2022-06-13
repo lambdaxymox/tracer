@@ -40,7 +40,7 @@ use renderer::*;
 use bsdf::*;
 
 
-const SAMPLES_PER_PIXEL: usize = 32;
+const SAMPLES_PER_PIXEL: usize = 128;
 const MAX_DEPTH: usize = 16;
 
 
@@ -67,8 +67,8 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
         Matrix4x4::from_affine_translation(&Vector3::new(0_f32, -1000_f32, 0_f32))
     ));
     
-    for a in -5..5 {
-        for b in -5..5 {
+    for a in -10..10 {
+        for b in -10..10 {
             let choose_mat = rng.gen::<f32>();
             let center_x = a as f32 + 0.9 * rng.gen::<f32>();
             let center_y = 0.2;
@@ -155,8 +155,8 @@ fn write_image_to_file(canvas: &Canvas, file: &mut File) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let width = 480;
-    let height = 270;
+    let width = 1920;
+    let height = 1080;
     let mut rng = rand::prelude::thread_rng();
     let settings = RendererSettings::new(SAMPLES_PER_PIXEL, MAX_DEPTH);
     let renderer = Renderer::new(settings);

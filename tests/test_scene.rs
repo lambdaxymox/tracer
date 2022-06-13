@@ -55,14 +55,9 @@ mod scene_tests {
 
     #[test]
     fn test_scene_sphere_sample_ray_intersects_from_camera() {
-        let mut scene = scene();
+        let scene = scene();
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
-
-        eprintln!("{:?}", ray);
-        eprintln!("{:?}", scene.objects[0].center());
-        eprintln!("{:?}", (scene.objects[0].center() - ray.origin).normalize());
-        eprintln!("{:?}", scene.camera.forward());
         
         assert!(scene.ray_cast(&query).is_some());
     }
