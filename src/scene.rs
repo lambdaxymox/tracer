@@ -19,7 +19,6 @@ impl<'a> ObjectIntersectionResult<'a> {
 
 pub struct Scene {
     pub objects: Vec<SceneObject>,
-    pub canvas: Canvas,
     pub camera: Camera,
 }
 
@@ -27,7 +26,6 @@ impl Scene {
     pub fn new(width: usize, height: usize, camera: Camera) -> Scene {
         Scene {
             objects: Vec::new(),
-            canvas: Canvas::new(width, height),
             camera,
         }
     }

@@ -74,9 +74,9 @@ impl Renderer {
     }
 
     #[inline]
-    fn sample_pixel(&self, scene: &mut Scene, row: usize, column: usize, sampler: &mut SphereSampler) -> Vector3<f32> {
-        let height = scene.canvas.height;
-        let width = scene.canvas.width;
+    fn sample_pixel(&self, scene: &mut Scene, row: usize, column: usize, sampler: &mut SphereSampler, canvas: &mut Canvas) -> Vector3<f32> {
+        let height = canvas.height;
+        let width = canvas.width;
         let mut color = Vector3::new(0_f32, 0_f32, 0_f32);
         for _ in 0..self.samples_per_pixel {
             let du = sampler.sample_f32();
@@ -92,13 +92,13 @@ impl Renderer {
         color / self.samples_per_pixel as f32
     }
 
-    pub fn render(&self, scene: &mut Scene, sampler: &mut SphereSampler) {
-        let height = scene.canvas.height;
-        let width = scene.canvas.width;
+    pub fn render(&self, scene: &mut Scene, sampler: &mut SphereSampler, canvas: &mut Canvas) {
+        let height = canvas.height;
+        let width = canvas.width;
         for row in 0..height {
             println!("Rendering line {} of {}", row+1, height);
             for column in 0..width {
-                let mut color = self.sample_pixel(scene, row, column, sampler);
+                let mut color = self.sample_pixel(scene, row, column, sampler, canvas);
                 color = Vector3::new(
                     f32::sqrt(color[0]), 
                     f32::sqrt(color[1]), 
@@ -109,7 +109,7 @@ impl Renderer {
                 let ig = (255.99 * color[1]) as u8;
                 let ib = (255.99 * color[2]) as u8;
             
-                scene.canvas[row][column] = Rgba::new(ir, ig, ib);
+                canvas[row][column] = Rgba::new(ir, ig, ib);
             }
         }
     }

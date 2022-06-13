@@ -157,6 +157,7 @@ fn write_image_to_file(canvas: &Canvas, file: &mut File) -> io::Result<()> {
 fn main() -> io::Result<()> {
     let width = 480;
     let height = 270;
+    let mut canvas = Canvas::new(width, height);
     let mut rng = rand::prelude::thread_rng();
     let settings = RendererSettings::new(SAMPLES_PER_PIXEL, MAX_DEPTH);
     let renderer = Renderer::new(settings);
@@ -166,10 +167,10 @@ fn main() -> io::Result<()> {
 
     println!("Generating image.");
     let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
-    renderer.render(&mut scene, &mut sampler);
+    renderer.render(&mut scene, &mut sampler, &mut canvas);
     
     println!("Writing image to file.");
     let mut file = File::create("output.ppm").unwrap();
-    write_image_to_file(&scene.canvas, &mut file)
+    write_image_to_file(&canvas, &mut file)
 }
 
