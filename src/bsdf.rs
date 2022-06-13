@@ -181,7 +181,7 @@ impl BsdfQuerySampler for SimpleDielectricBsdfQuerySampler {
 
         let ray_outgoing = if let Some(refracted_direction) = refract(*ray_incoming, normal_outward, ni_over_nt) {
             let reflection_prob = schlick(cosine, bsdf.refraction_index);
-            if sampler.rng.gen::<f32>() < reflection_prob {
+            if sampler.sample_f32() < reflection_prob {
                 ray_incoming.reflect(normal)
             } else {
                 refracted_direction

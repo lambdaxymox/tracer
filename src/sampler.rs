@@ -5,12 +5,17 @@ use cglinalg::{
 };
 
 pub struct SphereSampler {
-    pub rng: ThreadRng,
+    rng: ThreadRng,
 }
 
 impl SphereSampler {
     pub fn new(rng: ThreadRng) -> Self {
         Self { rng, }
+    }
+
+    #[inline]
+    pub fn sample_f32(&mut self) -> f32 {
+        self.rng.gen::<f32>()
     }
 
     pub fn sample_unit_sphere(&mut self) -> Vector3<f32> {

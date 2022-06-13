@@ -7,7 +7,6 @@ use cglinalg::{
     Vector3,
     Magnitude,
 };
-use rand::prelude::*;
 
 
 #[derive(Copy, Clone)]
@@ -91,9 +90,9 @@ impl Renderer {
         let width = scene.canvas.width;
         let mut color = Vector3::new(0_f32, 0_f32, 0_f32);
         for _ in 0..self.samples_per_pixel {
-            let du = sampler.rng.gen::<f32>();
+            let du = sampler.sample_f32();
             let u = (column as f32 + du) / (width as f32);
-            let dv = sampler.rng.gen::<f32>();
+            let dv = sampler.sample_f32();
             let v = (((height - row) as f32) + dv) / (height as f32);
             let ray = scene.camera.cast_ray(sampler, u, v);
             let query = IntersectionQuery::new(ray, self.t_min, self.t_max);
