@@ -163,11 +163,11 @@ fn main() -> io::Result<()> {
     let renderer = Renderer::new(settings);
 
     println!("Generating scene.");
-    let mut scene = generate_scene(&mut rng, width, height);
+    let scene = generate_scene(&mut rng, width, height);
 
     println!("Generating image.");
     let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
-    renderer.render(&mut scene, &mut sampler, &mut canvas);
+    renderer.render(&scene, &mut sampler, &mut canvas);
     
     println!("Writing image to file.");
     let mut file = File::create("output.ppm").unwrap();
