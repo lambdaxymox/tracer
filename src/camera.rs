@@ -87,7 +87,8 @@ impl Camera {
 
     #[inline]
     pub fn forward(&self) -> Vector3<f32> {
-        self.forward
+        // FIXME: straighten this out.
+        -self.forward
     }
 }
 

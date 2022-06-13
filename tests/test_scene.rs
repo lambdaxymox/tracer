@@ -1,4 +1,5 @@
 extern crate tracer;
+extern crate approx;
 
 
 #[cfg(test)]
@@ -10,8 +11,15 @@ mod scene_tests {
         Sphere,
         SceneObject,
         SimpleLambertianBsdf,
-        IntersectionQuery, SimpleLambertianBsdfQuerySampler,
+        IntersectionQuery, 
+        IntersectionResult,
+        SimpleLambertianBsdfQuerySampler,
         SphereModelObject,
+        ScatteringQuery,
+        SphereSampler,
+    };
+    use approx::{
+        assert_relative_eq,
     };
     use cglinalg::{
         Vector3,
@@ -64,19 +72,22 @@ mod scene_tests {
 
     #[test]
     fn test_scene_sphere_sample_ray() {
-        let mut scene = scene();
-        let ray = Ray::new(scene.camera.position(), scene.camera.forward());
+        let scene = scene();
+        let ray_origin = scene.camera.position();
+        let ray_direction = scene.camera.forward();
+        let ray = Ray::new(ray_origin, ray_direction);
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
         let sphere = scene.ray_cast(&query).unwrap();
+        let expected = IntersectionResult::new_hit(
+            13.142121,
+            Vector3::new(4_f32, 5_f32, 6_f32) - ray_direction,
+            -ray_direction,
+        ).unwrap_hit();
+        let result = sphere.object.intersect(&query).unwrap_hit();
         
-        /*
-        let expected = ;
-        let intersection_result = sphere.intersect(&ray, 0.1, f32::MAX);
-        let result = intersection_result.ray;
-
-        assert_eq!(result, expected);
-        */
-        todo!("FINISH ME!")
+        assert_relative_eq!(result.t, expected.t);
+        assert_relative_eq!(result.point, expected.point, epsilon = 1e-4);
+        assert_relative_eq!(result.normal, expected.normal, epsilon = 1e-4);
     }
 
     #[test]
@@ -91,36 +102,22 @@ mod scene_tests {
     }
 
     #[test]
-    fn test_scene_sphere_sample_normal() {
-        let mut scene = scene();
-        let ray = Ray::new(scene.camera.position(), scene.camera.forward());
-        let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
-        let sphere = scene.ray_cast(&query).unwrap();
-        
-        /*
-        let expected = ;
-        let intersection_result = sphere.intersect(&ray, 0.1, f32::MAX);;
-        let result = intersection_result.normal;
-
-        assert_eq!(result, expected);
-        */
-        todo!("FINISH ME!")
-    }
-
-    #[test]
     fn test_scene_sphere_sample_bsdf() {
         let mut scene = scene();
+        let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
-        let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
-        let sphere = scene.ray_cast(&query).unwrap();
-        
-        /*
-        let expected = ;
-        let scattered_ray = sphere.sample_bsdf(&ray);
-        let result = scattered_ray.scattering_fraction;
+        let intersection_query = IntersectionQuery::new(ray, 0.1, f32::MAX);
+        let sphere = scene.ray_cast(&intersection_query).unwrap();
+        let intersection_result = sphere.intersection_result.unwrap_hit();
+        let scattering_query = ScatteringQuery::new(
+            intersection_query.ray.direction,
+            intersection_result.point,
+        );
+        let expected = Vector3::new(0.5, 0.5, 0.5);
+        let scattering_result = sphere.object.scatter(&scattering_query, &mut sampler).unwrap();
+
+        let result = scattering_result.scattering_fraction;
 
         assert_eq!(result, expected);
-        */
-        todo!("FINISH ME!")
     }
 }

@@ -11,3 +11,6 @@ description = "An offline path tracer."
 cglinalg = { git = "https://github.com/lambdaxymox/cglinalg", version = "0.15.6" }
 rand = "0.8.5"
 
+[dev-dependencies]
+approx = "0.5.1"
+

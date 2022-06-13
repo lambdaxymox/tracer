@@ -40,7 +40,7 @@ use renderer::*;
 use bsdf::*;
 
 
-const SAMPLES_PER_PIXEL: usize = 128;
+const SAMPLES_PER_PIXEL: usize = 32;
 const MAX_DEPTH: usize = 16;
 
 
@@ -155,8 +155,8 @@ fn write_image_to_file(canvas: &Canvas, file: &mut File) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let width = 1920;
-    let height = 1080;
+    let width = 480;
+    let height = 270;
     let mut rng = rand::prelude::thread_rng();
     let settings = RendererSettings::new(SAMPLES_PER_PIXEL, MAX_DEPTH);
     let renderer = Renderer::new(settings);
