@@ -11,7 +11,7 @@ use cglinalg::{
 pub trait ModelObject: std::fmt::Debug {
     fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
 
-    fn scatter(&mut self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult>;
+    fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult>;
 
     fn center(&self) -> Vector3<f32>;
 
@@ -47,7 +47,7 @@ where
         self.geometry.intersect(query)
     }
 
-    fn scatter(&mut self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult> {
+    fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult> {
         // if let Some(normal) = self.normal(&query.point) {
             let normal = (query.point - self.geometry.center()).normalize();
             let ray_incoming = query.ray_incoming;

@@ -49,7 +49,7 @@ mod sphere_lambertian_model_tests {
 
     #[test]
     fn test_scattering() {
-        let mut sphere = sphere();
+        let sphere = sphere();
         let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
         let ray_incoming = Ray::new(
             Vector3::new(0_f32, 0_f32, 30_f32), 
@@ -126,7 +126,7 @@ mod sphere_metal_model_tests {
 
     #[test]
     fn test_scattering() {
-        let mut sphere = sphere();
+        let sphere = sphere();
         let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
         let ray_incoming = Ray::new(
             Vector3::new(0_f32, 0_f32, 30_f32), 
