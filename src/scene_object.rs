@@ -94,11 +94,16 @@ impl SceneObject {
         )
     }
 
-    pub fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult> {
+    pub fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> ScatteringResult {// Option<ScatteringResult> {
         let query_model_space = self.scattering_query_world_space_to_model_space(query);
+        /*
         self.object.scatter(&query_model_space, sampler).map(|result_model_space| {
             self.scattering_result_model_space_to_world_space(&result_model_space)
         })
+        */
+        let result_model_space = self.object.scatter(&query_model_space, sampler);
+        
+        self.scattering_result_model_space_to_world_space(&result_model_space)
     }
 
     #[inline]

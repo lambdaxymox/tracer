@@ -40,7 +40,7 @@ use renderer::*;
 use bsdf::*;
 
 
-const SAMPLES_PER_PIXEL: usize = 32;
+const SAMPLES_PER_PIXEL: usize = 128;
 const MAX_DEPTH: usize = 16;
 
 

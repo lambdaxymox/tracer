@@ -11,7 +11,8 @@ use cglinalg::{
 pub trait ModelObject: std::fmt::Debug {
     fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
 
-    fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult>;
+    // fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult>;
+    fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> ScatteringResult;
 
     fn center(&self) -> Vector3<f32>;
 
@@ -47,22 +48,23 @@ where
         self.geometry.intersect(query)
     }
 
-    fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult> {
-        // if let Some(normal) = self.normal(&query.point) {
+    fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> ScatteringResult {// Option<ScatteringResult> {
+        // if self.contains(&query.point) { //let Some(normal) = self.normal(&query.point) {
             let normal = (query.point - self.geometry.center()).normalize();
             let ray_incoming = query.ray_incoming;
             let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point, sampler);
             let bsdf_result = self.bsdf.sample(&bsdf_query);
              
-            Some(ScatteringResult::new(
+            // Some(ScatteringResult::new(
+            ScatteringResult::new(
                 bsdf_result.ray_incoming,
                 bsdf_result.ray_outgoing,
                 bsdf_result.point,
                 bsdf_result.normal,
                 bsdf_result.scattering_fraction,
-            ))
+            )
         // } else {
-        //     None
+        //    None
         // }
     }
 
@@ -72,7 +74,7 @@ where
 
     fn contains(&self, point: &Vector3<f32>) -> bool {
         let diff = point - self.geometry.center;
-        
+
         diff.dot(&diff) <= self.geometry.radius * self.geometry.radius
     }
 

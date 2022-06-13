@@ -114,7 +114,7 @@ mod scene_tests {
             intersection_result.point,
         );
         let expected = Vector3::new(0.5, 0.5, 0.5);
-        let scattering_result = sphere.object.scatter(&scattering_query, &mut sampler).unwrap();
+        let scattering_result = sphere.object.scatter(&scattering_query, &mut sampler);
 
         let result = scattering_result.scattering_fraction;
 
