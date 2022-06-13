@@ -4,11 +4,8 @@ extern crate tracer;
 #[cfg(test)]
 mod sphere_lambertian_model_tests {
     use tracer::{
-        Camera,
-        Scene,
         Ray,
         Sphere,
-        SceneObject,
         SimpleLambertianBsdf,
         SimpleLambertianBsdfQuerySampler,
         IntersectionQuery,
@@ -21,7 +18,6 @@ mod sphere_lambertian_model_tests {
     };
     use cglinalg::{
         Vector3,
-        Matrix4x4,
         Magnitude,
     };
 
@@ -85,11 +81,8 @@ mod sphere_lambertian_model_tests {
 #[cfg(test)]
 mod sphere_metal_model_tests {
     use tracer::{
-        Camera,
-        Scene,
         Ray,
         Sphere,
-        SceneObject,
         SimpleMetalBsdf,
         SimpleMetalBsdfQuerySampler,
         IntersectionQuery,
@@ -102,7 +95,6 @@ mod sphere_metal_model_tests {
     };
     use cglinalg::{
         Vector3,
-        Matrix4x4,
         Magnitude,
     };
 
