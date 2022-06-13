@@ -19,4 +19,4 @@ pub use scene::*;
 pub use model_object::*;
 pub use scene_object::*;
 pub use sphere::*;
-
+pub use sampler::*;

@@ -17,6 +17,7 @@ mod sphere_lambertian_model_tests {
         ModelObject,
         ScatteringQuery,
         ScatteringResult,
+        SphereSampler,
     };
     use cglinalg::{
         Vector3,
@@ -49,10 +50,11 @@ mod sphere_lambertian_model_tests {
 
         assert_eq!(result, expected);
     }
-    /*
+
     #[test]
     fn test_scattering() {
         let mut sphere = sphere();
+        let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
         let ray_incoming = Ray::new(
             Vector3::new(0_f32, 0_f32, 30_f32), 
             Vector3::new(0_f32, 0_f32, -1_f32)
@@ -62,7 +64,6 @@ mod sphere_lambertian_model_tests {
         let ray_outgoing_direction = (intersection_result.normal + Vector3::new(1_f32, 1_f32, 0_f32)).normalize();
         let scattering_query = ScatteringQuery::new(
             ray_incoming.direction,
-            ray_outgoing_direction,
             intersection_result.point,
         );
         let expected = ScatteringResult::new(
@@ -72,14 +73,13 @@ mod sphere_lambertian_model_tests {
             intersection_result.normal,
             Vector3::new(0.5, 0.5, 0.5)
         );
-        let result = sphere.scatter(&scattering_query).unwrap();
+        let result = sphere.scatter(&scattering_query, &mut sampler).unwrap();
 
         assert_eq!(result.ray_incoming, expected.ray_incoming);
         assert_eq!(result.point, expected.point);
         assert_eq!(result.normal, expected.normal);
         assert_eq!(result.scattering_fraction, expected.scattering_fraction);
     }
-    */
 }
 
 #[cfg(test)]
@@ -98,6 +98,7 @@ mod sphere_metal_model_tests {
         ModelObject,
         ScatteringQuery,
         ScatteringResult,
+        SphereSampler,
     };
     use cglinalg::{
         Vector3,
@@ -130,10 +131,11 @@ mod sphere_metal_model_tests {
 
         assert_eq!(result, expected);
     }
-    /*
+
     #[test]
     fn test_scattering() {
         let mut sphere = sphere();
+        let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
         let ray_incoming = Ray::new(
             Vector3::new(0_f32, 0_f32, 30_f32), 
             Vector3::new(0_f32, 0_f32, -1_f32)
@@ -143,7 +145,6 @@ mod sphere_metal_model_tests {
         let ray_outgoing_direction = (intersection_result.normal + Vector3::new(1_f32, 1_f32, 0_f32)).normalize();
         let scattering_query = ScatteringQuery::new(
             ray_incoming.direction,
-            ray_outgoing_direction,
             intersection_result.point,
         );
         let expected = ScatteringResult::new(
@@ -153,13 +154,12 @@ mod sphere_metal_model_tests {
             intersection_result.normal,
             Vector3::new(0.5, 0.5, 0.5)
         );
-        let result = sphere.scatter(&scattering_query).unwrap();
+        let result = sphere.scatter(&scattering_query, &mut sampler).unwrap();
 
         assert_eq!(result.ray_incoming, expected.ray_incoming);
         assert_eq!(result.point, expected.point);
         assert_eq!(result.normal, expected.normal);
         assert_eq!(result.scattering_fraction, expected.scattering_fraction);
     }
-    */
 }
 
