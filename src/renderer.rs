@@ -44,7 +44,7 @@ impl Renderer {
         }
     }
 
-    fn estimate(&self, scene: &mut Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
+    fn estimate(&self, scene: &Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
         // TODO: Include ability to sample emissions for scene objects that are lights.
         if let Some(hit) = scene.ray_cast(query) {
             if depth < self.max_path_depth {
@@ -74,7 +74,7 @@ impl Renderer {
     }
 
     #[inline]
-    fn sample_pixel(&self, scene: &mut Scene, row: usize, column: usize, sampler: &mut SphereSampler, canvas: &mut Canvas) -> Vector3<f32> {
+    fn sample_pixel(&self, scene: &Scene, row: usize, column: usize, sampler: &mut SphereSampler, canvas: &mut Canvas) -> Vector3<f32> {
         let height = canvas.height;
         let width = canvas.width;
         let mut color = Vector3::new(0_f32, 0_f32, 0_f32);
@@ -92,7 +92,7 @@ impl Renderer {
         color / self.samples_per_pixel as f32
     }
 
-    pub fn render(&self, scene: &mut Scene, sampler: &mut SphereSampler, canvas: &mut Canvas) {
+    pub fn render(&self, scene: &Scene, sampler: &mut SphereSampler, canvas: &mut Canvas) {
         let height = canvas.height;
         let width = canvas.width;
         for row in 0..height {

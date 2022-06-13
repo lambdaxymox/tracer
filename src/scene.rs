@@ -1,7 +1,6 @@
 use crate::query::*;
 use crate::geometry::*;
 use crate::camera::*;
-use crate::canvas::*;
 use crate::scene_object::*;
 
 
