@@ -103,7 +103,7 @@ mod scene_tests {
 
     #[test]
     fn test_scene_sphere_sample_bsdf() {
-        let mut scene = scene();
+        let scene = scene();
         let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let intersection_query = IntersectionQuery::new(ray, 0.1, f32::MAX);

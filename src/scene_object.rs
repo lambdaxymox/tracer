@@ -16,10 +16,7 @@ pub struct SceneObject {
 }
 
 impl SceneObject {
-    pub fn new(
-        object: Box<dyn ModelObject>, 
-        model_matrix: Matrix4x4<f32>) -> Self 
-    {
+    pub fn new(object: Box<dyn ModelObject>, model_matrix: Matrix4x4<f32>) -> Self {
         let model_matrix_inv = model_matrix.inverse().unwrap();
         
         Self { object, model_matrix, model_matrix_inv, }
