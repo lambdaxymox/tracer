@@ -52,8 +52,6 @@ impl Renderer {
                     query.ray.direction,
                     hit.intersection_result.unwrap_hit_or_tangent().point
                 );
-                // TODO: A missed scattering query is still possible due to numerical issues.
-                // let scattering_result = hit.object.scatter(&scattering_query, sampler).unwrap();
                 let scattering_result = hit.object.scatter(&scattering_query, sampler);
                 let next_origin = scattering_result.point;
                 let next_direction = scattering_result.ray_outgoing;
@@ -62,21 +60,6 @@ impl Renderer {
                 let next_estimate = self.estimate(scene, &next_intersection_query, sampler, depth + 1);
 
                 scattering_result.scattering_fraction.component_mul(&next_estimate)
-                /*
-                if let Some(scattering_result) = hit.object.scatter(&scattering_query, sampler) {
-                    let next_origin = scattering_result.point;
-                    let next_direction = scattering_result.ray_outgoing;
-                    let next_incoming_ray = Ray::new(next_origin, next_direction);
-                    let next_intersection_query = IntersectionQuery::new(next_incoming_ray, query.t_min, query.t_max);
-                    let next_estimate = self.estimate(scene, &next_intersection_query, sampler, depth + 1);
-    
-                    scattering_result.scattering_fraction.component_mul(&next_estimate)
-                } else {
-                    // If we hit this should not happen.
-                    panic!("Hit AND NOT Scatter: {:?}\n{:?}\n", hit, scattering_query);
-                    Vector3::new(0_f32, 0_f32, 0_f32)
-                }
-                */
             } else {
                 Vector3::new(0_f32, 0_f32, 0_f32)
             }
