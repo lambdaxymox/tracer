@@ -59,7 +59,7 @@ fn camera(width: usize, height: usize) -> Camera {
 fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
     let camera = camera(width, height);
     let mut scene = Scene::new(width, height, camera);
-    scene.push(SceneObject::new(Box::new(SphereModelObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1000_f32),
             Box::new(SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5))),
             Box::new(SimpleLambertianBsdfQuerySampler::new())
@@ -83,7 +83,7 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                         rng.gen::<f32>() * rng.gen::<f32>(), 
                         rng.gen::<f32>() * rng.gen::<f32>()
                     );
-                    scene.push(SceneObject::new(Box::new(SphereModelObject::new(
+                    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
                             Sphere::new(Vector3::zero(), 0.2),
                             Box::new(SimpleLambertianBsdf::new(albedo)),
                             Box::new(SimpleLambertianBsdfQuerySampler::new())
@@ -98,7 +98,7 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                         0.5 * (1_f32 + rng.gen::<f32>())
                     );
                     let fuzz = 0.5 * rng.gen::<f32>();
-                    scene.push(SceneObject::new(Box::new(SphereModelObject::new(
+                    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
                             Sphere::new(Vector3::zero(), 0.2),
                             Box::new(SimpleMetalBsdf::new(albedo, fuzz)),
                             Box::new(SimpleMetalBsdfQuerySampler::new())
@@ -107,7 +107,7 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
                     ));
                 } else {
                     // Glass.
-                    scene.push(SceneObject::new(Box::new(SphereModelObject::new(
+                    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
                             Sphere::new(Vector3::zero(), 0.2),
                             Box::new(SimpleDielectricBsdf::new(1.5)),
                             Box::new(SimpleDielectricBsdfQuerySampler::new())
@@ -119,21 +119,21 @@ fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
         }
     }
 
-    scene.push(SceneObject::new(Box::new(SphereModelObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1_f32),
             Box::new(SimpleDielectricBsdf::new(1.5)),
             Box::new(SimpleDielectricBsdfQuerySampler::new())
         )),
         Matrix4x4::from_affine_translation(&Vector3::new(0_f32, 1_f32, 0_f32))
     ));
-    scene.push(SceneObject::new(Box::new(SphereModelObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1_f32), 
             Box::new(SimpleLambertianBsdf::new(Vector3::new(0.4, 0.2, 0.1))),
             Box::new(SimpleLambertianBsdfQuerySampler::new())
         )),
         Matrix4x4::from_affine_translation(&Vector3::new(-4_f32, 1_f32, 0_f32))
     ));
-    scene.push(SceneObject::new(Box::new(SphereModelObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1_f32), 
             Box::new(SimpleMetalBsdf::new(Vector3::new(0.7, 0.6, 0.5), 0.1)),
             Box::new(SimpleMetalBsdfQuerySampler::new())

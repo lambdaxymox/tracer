@@ -8,6 +8,8 @@ pub trait Intersection {
 }
 pub trait Geometry: std::fmt::Debug + Intersection {
     fn center(&self) -> Vector3<f32>;
+
+    fn contains(&self, point: &Vector3<f32>) -> bool;
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

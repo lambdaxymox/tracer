@@ -8,7 +8,7 @@ use cglinalg::{
 };
 
 
-pub trait ModelObject: std::fmt::Debug {
+pub trait ModelSpaceObject: std::fmt::Debug {
     fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
 
     fn scatter(&self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> ScatteringResult;
@@ -21,27 +21,30 @@ pub trait ModelObject: std::fmt::Debug {
 }
 
 #[derive(Debug)]
-pub struct SphereModelObject<Bsdf> 
+pub struct ModelSpaceGeometryObject<Geom, Bsdf> 
 where 
-    Bsdf: BsdfMapping 
+    Geom: Geometry,
+    Bsdf: BsdfMapping,
 {
-    geometry: Sphere,
+    geometry: Geom,
     bsdf: Box<Bsdf>,
     sampler: Box<dyn BsdfQuerySampler<Bsdf = Bsdf>>,
 }
 
-impl<Bsdf> SphereModelObject<Bsdf> 
+impl<Geom, Bsdf> ModelSpaceGeometryObject<Geom, Bsdf> 
 where 
-    Bsdf: BsdfMapping 
+    Geom: Geometry,
+    Bsdf: BsdfMapping, 
 {
-    pub fn new(geometry: Sphere, bsdf: Box<Bsdf>, sampler: Box<dyn BsdfQuerySampler<Bsdf = Bsdf>>) -> Self {
+    pub fn new(geometry: Geom, bsdf: Box<Bsdf>, sampler: Box<dyn BsdfQuerySampler<Bsdf = Bsdf>>) -> Self {
         Self { geometry, bsdf, sampler, }
     }
 }
 
-impl<Bsdf> ModelObject for SphereModelObject<Bsdf>
+impl<Geom, Bsdf> ModelSpaceObject for ModelSpaceGeometryObject<Geom, Bsdf>
 where 
-    Bsdf: BsdfMapping
+    Geom: Geometry,
+    Bsdf: BsdfMapping,
 {
     fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult {
         self.geometry.intersect(query)
@@ -66,10 +69,9 @@ where
         self.geometry.center()
     }
 
+    #[inline]
     fn contains(&self, point: &Vector3<f32>) -> bool {
-        let diff = point - self.geometry.center;
-
-        diff.dot(&diff) <= self.geometry.radius * self.geometry.radius
+        self.geometry.contains(point)
     }
 
     fn normal(&self, point: &Vector3<f32>) -> Option<Vector3<f32>> {

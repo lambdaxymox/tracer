@@ -92,5 +92,11 @@ impl Geometry for Sphere {
     fn center(&self) -> Vector3<f32> {
         self.center
     }
+
+    fn contains(&self, point: &Vector3<f32>) -> bool {
+        let diff = point - self.center;
+
+        diff.dot(&diff) <= self.radius * self.radius
+    }
 }
 
