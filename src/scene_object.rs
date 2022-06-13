@@ -99,11 +99,9 @@ impl SceneObject {
 
     pub fn scatter(&mut self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult> {
         let query_model_space = self.scattering_query_world_space_to_model_space(query);
-        if let Some(result_model_space) = self.object.scatter(&query_model_space, sampler) {
-            Some(self.scattering_result_model_space_to_world_space(&result_model_space))
-        } else {
-            None
-        }
+        self.object.scatter(&query_model_space, sampler).map(|result_model_space| {
+            self.scattering_result_model_space_to_world_space(&result_model_space)
+        })
     }
 
     #[inline]
