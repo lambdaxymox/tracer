@@ -1,6 +1,8 @@
 use cglinalg::{
     Vector3,
 };
+use crate::sampler::*;
+
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Ray {
@@ -74,7 +76,7 @@ pub trait BsdfMapping: std::fmt::Debug {
 pub trait BsdfQuerySampler: std::fmt::Debug {
     type Bsdf: BsdfMapping;
 
-    fn sample(&mut self, bsdf: &Self::Bsdf, ray_incoming: &Vector3<f32>, normal: &Vector3<f32>, point: &Vector3<f32>) -> BsdfQuery;
+    fn sample(&self, bsdf: &Self::Bsdf, ray_incoming: &Vector3<f32>, normal: &Vector3<f32>, point: &Vector3<f32>, sampler: &mut SphereSampler) -> BsdfQuery;
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

@@ -1,5 +1,5 @@
 use crate::query::*;
-use crate::sample;
+use crate::sampler::*;
 use cglinalg::{
     Magnitude, 
     Vector3,
@@ -19,13 +19,11 @@ impl SimpleLambertianBsdf {
 }
 
 #[derive(Debug)]
-pub struct SimpleLambertianBsdfQuerySampler {
-    rng: ThreadRng,
-}
+pub struct SimpleLambertianBsdfQuerySampler {}
 
 impl SimpleLambertianBsdfQuerySampler {
-    pub fn new(rng: ThreadRng) -> Self {
-        Self { rng }
+    pub fn new() -> Self { 
+        Self {}
     }
 }
 
@@ -34,13 +32,14 @@ impl BsdfQuerySampler for SimpleLambertianBsdfQuerySampler {
 
     #[inline]
     fn sample(
-        &mut self, 
+        &self, 
         _bsdf: &Self::Bsdf, 
         ray_incoming: &Vector3<f32>, 
         normal: &Vector3<f32>, 
-        point: &Vector3<f32>) -> BsdfQuery
+        point: &Vector3<f32>,
+        sampler: &mut SphereSampler) -> BsdfQuery
     {
-        let target = point + normal + sample::random_in_unit_sphere(&mut self.rng);
+        let target = point + normal + sampler.sample_unit_sphere();
         let ray_outgoing = target - point;
         
         BsdfQuery::new(*ray_incoming, ray_outgoing, *point, *normal)
@@ -72,13 +71,11 @@ impl SimpleMetalBsdf {
 }
 
 #[derive(Debug)]
-pub struct SimpleMetalBsdfQuerySampler {
-    rng: ThreadRng
-}
+pub struct SimpleMetalBsdfQuerySampler {}
 
 impl SimpleMetalBsdfQuerySampler {
-    pub fn new(rng: ThreadRng) -> Self {
-        Self { rng }
+    pub fn new() -> Self {
+        Self {}
     }
 }
 
@@ -87,14 +84,15 @@ impl BsdfQuerySampler for SimpleMetalBsdfQuerySampler {
 
     #[inline]
     fn sample(
-        &mut self, 
+        &self, 
         bsdf: &Self::Bsdf, 
         ray_incoming: &Vector3<f32>, 
         normal: &Vector3<f32>, 
-        point: &Vector3<f32>) -> BsdfQuery
+        point: &Vector3<f32>,
+        sampler: &mut SphereSampler) -> BsdfQuery
     {
         let reflected_direction = ray_incoming.reflect(normal);
-        let fuzzed_vector = sample::random_in_unit_sphere(&mut self.rng) * bsdf.fuzz;
+        let fuzzed_vector = sampler.sample_unit_sphere() * bsdf.fuzz;
         let ray_outgoing = reflected_direction + fuzzed_vector;
 
         BsdfQuery::new(*ray_incoming, ray_outgoing, *point, *normal)
@@ -127,13 +125,11 @@ impl SimpleDielectricBsdf {
 }
 
 #[derive(Debug)]
-pub struct SimpleDielectricBsdfQuerySampler {
-    rng: ThreadRng,
-}
+pub struct SimpleDielectricBsdfQuerySampler {}
 
 impl SimpleDielectricBsdfQuerySampler {
-    pub fn new(rng: ThreadRng) -> Self {
-        Self { rng }
+    pub fn new() -> Self {
+        Self {}
     }
 }
 
@@ -142,11 +138,12 @@ impl BsdfQuerySampler for SimpleDielectricBsdfQuerySampler {
 
     #[inline]
     fn sample(
-        &mut self, 
+        &self, 
         bsdf: &Self::Bsdf, 
         ray_incoming: &Vector3<f32>, 
         normal: &Vector3<f32>, 
-        point: &Vector3<f32>) -> BsdfQuery
+        point: &Vector3<f32>,
+        sampler: &mut SphereSampler) -> BsdfQuery
     {
         #[inline]
         fn refract(ray_incoming: Vector3<f32>, normal: Vector3<f32>, ni_over_nt: f32) -> Option<Vector3<f32>> {
@@ -184,7 +181,7 @@ impl BsdfQuerySampler for SimpleDielectricBsdfQuerySampler {
 
         let ray_outgoing = if let Some(refracted_direction) = refract(*ray_incoming, normal_outward, ni_over_nt) {
             let reflection_prob = schlick(cosine, bsdf.refraction_index);
-            if self.rng.gen::<f32>() < reflection_prob {
+            if sampler.rng.gen::<f32>() < reflection_prob {
                 ray_incoming.reflect(normal)
             } else {
                 refracted_direction

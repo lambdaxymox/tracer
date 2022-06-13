@@ -1,5 +1,5 @@
 use crate::query::*;
-use crate::sample;
+use crate::sampler::*;
 use cglinalg::{
     Magnitude, 
     Vector3
@@ -59,7 +59,7 @@ impl Camera {
         }
     }
 
-    pub fn cast_ray(&self, rng: &mut ThreadRng, u: f32, v: f32) -> Ray {
+    pub fn cast_ray(&self, sampler: &mut SphereSampler, u: f32, v: f32) -> Ray {
         // TODO: Cast a ray in eye space, and convert is back to world space?
         // That is, all the aspects of the camera construction, namely, lens position, lower left corner, horizontal, vertical,
         // forward axis, vertical axis, horizontal axis, Take place in eye space. When we cast a ray through the camera through its viewport
@@ -70,7 +70,7 @@ impl Camera {
         // How do we convert between them?
         //
         // Ray<EyeSpace> -> Ray<WorldSpace>
-        let rd = sample::random_in_unit_disk(rng) * self.lens_radius;
+        let rd = sampler.sample_unit_disk() * self.lens_radius;
         let offset = self.u * rd.x + self.v * rd.y;
         let lens_position = self.eye + offset;
         

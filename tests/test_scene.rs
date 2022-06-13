@@ -26,8 +26,7 @@ mod scene_tests {
         let model_matrix = Matrix4x4::from_affine_translation(&sphere_center_world_space);
         let sphere = Sphere::new(sphere_center_model_space, sphere_radius);
         let bsdf = Box::new(SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5)));
-        let rng = rand::prelude::thread_rng();
-        let bsdf_sampler = Box::new(SimpleLambertianBsdfQuerySampler::new(rng));
+        let bsdf_sampler = Box::new(SimpleLambertianBsdfQuerySampler::new());
         let object = Box::new(SphereModelObject::new(sphere, bsdf, bsdf_sampler));
         let scene_object = SceneObject::new(object, model_matrix);
         let camera = (|width: usize, height: usize| {

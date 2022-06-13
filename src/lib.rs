@@ -3,7 +3,7 @@ mod canvas;
 mod geometry;
 mod bsdf;
 mod query;
-mod sample;
+mod sampler;
 mod scene;
 mod model_object;
 mod scene_object;

@@ -1,5 +1,6 @@
 use crate::query::*;
 use crate::canvas::*;
+use crate::sampler::*;
 use crate::scene::*;
 use crate::scene_object::*;
 use cglinalg::{ 
@@ -45,7 +46,7 @@ impl Renderer {
         }
     }
 
-    fn estimate(&self, scene: &mut Scene, query: &IntersectionQuery, rng: &mut ThreadRng, depth: usize) -> Vector3<f32> {
+    fn estimate(&self, scene: &mut Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
         // TODO: Include ability to sample emissions for scene objects that are lights.
         if let Some(hit) = scene.ray_cast(query) {
             if depth < self.max_path_depth {
@@ -59,12 +60,12 @@ impl Renderer {
                 let unsafe_hit_object = unsafe {
                     std::mem::transmute::<&SceneObject, &mut SceneObject>(hit.object)
                 };
-                if let Some(scattering_result) = unsafe_hit_object.scatter(&scattering_query, rng) {
+                if let Some(scattering_result) = unsafe_hit_object.scatter(&scattering_query, sampler) {
                     let next_origin = scattering_result.point;
                     let next_direction = scattering_result.ray_outgoing;
                     let next_incoming_ray = Ray::new(next_origin, next_direction);
                     let next_intersection_query = IntersectionQuery::new(next_incoming_ray, query.t_min, query.t_max);
-                    let next_estimate = self.estimate(scene, &next_intersection_query, rng, depth + 1);
+                    let next_estimate = self.estimate(scene, &next_intersection_query, sampler, depth + 1);
     
                     scattering_result.scattering_fraction.component_mul(&next_estimate)
                 } else {
@@ -85,32 +86,32 @@ impl Renderer {
     }
 
     #[inline]
-    fn sample_pixel(&self, scene: &mut Scene, row: usize, column: usize, rng: &mut ThreadRng) -> Vector3<f32> {
+    fn sample_pixel(&self, scene: &mut Scene, row: usize, column: usize, sampler: &mut SphereSampler) -> Vector3<f32> {
         let height = scene.canvas.height;
         let width = scene.canvas.width;
         let mut color = Vector3::new(0_f32, 0_f32, 0_f32);
         for _ in 0..self.samples_per_pixel {
-            let du = rng.gen::<f32>();
+            let du = sampler.rng.gen::<f32>();
             let u = (column as f32 + du) / (width as f32);
-            let dv = rng.gen::<f32>();
+            let dv = sampler.rng.gen::<f32>();
             let v = (((height - row) as f32) + dv) / (height as f32);
-            let ray = scene.camera.cast_ray(rng, u, v);
+            let ray = scene.camera.cast_ray(sampler, u, v);
             let query = IntersectionQuery::new(ray, self.t_min, self.t_max);
 
-            color += self.estimate(scene, &query, rng, 0);
+            color += self.estimate(scene, &query, sampler, 0);
         }
         
         color / self.samples_per_pixel as f32
     }
 
-    pub fn render(&self, scene: &mut Scene) {
+    pub fn render(&self, scene: &mut Scene, sampler: &mut SphereSampler) {
         let height = scene.canvas.height;
         let width = scene.canvas.width;
         let mut rng = rand::prelude::thread_rng();
         for row in 0..height {
             println!("Rendering line {} of {}", row+1, height);
             for column in 0..width {
-                let mut color = self.sample_pixel(scene, row, column, &mut rng);
+                let mut color = self.sample_pixel(scene, row, column, sampler);
                 color = Vector3::new(
                     f32::sqrt(color[0]), 
                     f32::sqrt(color[1]), 

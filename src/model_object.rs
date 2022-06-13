@@ -1,6 +1,7 @@
 use crate::geometry::*;
 use crate::sphere::*;
 use crate::query::*;
+use crate::sampler::*;
 use crate::bsdf::*;
 use cglinalg::{
     Vector3,
@@ -13,7 +14,7 @@ use rand::prelude::*;
 pub trait ModelObject: std::fmt::Debug {
     fn intersect(&self, query: &IntersectionQuery) -> IntersectionResult;
 
-    fn scatter(&mut self, query: &ScatteringQuery) -> Option<ScatteringResult>;
+    fn scatter(&mut self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult>;
 
     fn center(&self) -> Vector3<f32>;
 
@@ -49,11 +50,11 @@ where
         self.geometry.intersect(query)
     }
 
-    fn scatter(&mut self, query: &ScatteringQuery) -> Option<ScatteringResult> {
+    fn scatter(&mut self, query: &ScatteringQuery, sampler: &mut SphereSampler) -> Option<ScatteringResult> {
         // if let Some(normal) = self.normal(&query.point) {
             let normal = (query.point - self.geometry.center()).normalize();
             let ray_incoming = query.ray_incoming;
-            let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point);
+            let bsdf_query = self.sampler.sample(&self.bsdf, &ray_incoming, &normal, &query.point, sampler);
             let bsdf_result = self.bsdf.sample(&bsdf_query);
              
             Some(ScatteringResult::new(

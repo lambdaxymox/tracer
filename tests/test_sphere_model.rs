@@ -25,10 +25,9 @@ mod sphere_lambertian_model_tests {
     };
 
     fn sphere() -> SphereModelObject<SimpleLambertianBsdf> {
-        let rng = rand::prelude::thread_rng();
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
         let bsdf = SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5));
-        let bsdf_sampler = SimpleLambertianBsdfQuerySampler::new(rng);
+        let bsdf_sampler = SimpleLambertianBsdfQuerySampler::new();
 
         SphereModelObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
     }
@@ -107,10 +106,9 @@ mod sphere_metal_model_tests {
     };
 
     fn sphere() -> SphereModelObject<SimpleMetalBsdf> {
-        let rng = rand::prelude::thread_rng();
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
         let bsdf = SimpleMetalBsdf::new(Vector3::new(0.5, 0.5, 0.5), 0.2);
-        let bsdf_sampler = SimpleMetalBsdfQuerySampler::new(rng);
+        let bsdf_sampler = SimpleMetalBsdfQuerySampler::new();
 
         SphereModelObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
     }
