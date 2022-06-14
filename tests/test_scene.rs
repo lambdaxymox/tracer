@@ -1,5 +1,7 @@
 extern crate tracer;
 extern crate approx;
+extern crate rand;
+extern crate rand_isaac;
 
 
 #[cfg(test)]
@@ -30,6 +32,7 @@ mod scene_tests {
         Matrix4x4,
         Magnitude,
     };
+    use rand::prelude::*;
 
     fn scene() -> Scene {
         let sphere_center_model_space = Vector3::zero();
@@ -108,7 +111,8 @@ mod scene_tests {
     #[test]
     fn test_scene_sphere_sample_bsdf() {
         let scene = scene();
-        let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
+        let rng = rand_isaac::Isaac64Rng::from_rng(rand::prelude::thread_rng()).unwrap();
+        let mut sampler = SphereSampler::new(rng);
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let intersection_query = IntersectionQuery::new(ray, 0.1, f32::MAX);
         let sphere = scene.ray_cast(&intersection_query).unwrap();

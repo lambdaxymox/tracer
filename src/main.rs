@@ -12,6 +12,7 @@ mod renderer;
 mod sampler;
 
 use rand::prelude::*;
+use rand_isaac::Isaac64Rng;
 
 use std::fs::File;
 use std::io;
@@ -41,7 +42,14 @@ const SAMPLES_PER_PIXEL: usize = 128;
 const MAX_DEPTH: usize = 16;
 
 
-fn camera(width: usize, height: usize) -> Camera {
+fn generate_rng() -> Isaac64Rng {
+    let mut seed_rng = rand::prelude::thread_rng();
+    let seed_u8 = [0; 32].map(|_| seed_rng.gen::<u8>());
+    
+    rand_isaac::Isaac64Rng::from_seed(seed_u8)
+}
+
+fn generate_camera(width: usize, height: usize) -> Camera {
     let look_from = Vector3::new(12_f32, 2_f32, 4_f32);
     let look_at = Vector3::new(0_f32, 0_f32, 0_f32);
     let distance_to_focus = (look_from - look_at).magnitude();
@@ -53,8 +61,8 @@ fn camera(width: usize, height: usize) -> Camera {
     Camera::new(look_from, look_at, v_up, v_fov, aspect_ratio, aperture, distance_to_focus)
 }
 
-fn generate_scene(rng: &mut ThreadRng, width: usize, height: usize) -> Scene {
-    let camera = camera(width, height);
+fn generate_scene(rng: &mut Isaac64Rng, width: usize, height: usize) -> Scene {
+    let camera = generate_camera(width, height);
     let mut scene = Scene::new(width, height, camera);
     scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1000_f32),
@@ -155,15 +163,17 @@ fn main() -> io::Result<()> {
     let width = 480;
     let height = 270;
     let mut canvas = Canvas::new(width, height);
-    let mut rng = rand::prelude::thread_rng();
     let settings = RendererSettings::new(SAMPLES_PER_PIXEL, MAX_DEPTH);
     let renderer = Renderer::new(settings);
+
+    let mut rng = generate_rng();
 
     println!("Generating scene.");
     let scene = generate_scene(&mut rng, width, height);
 
     println!("Generating image.");
-    let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
+    
+    let mut sampler = SphereSampler::new(rng);
     renderer.render(&scene, &mut sampler, &mut canvas);
     
     println!("Writing image to file.");

@@ -5,11 +5,11 @@ use cglinalg::{
 };
 
 pub struct SphereSampler {
-    rng: ThreadRng,
+    pub rng: rand_isaac::Isaac64Rng,
 }
 
 impl SphereSampler {
-    pub fn new(rng: ThreadRng) -> Self {
+    pub fn new(rng: rand_isaac::Isaac64Rng) -> Self {
         Self { rng, }
     }
 

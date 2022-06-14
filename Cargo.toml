@@ -10,6 +10,7 @@ description = "An offline path tracer."
 [dependencies]
 cglinalg = { git = "https://github.com/lambdaxymox/cglinalg", version = "0.15.6" }
 rand = "0.8.5"
+rand_isaac = "0.3.0"
 
 [dev-dependencies]
 approx = "0.5.1"

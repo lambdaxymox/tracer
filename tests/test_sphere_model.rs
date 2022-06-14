@@ -1,4 +1,6 @@
 extern crate tracer;
+extern crate rand;
+extern crate rand_isaac;
 
 
 #[cfg(test)]
@@ -25,6 +27,8 @@ mod sphere_lambertian_model_tests {
         Vector3,
         Magnitude,
     };
+    use rand::prelude::*;
+
 
     fn sphere() -> ModelSpaceGeometryObject<Sphere, SimpleLambertianBsdf> {
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
@@ -55,7 +59,8 @@ mod sphere_lambertian_model_tests {
     #[test]
     fn test_scattering() {
         let sphere = sphere();
-        let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
+        let rng = rand_isaac::Isaac64Rng::from_rng(rand::prelude::thread_rng()).unwrap();
+        let mut sampler = SphereSampler::new(rng);
         let ray_incoming = Ray::new(
             Vector3::new(0_f32, 0_f32, 30_f32), 
             Vector3::new(0_f32, 0_f32, -1_f32)
@@ -107,6 +112,7 @@ mod sphere_metal_model_tests {
         Vector3,
         Magnitude,
     };
+    use rand::prelude::*;
 
     fn sphere() -> ModelSpaceGeometryObject<Sphere, SimpleMetalBsdf> {
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
@@ -137,7 +143,8 @@ mod sphere_metal_model_tests {
     #[test]
     fn test_scattering() {
         let sphere = sphere();
-        let mut sampler = SphereSampler::new(rand::prelude::thread_rng());
+        let rng = rand_isaac::Isaac64Rng::from_rng(rand::prelude::thread_rng()).unwrap();
+        let mut sampler = SphereSampler::new(rng);
         let ray_incoming = Ray::new(
             Vector3::new(0_f32, 0_f32, 30_f32), 
             Vector3::new(0_f32, 0_f32, -1_f32)
