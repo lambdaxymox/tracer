@@ -46,7 +46,7 @@ impl Renderer {
 
     fn estimate(&self, scene: &Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
         // TODO: Include ability to sample emissions for scene objects that are lights.
-        if let Some(hit) = scene.ray_cast(query) {
+        if let Some(hit) = scene.ray_cast_scatter(query) {
             if depth < self.max_path_depth {
                 let scattering_query = ScatteringQuery::new(
                     query.ray.direction,

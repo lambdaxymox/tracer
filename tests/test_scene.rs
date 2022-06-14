@@ -74,7 +74,7 @@ mod scene_tests {
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
         
-        assert!(scene.ray_cast(&query).is_some());
+        assert!(scene.ray_cast_scatter(&query).is_some());
     }
 
     #[test]
@@ -84,7 +84,7 @@ mod scene_tests {
         let ray_direction = scene.camera.forward();
         let ray = Ray::new(ray_origin, ray_direction);
         let query = IntersectionQuery::new(ray, 0.1, f32::MAX);
-        let sphere = scene.ray_cast(&query).unwrap();
+        let sphere = scene.ray_cast_scatter(&query).unwrap();
         let expected = IntersectionResult::new_hit(
             13.142121,
             Vector3::new(4_f32, 5_f32, 6_f32) - ray_direction,
@@ -115,7 +115,7 @@ mod scene_tests {
         let mut sampler = SphereSampler::new(rng);
         let ray = Ray::new(scene.camera.position(), scene.camera.forward());
         let intersection_query = IntersectionQuery::new(ray, 0.1, f32::MAX);
-        let sphere = scene.ray_cast(&intersection_query).unwrap();
+        let sphere = scene.ray_cast_scatter(&intersection_query).unwrap();
         let intersection_result = sphere.intersection_result.unwrap_hit();
         let scattering_query = ScatteringQuery::new(
             intersection_query.ray.direction,
