@@ -6,17 +6,17 @@ use crate::scene::*;
 #[derive(Copy, Clone, Debug)]
 pub struct ObjectIntersectionResult<'a> {
     pub intersection_result: IntersectionResult,
-    pub object: &'a SceneObject,
+    pub object: &'a SceneScatteringObject,
 }
 
 impl<'a> ObjectIntersectionResult<'a> {
-    pub fn new(intersection_result: IntersectionResult, object: &'a SceneObject) -> Self {
+    pub fn new(intersection_result: IntersectionResult, object: &'a SceneScatteringObject) -> Self {
         Self { intersection_result, object, }
     }
 }
 
 pub struct Scene {
-    pub objects: Vec<SceneObject>,
+    pub objects: Vec<SceneScatteringObject>,
     pub camera: Camera,
 }
 
@@ -39,7 +39,7 @@ impl Scene {
     }
 
     /// Insert an object into a scene.
-    pub fn push(&mut self, object: SceneObject) {
+    pub fn push(&mut self, object: SceneScatteringObject) {
         self.objects.push(object);
     }
 

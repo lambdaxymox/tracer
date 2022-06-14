@@ -8,13 +8,13 @@ use cglinalg::{
 
 
 #[derive(Debug)]
-pub struct SceneObject {
+pub struct SceneScatteringObject {
     object: Box<dyn ModelSpaceScatteringObject>,
     pub model_matrix: Matrix4x4<f32>,
     model_matrix_inv: Matrix4x4<f32>,
 }
 
-impl SceneObject {
+impl SceneScatteringObject {
     pub fn new(object: Box<dyn ModelSpaceScatteringObject>, model_matrix: Matrix4x4<f32>) -> Self {
         let model_matrix_inv = model_matrix.inverse().unwrap();
         
