@@ -4,6 +4,7 @@ mod sampler;
 
 pub mod geometry;
 pub mod bsdf;
+pub mod light;
 pub mod query;
 pub mod scene;
 

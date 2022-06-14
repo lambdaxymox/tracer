@@ -30,12 +30,12 @@ mod sphere_lambertian_model_tests {
     use rand::prelude::*;
 
 
-    fn sphere() -> ModelSpaceGeometryObject<Sphere, SimpleLambertianBsdf> {
+    fn sphere() -> ModelSpaceGeometryScatteringObject<Sphere, SimpleLambertianBsdf> {
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
         let bsdf = SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5));
         let bsdf_sampler = SimpleLambertianBsdfQuerySampler::new();
 
-        ModelSpaceGeometryObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
+        ModelSpaceGeometryScatteringObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
     }
 
     #[test]
@@ -114,12 +114,12 @@ mod sphere_metal_model_tests {
     };
     use rand::prelude::*;
 
-    fn sphere() -> ModelSpaceGeometryObject<Sphere, SimpleMetalBsdf> {
+    fn sphere() -> ModelSpaceGeometryScatteringObject<Sphere, SimpleMetalBsdf> {
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
         let bsdf = SimpleMetalBsdf::new(Vector3::new(0.5, 0.5, 0.5), 0.2);
         let bsdf_sampler = SimpleMetalBsdfQuerySampler::new();
 
-        ModelSpaceGeometryObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
+        ModelSpaceGeometryScatteringObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
     }
 
     #[test]

@@ -42,7 +42,7 @@ mod scene_tests {
         let sphere = Sphere::new(sphere_center_model_space, sphere_radius);
         let bsdf = Box::new(SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5)));
         let bsdf_sampler = Box::new(SimpleLambertianBsdfQuerySampler::new());
-        let object = Box::new(ModelSpaceGeometryObject::new(sphere, bsdf, bsdf_sampler));
+        let object = Box::new(ModelSpaceGeometryScatteringObject::new(sphere, bsdf, bsdf_sampler));
         let scene_object = SceneObject::new(object, model_matrix);
         let camera = (|width: usize, height: usize| {
             let look_from = Vector3::new(-4_f32, -5_f32, 0_f32);
