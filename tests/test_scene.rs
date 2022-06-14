@@ -8,10 +8,8 @@ mod scene_tests {
         Camera,
         Scene,
         Ray,
-        Sphere,
         SceneObject,
         IntersectionQuery, 
-        IntersectionResult,
         ModelSpaceGeometryObject,
         ScatteringQuery,
         SphereSampler,
@@ -19,6 +17,10 @@ mod scene_tests {
     use tracer::bsdf::{
         SimpleLambertianBsdf,
         SimpleLambertianBsdfQuerySampler,
+    };
+    use tracer::geometry::{
+        IntersectionResult,
+        Sphere,
     };
     use approx::{
         assert_relative_eq,

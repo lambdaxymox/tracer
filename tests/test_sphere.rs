@@ -5,10 +5,12 @@ extern crate tracer;
 mod sphere_tests {
     use tracer::{
         Ray,
+        IntersectionQuery,
+    };
+    use tracer::geometry::{
         Sphere,
         Geometry,
         Intersection,
-        IntersectionQuery,
     };
     use cglinalg::{
         Vector3,

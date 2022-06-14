@@ -7,7 +7,9 @@ use cglinalg::{
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Sphere {
+    /// The center of the sphere in model space.
     pub center: Vector3<f32>,
+    /// The radius of the sphere in model space.
     pub radius: f32,
 }
 
