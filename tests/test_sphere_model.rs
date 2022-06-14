@@ -4,22 +4,23 @@ extern crate tracer;
 #[cfg(test)]
 mod sphere_lambertian_model_tests {
     use tracer::{
-        Ray,
-        IntersectionQuery,
-        ModelSpaceGeometryObject,
-        ModelSpaceObject,
-        ScatteringQuery,
-        ScatteringResult,
         SphereSampler,
     };
     use tracer::bsdf::{
         SimpleLambertianBsdf,
         SimpleLambertianBsdfQuerySampler,
     };
-    use tracer::geometry::{
+    use tracer::query::{
+        Ray,
+        IntersectionQuery,
         IntersectionResult,
+        ScatteringQuery,
+        ScatteringResult,
+    };
+    use tracer::geometry::{
         Sphere,
     };
+    use tracer::scene::*;
     use cglinalg::{
         Vector3,
         Magnitude,
@@ -85,22 +86,23 @@ mod sphere_lambertian_model_tests {
 #[cfg(test)]
 mod sphere_metal_model_tests {
     use tracer::{
-        Ray,
-        IntersectionQuery,
-        ModelSpaceGeometryObject,
-        ModelSpaceObject,
-        ScatteringQuery,
-        ScatteringResult,
         SphereSampler,
     };
     use tracer::bsdf::{
         SimpleMetalBsdf,
         SimpleMetalBsdfQuerySampler,
     };
-    use tracer::geometry::{
+    use tracer::query::{
+        Ray,
+        IntersectionQuery,
         IntersectionResult,
+        ScatteringQuery,
+        ScatteringResult,
+    };
+    use tracer::geometry::{
         Sphere,
     };
+    use tracer::scene::*;
     use cglinalg::{
         Vector3,
         Magnitude,

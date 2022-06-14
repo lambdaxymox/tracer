@@ -6,22 +6,22 @@ extern crate approx;
 mod scene_tests {
     use tracer::{
         Camera,
-        Scene,
-        Ray,
-        SceneObject,
-        IntersectionQuery, 
-        ModelSpaceGeometryObject,
-        ScatteringQuery,
         SphereSampler,
     };
     use tracer::bsdf::{
         SimpleLambertianBsdf,
         SimpleLambertianBsdfQuerySampler,
     };
-    use tracer::geometry::{
+    use tracer::query::{
+        IntersectionQuery, 
         IntersectionResult,
+        Ray,
+        ScatteringQuery,
+    };
+    use tracer::geometry::{
         Sphere,
     };
+    use tracer::scene::*;
     use approx::{
         assert_relative_eq,
     };

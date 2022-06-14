@@ -3,7 +3,7 @@ extern crate tracer;
 
 #[cfg(test)]
 mod sphere_tests {
-    use tracer::{
+    use tracer::query::{
         Ray,
         IntersectionQuery,
     };

@@ -1,7 +1,6 @@
 use crate::query::*;
-use crate::geometry::*;
 use crate::camera::*;
-use crate::scene_object::*;
+use crate::scene::*;
 
 
 #[derive(Copy, Clone, Debug)]

@@ -4,8 +4,6 @@ extern crate rand;
 
 mod query;
 mod scene;
-mod model_object;
-mod scene_object;
 mod canvas;
 mod camera;
 mod geometry;
@@ -31,8 +29,6 @@ use camera::{
 };
 use canvas::*;
 use sampler::*;
-use model_object::*;
-use scene_object::*;
 use scene::*;
 use renderer::*;
 use bsdf::*;

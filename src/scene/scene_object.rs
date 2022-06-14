@@ -1,7 +1,6 @@
-use crate::geometry::*;
 use crate::sampler::*;
 use crate::query::*;
-use crate::model_object::*;
+use crate::scene::*;
 use cglinalg::{
     Vector3,
     Matrix4x4,
