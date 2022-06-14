@@ -1,8 +1,8 @@
-use crate::query::*;
 use crate::sampler::*;
+use crate::bsdf::*;
 use cglinalg::{
-    Magnitude, 
     Vector3,
+    Magnitude,
 };
 
 
@@ -16,6 +16,68 @@ impl SimpleLambertianBsdf {
         Self { scattering_fraction, }
     }
 }
+
+impl BsdfMapping for SimpleLambertianBsdf {
+    fn sample(&self, query: &BsdfQuery) -> BsdfResult {
+        BsdfResult {
+            ray_incoming: query.ray_incoming,
+            ray_outgoing: query.ray_outgoing,
+            point: query.point,
+            normal: query.normal,
+            scattering_fraction: self.scattering_fraction,
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
+pub struct SimpleMetalBsdf {
+    reflectance: Vector3<f32>,
+    fuzz: f32,
+}
+
+impl SimpleMetalBsdf {
+    pub fn new(reflectance: Vector3<f32>, fuzz: f32) -> Self {
+        Self { reflectance, fuzz, }
+    }
+}
+
+impl BsdfMapping for SimpleMetalBsdf {
+    fn sample(&self, query: &BsdfQuery) -> BsdfResult {
+        let scattering_fraction = self.reflectance;
+
+        BsdfResult::new(
+            query.ray_incoming,
+            query.ray_outgoing,
+            query.point,
+            query.normal,
+            scattering_fraction,
+        )
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
+pub struct SimpleDielectricBsdf {
+    pub refraction_index: f32,
+}
+
+impl SimpleDielectricBsdf {
+    pub fn new(refraction_index: f32) -> Self {
+        Self { refraction_index, }
+    }
+}
+
+impl BsdfMapping for SimpleDielectricBsdf {
+    fn sample(&self, query: &BsdfQuery) -> BsdfResult {
+        BsdfResult::new(
+            query.ray_incoming,
+            query.ray_outgoing,
+            query.point, 
+            query.normal, 
+            Vector3::new(1_f32, 1_f32, 1_f32),
+        )
+    }
+}
+
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct SimpleLambertianBsdfQuerySampler {}
@@ -45,30 +107,6 @@ impl BsdfQuerySampler for SimpleLambertianBsdfQuerySampler {
     }
 }
 
-impl BsdfMapping for SimpleLambertianBsdf {
-    fn sample(&self, query: &BsdfQuery) -> BsdfResult {
-        BsdfResult {
-            ray_incoming: query.ray_incoming,
-            ray_outgoing: query.ray_outgoing,
-            point: query.point,
-            normal: query.normal,
-            scattering_fraction: self.scattering_fraction,
-        }
-    }
-}
-
-#[derive(Copy, Clone, Debug)]
-pub struct SimpleMetalBsdf {
-    reflectance: Vector3<f32>,
-    fuzz: f32,
-}
-
-impl SimpleMetalBsdf {
-    pub fn new(reflectance: Vector3<f32>, fuzz: f32) -> Self {
-        Self { reflectance, fuzz, }
-    }
-}
-
 #[derive(Copy, Clone, Debug, Default)]
 pub struct SimpleMetalBsdfQuerySampler {}
 
@@ -95,31 +133,6 @@ impl BsdfQuerySampler for SimpleMetalBsdfQuerySampler {
         let ray_outgoing = reflected_direction + fuzzed_vector;
 
         BsdfQuery::new(*ray_incoming, ray_outgoing, *point, *normal)
-    }
-}
-
-impl BsdfMapping for SimpleMetalBsdf {
-    fn sample(&self, query: &BsdfQuery) -> BsdfResult {
-        let scattering_fraction = self.reflectance;
-
-        BsdfResult::new(
-            query.ray_incoming,
-            query.ray_outgoing,
-            query.point,
-            query.normal,
-            scattering_fraction,
-        )
-    }
-}
-
-#[derive(Copy, Clone, Debug)]
-pub struct SimpleDielectricBsdf {
-    pub refraction_index: f32,
-}
-
-impl SimpleDielectricBsdf {
-    pub fn new(refraction_index: f32) -> Self {
-        Self { refraction_index, }
     }
 }
 
@@ -190,18 +203,6 @@ impl BsdfQuerySampler for SimpleDielectricBsdfQuerySampler {
         };
 
         BsdfQuery::new(*ray_incoming, ray_outgoing, *point, normal_outward)
-    }
-}
-
-impl BsdfMapping for SimpleDielectricBsdf {
-    fn sample(&self, query: &BsdfQuery) -> BsdfResult {
-        BsdfResult::new(
-            query.ray_incoming,
-            query.ray_outgoing,
-            query.point, 
-            query.normal, 
-            Vector3::new(1_f32, 1_f32, 1_f32),
-        )
     }
 }
 

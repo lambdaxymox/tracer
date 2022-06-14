@@ -12,7 +12,6 @@ mod geometry;
 mod bsdf;
 mod renderer;
 mod sampler;
-mod sphere;
 
 use rand::prelude::*;
 
@@ -31,13 +30,15 @@ use camera::{
     Camera
 };
 use canvas::*;
-use sphere::*;
 use sampler::*;
 use model_object::*;
 use scene_object::*;
 use scene::*;
 use renderer::*;
 use bsdf::*;
+use geometry::{
+    Sphere,
+};
 
 
 const SAMPLES_PER_PIXEL: usize = 128;

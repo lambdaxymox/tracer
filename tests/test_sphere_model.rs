@@ -6,8 +6,6 @@ mod sphere_lambertian_model_tests {
     use tracer::{
         Ray,
         Sphere,
-        SimpleLambertianBsdf,
-        SimpleLambertianBsdfQuerySampler,
         IntersectionQuery,
         IntersectionResult,
         ModelSpaceGeometryObject,
@@ -15,6 +13,10 @@ mod sphere_lambertian_model_tests {
         ScatteringQuery,
         ScatteringResult,
         SphereSampler,
+    };
+    use tracer::bsdf::{
+        SimpleLambertianBsdf,
+        SimpleLambertianBsdfQuerySampler,
     };
     use cglinalg::{
         Vector3,
@@ -83,8 +85,6 @@ mod sphere_metal_model_tests {
     use tracer::{
         Ray,
         Sphere,
-        SimpleMetalBsdf,
-        SimpleMetalBsdfQuerySampler,
         IntersectionQuery,
         IntersectionResult,
         ModelSpaceGeometryObject,
@@ -92,6 +92,10 @@ mod sphere_metal_model_tests {
         ScatteringQuery,
         ScatteringResult,
         SphereSampler,
+    };
+    use tracer::bsdf::{
+        SimpleMetalBsdf,
+        SimpleMetalBsdfQuerySampler,
     };
     use cglinalg::{
         Vector3,
