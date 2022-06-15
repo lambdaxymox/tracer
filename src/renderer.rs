@@ -44,6 +44,10 @@ impl Renderer {
         }
     }
 
+    fn estimate_direct_from_lights(&self, scene: &Scene) -> Vector3<f32> {
+        unimplemented!()
+    }
+
     fn path_trace(&self, scene: &Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
         if let Some(hit) = scene.ray_cast(query) {
             if depth < self.max_path_depth {
@@ -58,8 +62,9 @@ impl Renderer {
                 let next_intersection_query = IntersectionQuery::new(next_incoming_ray, query.t_min, query.t_max);
                 let next_estimate = self.path_trace(scene, &next_intersection_query, sampler, depth + 1);
                 let estimated_from_indirect_light = scattering_result.scattering_fraction.component_mul(&next_estimate);
+                // let estimated_from_direct_light = self.estimate_direct_from_lights(scene);
                 
-                scattering_result.emission + estimated_from_indirect_light
+                scattering_result.emission + estimated_from_indirect_light // + estimated_from_direct_light
             } else {
                 Vector3::new(0_f32, 0_f32, 0_f32)
             }

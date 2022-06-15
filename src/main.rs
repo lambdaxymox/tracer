@@ -126,9 +126,9 @@ fn generate_scene(rng: &mut Isaac64Rng, width: usize, height: usize) -> Scene {
                         Matrix4x4::from_affine_translation(&center)
                     ));
                 } else {
-                    // Light.
+                    // Emission.
                     scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
-                            Sphere::new(Vector3::zero(), 0.2),
+                            Sphere::new(Vector3::zero(), 0.3),
                             Box::new(BlackBodyBsdf::new()),
                             Box::new(BlackBodyBsdfQuerySampler::new()),
                             Box::new(DiffuseLight::new(Vector3::new(1_f32, 1_f32, 1_f32)))
