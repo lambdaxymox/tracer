@@ -44,9 +44,8 @@ impl Renderer {
         }
     }
 
-    fn estimate(&self, scene: &Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
-        // TODO: Include ability to sample emissions for scene objects that are lights.
-        if let Some(hit) = scene.ray_cast_scatter(query) {
+    fn path_trace(&self, scene: &Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
+        if let Some(hit) = scene.ray_cast(query) {
             if depth < self.max_path_depth {
                 let scattering_query = ScatteringQuery::new(
                     query.ray.direction,
@@ -57,9 +56,10 @@ impl Renderer {
                 let next_direction = scattering_result.ray_outgoing;
                 let next_incoming_ray = Ray::new(next_origin, next_direction);
                 let next_intersection_query = IntersectionQuery::new(next_incoming_ray, query.t_min, query.t_max);
-                let next_estimate = self.estimate(scene, &next_intersection_query, sampler, depth + 1);
-
-                scattering_result.scattering_fraction.component_mul(&next_estimate)
+                let next_estimate = self.path_trace(scene, &next_intersection_query, sampler, depth + 1);
+                let estimated_from_indirect_light = scattering_result.scattering_fraction.component_mul(&next_estimate);
+                
+                scattering_result.emission + estimated_from_indirect_light
             } else {
                 Vector3::new(0_f32, 0_f32, 0_f32)
             }
@@ -86,7 +86,7 @@ impl Renderer {
             let ray = scene.camera.cast_ray(sampler, u, v);
             let query = IntersectionQuery::new(ray, self.t_min, self.t_max);
 
-            color += self.estimate(scene, &query, sampler, 0);
+            color += self.path_trace(scene, &query, sampler, 0);
         }
         
         color / self.samples_per_pixel as f32

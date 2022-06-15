@@ -40,7 +40,7 @@ use geometry::{
 };
 
 
-const SAMPLES_PER_PIXEL: usize = 128;
+const SAMPLES_PER_PIXEL: usize = 32;
 const MAX_DEPTH: usize = 16;
 
 
@@ -66,10 +66,11 @@ fn generate_camera(width: usize, height: usize) -> Camera {
 fn generate_scene(rng: &mut Isaac64Rng, width: usize, height: usize) -> Scene {
     let camera = generate_camera(width, height);
     let mut scene = Scene::new(width, height, camera);
-    scene.push(SceneScatteringObject::new(Box::new(ModelSpaceGeometryScatteringObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1000_f32),
             Box::new(SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5))),
-            Box::new(SimpleLambertianBsdfQuerySampler::new())
+            Box::new(SimpleLambertianBsdfQuerySampler::new()),
+            Box::new(NoLight::new())
         )),
         Matrix4x4::from_affine_translation(&Vector3::new(0_f32, -1000_f32, 0_f32))
     ));
@@ -90,10 +91,11 @@ fn generate_scene(rng: &mut Isaac64Rng, width: usize, height: usize) -> Scene {
                         rng.gen::<f32>() * rng.gen::<f32>(), 
                         rng.gen::<f32>() * rng.gen::<f32>()
                     );
-                    scene.push(SceneScatteringObject::new(Box::new(ModelSpaceGeometryScatteringObject::new(
+                    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
                             Sphere::new(Vector3::zero(), 0.2),
                             Box::new(SimpleLambertianBsdf::new(albedo)),
-                            Box::new(SimpleLambertianBsdfQuerySampler::new())
+                            Box::new(SimpleLambertianBsdfQuerySampler::new()),
+                            Box::new(NoLight::new())
                         )),
                         Matrix4x4::from_affine_translation(&center)
                     ));
@@ -105,19 +107,31 @@ fn generate_scene(rng: &mut Isaac64Rng, width: usize, height: usize) -> Scene {
                         0.5 * (1_f32 + rng.gen::<f32>())
                     );
                     let fuzz = 0.5 * rng.gen::<f32>();
-                    scene.push(SceneScatteringObject::new(Box::new(ModelSpaceGeometryScatteringObject::new(
+                    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
                             Sphere::new(Vector3::zero(), 0.2),
                             Box::new(SimpleMetalBsdf::new(albedo, fuzz)),
-                            Box::new(SimpleMetalBsdfQuerySampler::new())
+                            Box::new(SimpleMetalBsdfQuerySampler::new()),
+                            Box::new(NoLight::new())
+                        )),
+                        Matrix4x4::from_affine_translation(&center)
+                    ));
+                } else if choose_mat < 0.97 {
+                    // Glass.
+                    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
+                            Sphere::new(Vector3::zero(), 0.2),
+                            Box::new(SimpleDielectricBsdf::new(1.5)),
+                            Box::new(SimpleDielectricBsdfQuerySampler::new()),
+                            Box::new(NoLight::new())
                         )),
                         Matrix4x4::from_affine_translation(&center)
                     ));
                 } else {
-                    // Glass.
-                    scene.push(SceneScatteringObject::new(Box::new(ModelSpaceGeometryScatteringObject::new(
+                    // Light.
+                    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
                             Sphere::new(Vector3::zero(), 0.2),
-                            Box::new(SimpleDielectricBsdf::new(1.5)),
-                            Box::new(SimpleDielectricBsdfQuerySampler::new())
+                            Box::new(BlackBodyBsdf::new()),
+                            Box::new(BlackBodyBsdfQuerySampler::new()),
+                            Box::new(DiffuseLight::new(Vector3::new(1_f32, 1_f32, 1_f32)))
                         )),
                         Matrix4x4::from_affine_translation(&center)
                     ));
@@ -126,24 +140,27 @@ fn generate_scene(rng: &mut Isaac64Rng, width: usize, height: usize) -> Scene {
         }
     }
 
-    scene.push(SceneScatteringObject::new(Box::new(ModelSpaceGeometryScatteringObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1_f32),
             Box::new(SimpleDielectricBsdf::new(1.5)),
-            Box::new(SimpleDielectricBsdfQuerySampler::new())
+            Box::new(SimpleDielectricBsdfQuerySampler::new()),
+            Box::new(NoLight::new())
         )),
         Matrix4x4::from_affine_translation(&Vector3::new(0_f32, 1_f32, 0_f32))
     ));
-    scene.push(SceneScatteringObject::new(Box::new(ModelSpaceGeometryScatteringObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1_f32), 
             Box::new(SimpleLambertianBsdf::new(Vector3::new(0.4, 0.2, 0.1))),
-            Box::new(SimpleLambertianBsdfQuerySampler::new())
+            Box::new(SimpleLambertianBsdfQuerySampler::new()),
+            Box::new(NoLight::new())
         )),
         Matrix4x4::from_affine_translation(&Vector3::new(-4_f32, 1_f32, 0_f32))
     ));
-    scene.push(SceneScatteringObject::new(Box::new(ModelSpaceGeometryScatteringObject::new(
+    scene.push(SceneObject::new(Box::new(ModelSpaceGeometryObject::new(
             Sphere::new(Vector3::zero(), 1_f32), 
             Box::new(SimpleMetalBsdf::new(Vector3::new(0.7, 0.6, 0.5), 0.1)),
-            Box::new(SimpleMetalBsdfQuerySampler::new())
+            Box::new(SimpleMetalBsdfQuerySampler::new()),
+            Box::new(NoLight::new())
         )),
         Matrix4x4::from_affine_translation(&Vector3::new(4_f32, 1_f32, 0_f32))
     ));

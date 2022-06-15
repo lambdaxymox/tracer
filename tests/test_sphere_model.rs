@@ -23,6 +23,7 @@ mod sphere_lambertian_model_tests {
         Sphere,
     };
     use tracer::scene::*;
+    use tracer::light::*;
     use cglinalg::{
         Vector3,
         Magnitude,
@@ -30,12 +31,15 @@ mod sphere_lambertian_model_tests {
     use rand::prelude::*;
 
 
-    fn sphere() -> ModelSpaceGeometryScatteringObject<Sphere, SimpleLambertianBsdf> {
+    fn sphere() -> ModelSpaceGeometryObject<Sphere, SimpleLambertianBsdf, NoLight> {
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
-        let bsdf = SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5));
-        let bsdf_sampler = SimpleLambertianBsdfQuerySampler::new();
+        let bsdf = Box::new(
+            SimpleLambertianBsdf::new(Vector3::new(0.5, 0.5, 0.5))
+        );
+        let bsdf_sampler = Box::new(SimpleLambertianBsdfQuerySampler::new());
+        let emitter = Box::new(NoLight::new());
 
-        ModelSpaceGeometryScatteringObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
+        ModelSpaceGeometryObject::new(sphere, bsdf, bsdf_sampler, emitter)
     }
 
     #[test]
@@ -77,7 +81,8 @@ mod sphere_lambertian_model_tests {
             ray_outgoing_direction,
             intersection_result.point,
             intersection_result.normal,
-            Vector3::new(0.5, 0.5, 0.5)
+            Vector3::new(0.5, 0.5, 0.5),
+            Vector3::zero()
         );
         let result = sphere.scatter(&scattering_query, &mut sampler);
 
@@ -87,6 +92,7 @@ mod sphere_lambertian_model_tests {
         assert_eq!(result.scattering_fraction, expected.scattering_fraction);
     }
 }
+
 
 #[cfg(test)]
 mod sphere_metal_model_tests {
@@ -108,18 +114,22 @@ mod sphere_metal_model_tests {
         Sphere,
     };
     use tracer::scene::*;
+    use tracer::light::*;
     use cglinalg::{
         Vector3,
         Magnitude,
     };
     use rand::prelude::*;
 
-    fn sphere() -> ModelSpaceGeometryScatteringObject<Sphere, SimpleMetalBsdf> {
+    fn sphere() -> ModelSpaceGeometryObject<Sphere, SimpleMetalBsdf, NoLight> {
         let sphere = Sphere::new(Vector3::zero(), 1_f32);
-        let bsdf = SimpleMetalBsdf::new(Vector3::new(0.5, 0.5, 0.5), 0.2);
-        let bsdf_sampler = SimpleMetalBsdfQuerySampler::new();
+        let bsdf = Box::new(
+            SimpleMetalBsdf::new(Vector3::new(0.5, 0.5, 0.5), 0.2)
+        );
+        let bsdf_sampler = Box::new(SimpleMetalBsdfQuerySampler::new());
+        let emitter = Box::new(NoLight::new());
 
-        ModelSpaceGeometryScatteringObject::new(sphere, Box::new(bsdf), Box::new(bsdf_sampler))
+        ModelSpaceGeometryObject::new(sphere, bsdf, bsdf_sampler, emitter)
     }
 
     #[test]
@@ -161,7 +171,8 @@ mod sphere_metal_model_tests {
             ray_outgoing_direction,
             intersection_result.point,
             intersection_result.normal,
-            Vector3::new(0.5, 0.5, 0.5)
+            Vector3::new(0.5, 0.5, 0.5),
+            Vector3::zero()
         );
         let result = sphere.scatter(&scattering_query, &mut sampler);
 

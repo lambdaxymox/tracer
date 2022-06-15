@@ -149,6 +149,7 @@ pub struct ScatteringResult {
     pub point: Vector3<f32>,
     pub normal: Vector3<f32>,
     pub scattering_fraction: Vector3<f32>,
+    pub emission: Vector3<f32>,
 }
 
 impl ScatteringResult {
@@ -157,10 +158,11 @@ impl ScatteringResult {
         ray_outgoing: Vector3<f32>,
         point: Vector3<f32>,
         normal: Vector3<f32>,
-        scattering_fraction: Vector3<f32>) -> Self 
+        scattering_fraction: Vector3<f32>,
+        emission: Vector3<f32>) -> Self 
     {
         Self {
-            ray_incoming, ray_outgoing, point, normal, scattering_fraction,
+            ray_incoming, ray_outgoing, point, normal, scattering_fraction, emission,
         }
     }
 }
