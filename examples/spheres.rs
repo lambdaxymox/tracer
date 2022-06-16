@@ -1,16 +1,13 @@
+extern crate tracer;
 extern crate cglinalg;
 extern crate rand;
 
-
-mod query;
-mod scene;
-mod canvas;
-mod camera;
-mod geometry;
-mod bsdf;
-mod light;
-mod renderer;
-mod sampler;
+use tracer::*;
+use tracer::bsdf::*;
+use tracer::geometry::*;
+use tracer::light::*;
+use tracer::renderer::*;
+use tracer::scene::*;
 
 use rand::prelude::*;
 use rand_isaac::Isaac64Rng;
@@ -26,18 +23,7 @@ use cglinalg::{
     Matrix4x4,
     Magnitude,
 };
-use camera::{
-    Camera
-};
-use canvas::*;
-use sampler::*;
-use scene::*;
-use renderer::*;
-use bsdf::*;
-use light::*;
-use geometry::{
-    Sphere,
-};
+
 
 
 const SAMPLES_PER_PIXEL: usize = 32;

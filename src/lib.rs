@@ -7,6 +7,7 @@ pub mod bsdf;
 pub mod light;
 pub mod query;
 pub mod scene;
+pub mod renderer;
 
 pub use camera::*;
 pub use canvas::*;
