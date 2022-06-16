@@ -60,7 +60,7 @@ impl Scene {
 
     /// Cast a ray into a scene and determine whether the ray intersects and 
     /// scattering object inside the scene.
-    pub fn ray_cast(&self, query: &IntersectionQuery) -> Option<ObjectIntersectionResult> {
+    pub fn intersect(&self, query: &IntersectionQuery) -> Option<ObjectIntersectionResult> {
         let mut closest_result = None;
         let mut t_closest_so_far = query.t_max;
         let mut closest_ray = *query;
@@ -88,7 +88,7 @@ impl Scene {
         let ray = Ray::new(*from_location, direction);
         let query = IntersectionQuery::new(ray, 0.0001, f32::MAX);
         
-        self.ray_cast(&query).is_none()
+        self.intersect(&query).is_none()
     }
 }
 
