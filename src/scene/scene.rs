@@ -1,4 +1,4 @@
-use crate::query::*;
+use crate::core::*;
 use crate::camera::*;
 use crate::scene::*;
 use cglinalg::{

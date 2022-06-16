@@ -1,4 +1,4 @@
-use crate::query::*;
+use crate::core::query::*;
 use cglinalg::{
     Vector3,
 };

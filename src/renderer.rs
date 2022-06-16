@@ -1,6 +1,5 @@
-use crate::query::*;
+use crate::core::*;
 use crate::canvas::*;
-use crate::sampler::*;
 use crate::scene::*;
 use cglinalg::{ 
     Vector3,

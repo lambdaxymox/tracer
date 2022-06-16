@@ -8,13 +8,13 @@ extern crate rand_isaac;
 mod scene_tests {
     use tracer::{
         Camera,
-        SphereSampler,
     };
+    use tracer::core::*;
     use tracer::bsdf::{
         SimpleLambertianBsdf,
         SimpleLambertianBsdfQuerySampler,
     };
-    use tracer::query::{
+    use tracer::core::{
         IntersectionQuery, 
         IntersectionResult,
         Ray,

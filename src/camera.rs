@@ -1,5 +1,4 @@
-use crate::query::*;
-use crate::sampler::*;
+use crate::core::*;
 use cglinalg::{
     Magnitude, 
     Vector3

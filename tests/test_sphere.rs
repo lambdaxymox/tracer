@@ -3,14 +3,13 @@ extern crate tracer;
 
 #[cfg(test)]
 mod sphere_tests {
-    use tracer::query::{
+    use tracer::core::*;
+    use tracer::core::{
         Ray,
         IntersectionQuery,
     };
     use tracer::geometry::{
         Sphere,
-        Geometry,
-        Intersection,
     };
     use cglinalg::{
         Vector3,

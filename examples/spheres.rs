@@ -2,7 +2,9 @@ extern crate tracer;
 extern crate cglinalg;
 extern crate rand;
 
+
 use tracer::*;
+use tracer::core::*;
 use tracer::bsdf::*;
 use tracer::geometry::*;
 use tracer::light::*;

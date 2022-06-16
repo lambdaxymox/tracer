@@ -1,4 +1,4 @@
-use crate::sampler::*;
+use crate::core::*;
 use cglinalg::{
     Vector3,
 };

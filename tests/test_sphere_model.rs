@@ -5,14 +5,12 @@ extern crate rand_isaac;
 
 #[cfg(test)]
 mod sphere_lambertian_model_tests {
-    use tracer::{
-        SphereSampler,
-    };
+    use tracer::core::*;
     use tracer::bsdf::{
         SimpleLambertianBsdf,
         SimpleLambertianBsdfQuerySampler,
     };
-    use tracer::query::{
+    use tracer::core::{
         Ray,
         IntersectionQuery,
         IntersectionResult,
@@ -96,14 +94,12 @@ mod sphere_lambertian_model_tests {
 
 #[cfg(test)]
 mod sphere_metal_model_tests {
-    use tracer::{
-        SphereSampler,
-    };
+    use tracer::core::*;
     use tracer::bsdf::{
         SimpleMetalBsdf,
         SimpleMetalBsdfQuerySampler,
     };
-    use tracer::query::{
+    use tracer::core::{
         Ray,
         IntersectionQuery,
         IntersectionResult,
