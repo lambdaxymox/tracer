@@ -44,16 +44,60 @@ impl Renderer {
         }
     }
 
-    fn estimate_direct_from_lights(&self, scene: &Scene) -> Vector3<f32> {
+    fn estimate_direct_from_point_lights(&self, scene: &Scene, point: &Vector3<f32>) -> Vector3<f32> {
+        let mut L_o = Vector3::zero();
+        for light in scene.lights.iter() {
+            if scene.line_of_sight(point, &light.position()) {
+                let mut w_i = light.position() - point;
+                let distance_squared = w_i.magnitude_squared();
+                w_i /= distance_squared;
+
+                let E_i = light.emission() / (4_f32 * std::f32::consts::PI * distance_squared);
+
+                L_o += E_i;
+                // L_o += (surfel.evaluate_bsdf(w_i, -ray.direction()) * E_i * max(0_f32, w_i.dot(surfel.shading.normal)));
+                // debug_assert(radiance.is_finite());
+            }
+        }
+
+        L_o
+
+        /*
+        Radiance3 App::estimateDirectLightFromPointLights(const SurfaceElement& surfel, const Ray& ray) {
+            Radiance3 L_o(0.0f);
+            if (m_pointLights) {
+                for (int L = 0; L < m_world->lightArray.size(); ++L) {
+                    const GLight& light = m_world->lightArray[L];
+                    // Shadow rays
+                    if (m_world->lineOfSight(surfel.geometric.location + surfel.geometric.normal * 0.0001f, light.position.xyz())) {
+                        Vector3 w_i = light.position.xyz() - surfel.shading.location;
+                        const float distance2 = w_i.squaredLength();
+                        w_i /= sqrt(distance2);
+    
+                        // Attenuated radiance
+                        const Irradiance3& E_i = light.color / (4.0f * pif() * distance2);
+                        L_o += (surfel.evaluateBSDF(w_i, -ray.direction()) * E_i * max(0.0f, w_i.dot(surfel.shading.normal)));
+                        debugAssert(radiance.isFinite());
+                    }
+                } 
+            }
+            
+            return L_o; 
+        }
+        */
+    }
+
+    fn estimate_direct_from_area_lights(&self, scene: &Scene) -> Vector3<f32> {
         unimplemented!()
     }
 
     fn path_trace(&self, scene: &Scene, query: &IntersectionQuery, sampler: &mut SphereSampler, depth: usize) -> Vector3<f32> {
         if let Some(hit) = scene.ray_cast(query) {
             if depth < self.max_path_depth {
+                let intersection_result = hit.intersection_result.unwrap_hit_or_tangent();
                 let scattering_query = ScatteringQuery::new(
                     query.ray.direction,
-                    hit.intersection_result.unwrap_hit_or_tangent().point
+                    intersection_result.point
                 );
                 let scattering_result = hit.object.scatter(&scattering_query, sampler);
                 let next_origin = scattering_result.point;
@@ -62,9 +106,13 @@ impl Renderer {
                 let next_intersection_query = IntersectionQuery::new(next_incoming_ray, query.t_min, query.t_max);
                 let next_estimate = self.path_trace(scene, &next_intersection_query, sampler, depth + 1);
                 let estimated_from_indirect_light = scattering_result.scattering_fraction.component_mul(&next_estimate);
-                // let estimated_from_direct_light = self.estimate_direct_from_lights(scene);
+                let estimated_from_direct_point_light = self.estimate_direct_from_point_lights(scene, &intersection_result.point);
+                // let estimated_from_direct_area_light = self.estimate_direct_from_area_lights(scene);
                 
-                scattering_result.emission + estimated_from_indirect_light // + estimated_from_direct_light
+                scattering_result.emission + 
+                    estimated_from_indirect_light + 
+                    estimated_from_direct_point_light // +
+                    // estimated_from_direct_area_light
             } else {
                 Vector3::new(0_f32, 0_f32, 0_f32)
             }

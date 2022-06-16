@@ -1,6 +1,10 @@
 use crate::query::*;
 use crate::camera::*;
 use crate::scene::*;
+use cglinalg::{
+    Vector3,
+    Magnitude,
+};
 
 
 #[derive(Copy, Clone, Debug)]
@@ -17,6 +21,7 @@ impl<'a> ObjectIntersectionResult<'a> {
 
 pub struct Scene {
     pub objects: Vec<SceneObject>,
+    pub lights: Vec<ScenePointLightObject>,
     pub camera: Camera,
 }
 
@@ -24,6 +29,7 @@ impl Scene {
     pub fn new(width: usize, height: usize, camera: Camera) -> Scene {
         Scene {
             objects: Vec::new(),
+            lights: Vec::new(),
             camera,
         }
     }
@@ -38,9 +44,18 @@ impl Scene {
         self.objects.is_empty()
     }
 
+    /// Determine whether a scene contains any lights.
+    pub fn is_empty_lights(&self) -> bool {
+        self.lights.is_empty()
+    }
+
     /// Insert an object into a scene.
-    pub fn push(&mut self, object: SceneObject) {
+    pub fn push_object(&mut self, object: SceneObject) {
         self.objects.push(object);
+    }
+
+    pub fn push_light(&mut self, light: ScenePointLightObject) {
+        self.lights.push(light);
     }
 
     /// Cast a ray into a scene and determine whether the ray intersects and 
@@ -66,6 +81,14 @@ impl Scene {
         }
 
         closest_result
+    }
+
+    pub fn line_of_sight(&self, from_location: &Vector3<f32>, to_location: &Vector3<f32>) -> bool {
+        let direction = (to_location - from_location).normalize();
+        let ray = Ray::new(*from_location, direction);
+        let query = IntersectionQuery::new(ray, 0.0001, f32::MAX);
+        
+        self.ray_cast(&query).is_none()
     }
 }
 

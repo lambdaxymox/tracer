@@ -58,7 +58,7 @@ mod scene_tests {
             Camera::new(look_from, look_at, v_up, v_fov, aspect_ratio, aperture, distance_to_focus)
         })(720, 480);
         let mut scene = Scene::new(720, 480, camera);
-        scene.push(scene_object);
+        scene.push_object(scene_object);
 
         scene
     }

@@ -23,12 +23,12 @@ impl LightingQuery {
 pub struct LightingResult {
     pub ray_incoming: Vector3<f32>,
     pub point: Vector3<f32>,
-    pub emission: Vector3<f32>,
+    pub radiance: Vector3<f32>,
 }
 
 impl LightingResult {
-    pub fn new(ray_incoming: Vector3<f32>, point: Vector3<f32>, emission: Vector3<f32>) -> Self {
-        Self { ray_incoming, point, emission, }
+    pub fn new(ray_incoming: Vector3<f32>, point: Vector3<f32>, radiance: Vector3<f32>) -> Self {
+        Self { ray_incoming, point, radiance, }
     }
 }
 

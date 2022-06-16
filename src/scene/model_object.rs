@@ -86,7 +86,7 @@ where
             bsdf_result.point,
             bsdf_result.normal,
             bsdf_result.scattering_fraction,
-            lighting_result.emission,
+            lighting_result.radiance,
         )
     }
 }

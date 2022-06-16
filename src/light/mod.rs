@@ -1,7 +1,9 @@
 mod light;
-mod simple_lights;
+mod no_light;
+mod point_light;
 
 
 pub use light::*;
-pub use simple_lights::*;
+pub use no_light::*;
+pub use point_light::*;
 
